@@ -38,7 +38,10 @@
 			// break apart the argument list and remove default assignments
 			$pairs=explode(',',$args);
 			foreach ($pairs as &$pair)
-				$pair=explode('=',$pair)[0];
+			{
+				$exp=explode('=',$pair);
+				$pair=$exp[0];
+			}
 			$justargs=implode(',',$pairs);
 
 			$output.="

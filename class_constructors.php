@@ -106,6 +106,11 @@ function uiform($fields=false,$record=false,$style=false)
 	return new uiform($fields,$record,$style);
 }
 
+function uigoogleanalytics($account,$domain=false)
+{
+	return new uigoogleanalytics($account,$domain);
+}
+
 function uiheader($level,$text=false)
 {
 	return new uiheader($level,$text);
@@ -131,19 +136,19 @@ function uiimage($src)
 	return new uiimage($src);
 }
 
-function uiinput_text($name,$attr=false)
+function uiinput_text($attr=false)
 {
-	return new uiinput_text($name,$attr);
+	return new uiinput_text($attr);
 }
 
-function uiinput_password($name,$attr=false)
+function uiinput_password($attr=false)
 {
-	return new uiinput_text($name,$attr);
+	return new uiinput_text($attr);
 }
 
-function uiinput_checkbox($name,$attr=false)
+function uiinput_checkbox($attr=false)
 {
-	return new uiinput_text($name,$attr);
+	return new uiinput_text($attr);
 }
 
 function uilabel($text=false)

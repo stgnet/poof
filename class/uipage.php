@@ -6,6 +6,7 @@ class uiPage extends uiElement
 	private $ui_styles;
 	private $ui_prescripts;
 	private $ui_postscripts;
+	private $ui_headscripts;
 	private $ui_readyscripts;
 
 	function __construct($meta)
@@ -17,6 +18,7 @@ class uiPage extends uiElement
 		$this->ui_prescripts=array();
 		// jquery always goes first!
 		$this->ui_postscripts=array('jquery.js','bootstrap.js');
+		$this->ui_headscripts=array();
 		$this->ui_readyscripts=array();
 
 		if (!is_array($meta))
@@ -33,6 +35,10 @@ class uiPage extends uiElement
 	function PostScript($name,$file)
 	{
 		$this->ui_postscripts[$name]=$file;
+	}
+	function HeadScript($name,$code)
+	{
+		$this->ui_headscripts[$name]=$code;
 	}
 	function ReadyScript($name,$code)
 	{
@@ -61,11 +67,19 @@ class uiPage extends uiElement
 	{
 		global $POOF_URL;
 		$output='';
+		$head='';
 
 		foreach ($this->ui_prescripts as $script)
 			$output.=$this->Tag("script src=\"".
 				$this->pathfix("$POOF_URL/js",$script).
 				"\"");
+
+		$head='';
+		foreach ($this->ui_headscripts as $code)
+			$head.=" ".$code."\n";
+
+		if (!empty($head))
+			$output.=$this->Tag("script type=\"text/javascript\"",$head);
 
 		return($output);
 	}
@@ -94,10 +108,11 @@ class uiPage extends uiElement
 		}
 	})
 */
+		if (!empty($ready))
 		$output.=$this->Tag("script type=\"text/javascript\"",
 			"\$(document).ready(function(){\n".
 			$ready.
-			"});\n</script>\n"
+			"});\n"
 		);
 		return($output);
 	}
