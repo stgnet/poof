@@ -118,7 +118,7 @@
 			if (!empty($stack['file']) && basename($stack['file'])=="err.class.php")
 				continue;
 
-			if ($stack['function']=="ErrorHandler") continue;
+			if (substr($stack['function'],0,10)=="poof_error") continue;
 
 			$output.="===> FUNCTION {$stack['function']} (";
 

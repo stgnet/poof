@@ -5,14 +5,14 @@
 class uiElement 
 {
 	protected $ui_name;
-
+	protected $ui_class;
 	private $ui_parent;
-
 	private $ui_contents;
 
 	function __construct()
 	{
 		$this->UniqName('element');
+		$this->ui_class=false;
 	}
 	function UniqName($prefix=NULL)
 	{
@@ -134,9 +134,12 @@ class uiElement
 
 			// debugging aid:
 			if (!empty($POOF_UI_DEBUG))
-				echo "<div style=\"margin: 10px; border: 3px #ccc solid;box-shadow: 5px 5px 2px #888 ;\"><div style=\"background-color: #ccc;\">{$element->ui_name}</div>";
+				echo "<div style=\"margin: 10px; border: 3px #ccc solid;box-shadow: 5px 5px 2px #888 ;\"><div style=\"background-color: #ccc;\">{$element->ui_name}  ({$element->ui_class})</div>";
 
-			echo "<div id=\"{$element->ui_name}\">\n";
+			echo "<div id=\"{$element->ui_name}\"";
+			if ($element->ui_class)
+				echo " class=\"{$element->ui_class}\"";
+			echo ">\n";
 
 			$element->Generate();
 
