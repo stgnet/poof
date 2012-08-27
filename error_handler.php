@@ -115,10 +115,15 @@
 		//foreach (array_reverse(debug_backtrace()) as $stack)
 		foreach (debug_backtrace() as $stack)
 		{
+/*
 			if (!empty($stack['file']) && basename($stack['file'])=="err.class.php")
 				continue;
+*/
 
-			if (substr($stack['function'],0,10)=="poof_error") continue;
+			//if (substr($stack['function'],0,10)=="poof_error") continue;
+			if ($stack['function']=="poof_error_trace") continue;
+			if ($stack['function']=="poof_error_send_html") continue;
+			if ($stack['function']=="poof_error_send") continue;
 
 			$output.="===> FUNCTION {$stack['function']} (";
 

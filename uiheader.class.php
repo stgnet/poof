@@ -4,16 +4,14 @@ class uiHeader extends uiElement
 {
 	private $text;
 
-	function uiHeader($text)
+	function __construct($text)
 	{
 		$this->UniqName();
 		$this->text=$text;
 	}
 
-	function Generate()
+	function __toString()
 	{
-		echo "<h1>".htmlentities($this->text)."</h1>";
-
-		$this->GenerateContent();
+		return("<h1>".htmlentities($this->text)."</h1>". $this->GenerateContent());
 	}
 }

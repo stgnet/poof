@@ -2,11 +2,15 @@
 
 spl_autoload_register('poof_autoload');
 
-require_once(poof_locate()."/error_handler.php");
+require_once(dirname(__FILE__)."/error_handler.php");
+require_once(dirname(__FILE__)."/ui_functions.php");
 
 // pass all php errors through our handler
 set_error_handler('poof_error_handler');
 error_reporting(-1);
+
+// security considerations
+libxml_disable_entity_loader(true);
 
 function poof_locate()
 {

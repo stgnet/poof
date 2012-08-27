@@ -14,7 +14,7 @@ class uiPage extends uiElement
 	}
 
 	// other UI elements define their own Generate, but must also call GenerateContent
-	function Generate()
+	function __toString()
 	{
 		global $POOF_URL;
 
@@ -28,34 +28,35 @@ class uiPage extends uiElement
 		$scripts=array('/js/bootstrap.js','/js/jquery.js');
 
 
-		echo "<!DOCTYPE html>\n";
-		echo "<html lang=\"en\">\n";
+		$output="<!DOCTYPE html>\n";
+		$output.="<html lang=\"en\">\n";
 
-		echo "<head>\n";
-		echo "<meta charset=\"utf-8\">";
+		$output.="<head>\n";
+		$output.="<meta charset=\"utf-8\">";
 
-		echo "<title>".htmlentities($this->ui_meta['title'])."</title>\n";
+		$output.="<title>".htmlentities($this->ui_meta['title'])."</title>\n";
 		foreach ($this->ui_meta as $name => $content)
 			if ($name!='title')
-				echo "<meta name=\"$name\" content=\"$content\">\n";
+				$output.="<meta name=\"$name\" content=\"$content\">\n";
 
 		foreach ($styles as $style)
-			echo "<link href=\"{$POOF_URL}{$style}\" rel=\"stylesheet\">\n";
+			$output.="<link href=\"{$POOF_URL}{$style}\" rel=\"stylesheet\">\n";
 
 			
 
-		echo "</head>";
+		$output.="</head>";
 
-		echo "<body>\n";
+		$output.="<body>\n";
 
-		echo "<div id=\"{$this->ui_name}\">\n";
-		$this->GenerateContent();
-		echo "</div>\n";
+		$output.="<div id=\"{$this->ui_name}\">\n";
+		$output.=$this->GenerateContent();
+		$output.="</div>\n";
 
 		foreach ($scripts as $script)
-			echo "<script src=\"{$POOF_URL}{$script}\"></script>\n";
+			$output.="<script src=\"{$POOF_URL}{$script}\"></script>\n";
 
-		echo "</body></html>\n";
+		$output.="</body></html>\n";
+		return($output);
 	}
 
 }

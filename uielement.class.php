@@ -24,16 +24,23 @@ class uiElement
 		$this->ui_name=$prefix.$GLOBALS[$count]++;
 	}
 
-	function Add($obj)
+	function Add()
 	{
-		if (!$obj instanceof uiElement)
-			Fatal("uiElement::Add(".get_class($obj)."): incompatible object not based on uiElement!");
+		$args=func_get_args();
+		foreach ($args as $obj)
+		{
+			if (!$obj instanceof uiElement)
+				Fatal("uiElement::Add(".get_class($obj)."): incompatible object not based on uiElement!");
 
-		if ($obj->ui_parent)
-			Fatal("uiElement::Add({$obj->ui_name}): already added to {$obj->ui_parent->ui_name}");
+			if ($obj->ui_parent)
+				Fatal("uiElement::Add({$obj->ui_name}): already added to {$obj->ui_parent->ui_name}");
 
-		$this->ui_contents[]=$obj;
-		$obj->ui_parent=&$this;
+			$this->ui_contents[]=$obj;
+			$obj->ui_parent=&$this;
+		}
+
+		// Add() returns this to allow convenient tree building
+		return($this);
 	}
 
 	function GetPath()
@@ -128,34 +135,38 @@ class uiElement
 			}
 		}
 
+		$output='';
 		if ($this->ui_contents) foreach ($this->ui_contents as $element)
 		{
+
 			if (!$element->ui_name) Fatal("UI Element Name not set");
 
 			// debugging aid:
 			if (!empty($POOF_UI_DEBUG))
-				echo "<div style=\"margin: 10px; border: 3px #ccc solid;box-shadow: 5px 5px 2px #888 ;\"><div style=\"background-color: #ccc;\">{$element->ui_name}  ({$element->ui_class})</div>";
+				$output.="<div style=\"margin: 10px; border: 3px #ccc solid;box-shadow: 5px 5px 2px #888 ;\"><div style=\"background-color: #ccc;\">{$element->ui_name}  ({$element->ui_class})</div>";
 
-			echo "<div id=\"{$element->ui_name}\"";
+			$output.="<div id=\"{$element->ui_name}\"";
 			if ($element->ui_class)
-				echo " class=\"{$element->ui_class}\"";
-			echo ">\n";
+				$output.=" class=\"{$element->ui_class}\"";
+			$output.=">\n";
 
-			$element->Generate();
+			//$element->Generate();
+			$output.=$element;
 
-			echo "</div>\n";
+			$output.="</div>\n";
 
 			if (!empty($POOF_UI_DEBUG))
-				echo "</div>\n";
+				$output.="</div>\n";
 
 		}
+		return($output);
 	}
 
-	// other UI elements define their own Generate, but must also call GenerateContent
-	function Generate()
+	// generate output, but also content from child elements
+	function __toString()
 	{
-		// this doesn't actually generate output, just call the content elements
-		$this->GenerateContent();
+		// this base class doesn't actually generate output,
+		// so just call call the elements
+		return($this->GenerateContent());
 	}
-
 }

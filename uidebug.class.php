@@ -4,29 +4,29 @@ class uiDebug extends uiElement
 {
 	private $what;
 
-	function uiDebug($what=false)
+	function __construct($what=false)
 	{
 		$this->UniqName();
 		$this->what=$what;
 	}
 
-	function Generate()
+	function __toString()
 	{
-		echo "<style type=\"text/css\">pre {background: #eee;}</style>";
+		$output="<style type=\"text/css\">pre {background: #eee;}</style>";
 
-		echo "<pre>";
+		$output.="<pre>";
 		if (empty($this->what))
-			echo htmlentities(print_r($GLOBALS,true));
+			$output.=htmlentities(print_r($GLOBALS,true));
 		else
 		{
-			echo "[".$this->what."] => ";
+			$output.="[".$this->what."] => ";
 			if (isset($GLOBALS[$this->what]))
-				echo htmlentities(print_r($GLOBALS[$this->what],true));
+				$output.=htmlentities(print_r($GLOBALS[$this->what],true));
 			else
-				echo "** ERROR: NOT SET **";
+				$output.="** ERROR: NOT SET **";
 		}
-		echo "</pre>\n";
+		$output.="</pre>\n";
 
-		$this->GenerateContent();
+		return($output.$this->GenerateContent());
 	}
 }
