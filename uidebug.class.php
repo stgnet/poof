@@ -12,7 +12,7 @@ class uiDebug extends uiElement
 
 	function __toString()
 	{
-		$output="<style type=\"text/css\">pre {background: #eee;}</style>";
+		$output=$this->Indent()."<style type=\"text/css\">pre {background: #eee;}</style>";
 
 		$output.="<pre>";
 		if (empty($this->what))
@@ -25,7 +25,7 @@ class uiDebug extends uiElement
 			else
 				$output.="** ERROR: NOT SET **";
 		}
-		$output.="</pre>\n";
+		$output.="</pre>";
 
 		return($output.$this->GenerateContent());
 	}

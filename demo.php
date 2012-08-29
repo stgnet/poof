@@ -1,11 +1,6 @@
 <?php
 	require('poof.php');
 
-	global $POOF_UI_DEBUG;
-
-	if (!empty($GLOBALS['debug']))
-		$POOF_UI_DEBUG=true;
-
 	$meta=array(
 		'title'=>"POOF Framework Demonstration",
 		'keywords'=>"POOF, PHP, Framework, Object-oriented, Orthogonal",
@@ -14,7 +9,7 @@
 		'author'=>"Scott Griepentrog scott@griepentrog.com",
 	);
 
-	$logo=new uiImage("http://placehold.it/143x45",$_SERVER['SCRIPT_NAME']);
+	$logo=new uiImage("http://placehold.it/143x45",'index.php');
 
 	$navmenu=array(
 		'One'=>"one.php",
@@ -22,22 +17,20 @@
 		'Three'=>"three.php",
 	);
 
-	$navbar=new uiNavBar($navmenu);
-	$navbar->AddClass("pull-right");
-
-	$navbar_container=new uiContainer();
-
-	$navbar_container->Add($logo);
-	$navbar_container->Add($navbar);
-
-
-	$page=new uiPage($meta);
-	$page->Add($navbar_container);
-
-	$page->Add(new uiHeader("POOF Diagnostic Tool"));
-	//$page->Add(new uiSession());
-	$page->Add(new uiDebug('POOF_DIR'));
-	$page->Add(new uiDebug('POOF_URL'));
-	$page->Add(new uiDebug('_SESSION'));
-	$page->Add(new uiDebug('_SERVER'));
-	$page->Generate();
+	echo uiPage($meta)->AddClass("wrap")->Add(
+		uiDiv("navbar navbar-fixed-top")->Add(
+uiDiv("navbar-inner")->Add(
+uiDiv("container")->Add(
+			uiImage("img/poof.png","index.php")->AddClass("pull-left"),
+			uiNavBar($navmenu)->AddClass("pull-right")
+))
+		)
+,
+		uiContainer()->Add(
+		uiHero()->Add(
+			uiHeader("Hello, World!"),
+			uiParagraph("This is a demostration of POOF"),
+			uiButton("Code","http://github.com/stgnet/poof")
+		)
+		)
+	);

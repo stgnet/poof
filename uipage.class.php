@@ -18,7 +18,7 @@ class uiPage extends uiElement
 	{
 		global $POOF_URL;
 
-		if ($_SERVER['REQUEST_METHOD']=='POST')
+		if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST')
 		{
 			if ($this->HandlePost())
 				return;
@@ -43,17 +43,21 @@ class uiPage extends uiElement
 			$output.="<link href=\"{$POOF_URL}{$style}\" rel=\"stylesheet\">\n";
 
 			
+		foreach ($scripts as $script)
+			$output.="<script src=\"{$POOF_URL}{$script}\"></script>\n";
 
 		$output.="</head>";
 
 		$output.="<body>\n";
 
-		$output.="<div id=\"{$this->ui_name}\">\n";
+		$output.="<div id=\"{$this->ui_name}\">";
 		$output.=$this->GenerateContent();
-		$output.="</div>\n";
+		$output.="\n</div>\n";
 
+/*
 		foreach ($scripts as $script)
 			$output.="<script src=\"{$POOF_URL}{$script}\"></script>\n";
+*/
 
 		$output.="</body></html>\n";
 		return($output);

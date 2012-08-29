@@ -23,6 +23,15 @@ class uiElement
 			$GLOBALS[$count]=1;
 		$this->ui_name=$prefix.$GLOBALS[$count]++;
 	}
+	function AddClass($class)
+	{
+		if (empty($this->ui_class))
+			$this->ui_class=$class;
+		else
+			$this->ui_class.=" ".$class;
+		// chaining
+		return($this);
+	}
 
 	function Add()
 	{
@@ -122,18 +131,30 @@ class uiElement
 		Fatal("unable to locate post element '$post_is_for'");
 	}
 
+	function Indent($adjust=0)
+	{
+		global $POOF_UI_LEVEL;
+
+		$indention="    ";
+
+		$POOF_UI_LEVEL+=$adjust;
+		return("\n".str_repeat($indention,$POOF_UI_LEVEL));
+	}
 	function GenerateContent()
 	{
 		global $POOF_UI_DEBUG;
+		global $POOF_UI_LEVEL;
 
 		if (empty($this->ui_parent))
 		{
-			if ($_SERVER['REQUEST_METHOD']=='POST')
+			if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST')
 			{
 				if ($this->HandlePost())
 					return;
 			}
 		}
+		if (empty($POOF_UI_LEVEL))
+			$POOF_UI_LEVEL=1;
 
 		$output='';
 		if ($this->ui_contents) foreach ($this->ui_contents as $element)
@@ -142,20 +163,21 @@ class uiElement
 			if (!$element->ui_name) Fatal("UI Element Name not set");
 
 			// debugging aid:
-			if (!empty($POOF_UI_DEBUG))
-				$output.="<div style=\"margin: 10px; border: 3px #ccc solid;box-shadow: 5px 5px 2px #888 ;\"><div style=\"background-color: #ccc;\">{$element->ui_name}  ({$element->ui_class})</div>";
+			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
+				$output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">{$element->ui_name}  ({$element->ui_class})</div>\n";
 
-			$output.="<div id=\"{$element->ui_name}\"";
+			$output.=$this->Indent()."<div id=\"{$element->ui_name}\"";
 			if ($element->ui_class)
 				$output.=" class=\"{$element->ui_class}\"";
-			$output.=">\n";
+			$output.=">";
 
-			//$element->Generate();
+			$POOF_UI_LEVEL++;
 			$output.=$element;
+			$POOF_UI_LEVEL--;
 
-			$output.="</div>\n";
+			$output.=$this->Indent()."</div>";
 
-			if (!empty($POOF_UI_DEBUG))
+			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="</div>\n";
 
 		}

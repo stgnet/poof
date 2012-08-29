@@ -3,7 +3,7 @@
 spl_autoload_register('poof_autoload');
 
 require_once(dirname(__FILE__)."/error_handler.php");
-require_once(dirname(__FILE__)."/ui_functions.php");
+require_once(dirname(__FILE__)."/class_constructors.php");
 
 // pass all php errors through our handler
 set_error_handler('poof_error_handler');
