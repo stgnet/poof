@@ -17,20 +17,18 @@
 		'Three'=>"three.php",
 	);
 
-	echo uiPage($meta)->AddClass("wrap")->Add(
-		uiDiv("navbar navbar-fixed-top")->Add(
-uiDiv("navbar-inner")->Add(
-uiDiv("container")->Add(
-			uiImage("img/poof.png","index.php")->AddClass("pull-left"),
-			uiNavBar($navmenu)->AddClass("pull-right")
-))
-		)
-,
+	echo uiPage($meta)->Add(
+		uiContainer("navbar")->Add(
+			uiContainer()->Add(
+				uiImage("img/poof.png","index.php")->AddClass("nav pull-left"),
+				uiNavList($navmenu)->AddClass("pull-right")
+			)
+		),
 		uiContainer()->Add(
-		uiHero()->Add(
-			uiHeader("Hello, World!"),
-			uiParagraph("This is a demostration of POOF"),
-			uiButton("Code","http://github.com/stgnet/poof")
-		)
+			uiHero()->Add(
+				uiHeader("Hello, World!"),
+				uiParagraph("This is a demostration of POOF"),
+				uiButton("Code","http://github.com/stgnet/poof")
+			)
 		)
 	);

@@ -34,9 +34,9 @@ function uielement()
 	return new uielement();
 }
 
-function uicontainer()
+function uicontainer($class=false)
 {
-	return new uicontainer();
+	return new uicontainer($class);
 }
 
 function uidiv($class)
@@ -47,6 +47,11 @@ function uidiv($class)
 function uiheader($text)
 {
 	return new uiheader($text);
+}
+
+function uinavlist($list)
+{
+	return new uinavlist($list);
 }
 
 function uiparagraph($text)
