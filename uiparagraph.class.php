@@ -6,14 +6,15 @@ class uiParagraph extends uiElement
 
 	function __construct($text)
 	{
-		$this->UniqName();
+		parent::__construct();
 		//$this->ui_class="navbar";
 		$this->text=$text;
 	}
 
 	function __toString()
 	{
-		$output=$this->Indent()."<p>".htmlentities($this->text)."</p>";
-		return($output.$this->GenerateContent());
+		$output=$this->Indent()."<p>".htmlentities($this->text);
+
+		return($output.$this->GenerateContent()."</p>");
 	}
 }

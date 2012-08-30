@@ -6,22 +6,19 @@ class uiElement
 {
 	protected $ui_name;
 	protected $ui_class;
+	protected $ui_style;
 	private $ui_parent;
 	private $ui_contents;
 
 	function __construct()
 	{
-		$this->UniqName('element');
+		$id=substr(strtolower(get_class($this)),2);
+		$counter="POOF_UI_DIV_".$id;
+		if (empty($GLOBALS[$counter]))
+			$GLOBALS[$counter]=1;
+		$this->ui_name=$id.$GLOBALS[$counter]++;
 		$this->ui_class=false;
-	}
-	function UniqName($prefix=NULL)
-	{
-		if (!$prefix)
-			$prefix=substr(strtolower(get_class($this)),2);
-		$count='POOF_UI_DIV_'.$prefix;
-		if (empty($GLOBALS[$count]))
-			$GLOBALS[$count]=1;
-		$this->ui_name=$prefix.$GLOBALS[$count]++;
+		$this->ui_style=false;
 	}
 	function AddClass($class)
 	{
@@ -30,6 +27,14 @@ class uiElement
 		else
 			$this->ui_class.=" ".$class;
 		// chaining
+		return($this);
+	}
+	function Style($style)
+	{
+		if (empty($this->ui_style))
+			$this->ui_style=$style;
+		else
+			$this->ui_style.=" ".$style;
 		return($this);
 	}
 
@@ -169,6 +174,8 @@ class uiElement
 			$output.=$this->Indent()."<div id=\"{$element->ui_name}\"";
 			if ($element->ui_class)
 				$output.=" class=\"{$element->ui_class}\"";
+			if ($element->ui_style)
+				$output.=" style=\"{$element->ui_style}\"";
 			$output.=">";
 
 			$POOF_UI_LEVEL++;
@@ -185,6 +192,7 @@ class uiElement
 	}
 
 	// generate output, but also content from child elements
+	// child classes should overload this generate their own html output
 	function __toString()
 	{
 		// this base class doesn't actually generate output,

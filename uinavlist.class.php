@@ -6,7 +6,7 @@ class uiNavList extends uiElement
 
 	function __construct($list)
 	{
-		$this->UniqName();
+		parent::__construct();
 		$this->list=$list;
 	}
 

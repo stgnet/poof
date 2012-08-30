@@ -2,16 +2,26 @@
 
 class uiHeader extends uiElement
 {
+	private $level;
 	private $text;
 
-	function __construct($text)
+	function __construct($level,$text=false)
 	{
-		$this->UniqName();
-		$this->text=$text;
+		parent::__construct();
+		if (!empty($text))
+		{
+			$this->level=$level;
+			$this->text=$text;
+		}
+		else
+		{
+			$this->level=1;
+			$this->text=$level;
+		}
 	}
 
 	function __toString()
 	{
-		return("<h1>".htmlentities($this->text)."</h1>". $this->GenerateContent());
+		return("<h{$this->level}>".htmlentities($this->text)."</h{$this->level}>". $this->GenerateContent());
 	}
 }

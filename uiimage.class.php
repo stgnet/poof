@@ -6,7 +6,7 @@ class uiImage extends uiElement
 	private $href;
 	function __construct($src,$href)
 	{
-		$this->UniqName();
+		parent::__construct();
 		//$this->ui_class="navbar";
 		$this->src=$src;
 		$this->href=$href;

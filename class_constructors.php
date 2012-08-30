@@ -19,6 +19,11 @@ function uinavbar($menu)
 	return new uinavbar($menu);
 }
 
+function uipre($text)
+{
+	return new uipre($text);
+}
+
 function uiimage($src,$href)
 {
 	return new uiimage($src,$href);
@@ -44,9 +49,9 @@ function uidiv($class)
 	return new uidiv($class);
 }
 
-function uiheader($text)
+function uiheader($level,$text=false)
 {
-	return new uiheader($text);
+	return new uiheader($level,$text);
 }
 
 function uinavlist($list)

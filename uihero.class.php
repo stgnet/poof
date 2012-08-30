@@ -4,7 +4,7 @@ class uiHero extends uiElement
 {
 	function __construct()
 	{
-		$this->UniqName();
+		parent::__construct();
 		$this->ui_class="hero-unit";
 	}
 

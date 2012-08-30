@@ -4,7 +4,7 @@ class uiDiv extends uiElement
 {
 	function __construct($class)
 	{
-		$this->UniqName();
+		parent::__construct();
 		$this->ui_class=$class;
 	}
 

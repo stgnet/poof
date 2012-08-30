@@ -6,7 +6,7 @@ class uiDebug extends uiElement
 
 	function __construct($what=false)
 	{
-		$this->UniqName();
+		parent::__construct();
 		$this->what=$what;
 	}
 

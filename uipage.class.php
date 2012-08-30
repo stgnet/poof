@@ -6,7 +6,7 @@ class uiPage extends uiElement
 
 	function __construct($meta)
 	{
-		$this->UniqName('page');
+		parent::__construct();
 		$this->ui_meta=$meta;
 
 		if (!is_array($meta))

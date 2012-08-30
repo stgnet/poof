@@ -6,7 +6,7 @@ class uiNavBar extends uiElement
 
 	function __construct($menu)
 	{
-		$this->UniqName();
+		parent::__construct();
 		$this->ui_class="navbar";
 		$this->menu=$menu;
 	}

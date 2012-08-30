@@ -9,8 +9,6 @@
 		'author'=>"Scott Griepentrog scott@griepentrog.com",
 	);
 
-	$logo=new uiImage("http://placehold.it/143x45",'index.php');
-
 	$navmenu=array(
 		'One'=>"one.php",
 		'Two'=>"two.php",
@@ -20,7 +18,7 @@
 	echo uiPage($meta)->Add(
 		uiContainer("navbar")->Add(
 			uiContainer()->Add(
-				uiImage("img/poof.png","index.php")->AddClass("nav pull-left"),
+				uiImage("img/poof.png","index.php")->AddClass("nav"),
 				uiNavList($navmenu)->AddClass("pull-right")
 			)
 		),
@@ -28,7 +26,11 @@
 			uiHero()->Add(
 				uiHeader("Hello, World!"),
 				uiParagraph("This is a demostration of POOF"),
-				uiButton("Code","http://github.com/stgnet/poof")
+				uiButton("Download Code","http://github.com/stgnet/poof")->AddClass("btn-large")
 			)
+		),
+		uiContainer()->Add(
+			uiHeader(3,"This PHP code generated this page:"),
+			uiPre(file_get_contents($_SERVER['SCRIPT_FILENAME']))
 		)
 	);

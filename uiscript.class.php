@@ -6,7 +6,7 @@ class uiScript extends uiElement
 
 	function __construct($code)
 	{
-		$this->UniqName();
+		parent::__construct();
 		$this->js=$code;
 	}
 
