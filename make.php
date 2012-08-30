@@ -6,43 +6,42 @@
 		// update the convenience function list from classes
 		$output='<'.'?php';
 
+		// scan files in the directory
 		$d=dir(".");
 		while ($file=$d->read())
 		{
-			if (preg_match('/^(.*)\.class\.php$/',$file,$match))
+			// skip anything that isn't an autoload-able class
+			if (!preg_match('/^(.*)\.class\.php$/',$file,$match))
+				continue;
+
+			$class=$match[1];
+			$contents=file_get_contents($file);
+
+			// locate the construct function to get args - and warn if not found
+			if (!preg_match('/function\s+__construct\((.*)\)/',$contents,$match))
 			{
-				$class=$match[1];
-				$contents=file_get_contents($file);
+				print("$class: __construct() not found!\n");
+				continue;
+			}
+			$args=$match[1];
 
-				if (!preg_match('/function\s+__construct\((.*)\)/',$contents,$match))
-				{
-					print("$class: __construct() not found!\n");
-					continue;
-				}
-				$args=$match[1];
+			// break apart the argument list and remove default assignments
+			$pairs=explode(',',$args);
+			foreach ($pairs as &$pair)
+				$pair=explode('=',$pair)[0];
+			$justargs=implode(',',$pairs);
 
-				// break apart the argument list and remove default assignments
-				$justargs=array();
-				$pairs=explode(',',$args);
-				foreach ($pairs as $pair)
-				{
-					$exp=explode('=',$pair);
-					$justargs[]=$exp[0];
-				}
-				$justargs=implode(',',$justargs);
-
-				$output.="
+			$output.="
 function $class($args)
 {
 	return new $class($justargs);
 }
 ";
-	
-			}
 		}
 		file_put_contents("class_constructors.php",$output);
 	}
 
+	// make all the components needed
 	make_constructors();
 
 
