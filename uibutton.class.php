@@ -16,7 +16,6 @@ class uiButton extends uiElement
 
 	function __toString()
 	{
-		$output="<a href=\"{$this->href}\">".htmlentities($this->text)."</a>";
-		return($output.$this->GenerateContent());
+		return($this->Tag("a href=\"{$this->href}\"",htmlentities($this->text)).$this->GenerateContent());
 	}
 }

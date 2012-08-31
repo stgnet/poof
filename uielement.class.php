@@ -29,7 +29,7 @@ class uiElement
 		// chaining
 		return($this);
 	}
-	function Style($style)
+	function AddStyle($style)
 	{
 		if (empty($this->ui_style))
 			$this->ui_style=$style;
@@ -142,13 +142,37 @@ class uiElement
 
 		$indention="    ";
 
-		$POOF_UI_LEVEL+=$adjust;
-		return("\n".str_repeat($indention,$POOF_UI_LEVEL));
+		if ($adjust<=0)
+			$POOF_UI_LEVEL+=$adjust;
+		$output="\n".str_repeat($indention,$POOF_UI_LEVEL);
+		if ($adjust>0)
+			$POOF_UI_LEVEL+=$adjust;
+		return($output);
+	}
+	function Tag($tag,$contents=false)
+	{
+		$untag=explode(' ',$tag)[0];
+
+		if (empty($contents) && $untag!="script")
+			return($this->Indent()."<$tag />");
+
+		if (!substr_count($contents,"\n") || $untag=="pre")
+			return($this->Indent()."<$tag>$contents</$untag>");
+
+		return($this->Indent(1)."<$tag>$contents".$this->Indent(-1)."</$untag>");
+	}
+	function DivTag()
+	{
+		$tag="div id=\"$this->ui_name\"";
+		if ($this->ui_class)
+			$tag.=" class=\"{$this->ui_class}\"";
+		if ($this->ui_style)
+			$tag.=" style=\"{$this->ui_style}\"";
+		return($tag);
 	}
 	function GenerateContent()
 	{
 		global $POOF_UI_DEBUG;
-		global $POOF_UI_LEVEL;
 
 		if (empty($this->ui_parent))
 		{
@@ -158,31 +182,17 @@ class uiElement
 					return;
 			}
 		}
-		if (empty($POOF_UI_LEVEL))
-			$POOF_UI_LEVEL=1;
 
 		$output='';
 		if ($this->ui_contents) foreach ($this->ui_contents as $element)
 		{
-
 			if (!$element->ui_name) Fatal("UI Element Name not set");
 
 			// debugging aid:
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">{$element->ui_name}  ({$element->ui_class})</div>\n";
 
-			$output.=$this->Indent()."<div id=\"{$element->ui_name}\"";
-			if ($element->ui_class)
-				$output.=" class=\"{$element->ui_class}\"";
-			if ($element->ui_style)
-				$output.=" style=\"{$element->ui_style}\"";
-			$output.=">";
-
-			$POOF_UI_LEVEL++;
-			$output.=$element;
-			$POOF_UI_LEVEL--;
-
-			$output.=$this->Indent()."</div>";
+			$output.=$this->Tag($element->DivTag(),$element);
 
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="</div>\n";

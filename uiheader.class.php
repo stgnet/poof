@@ -22,6 +22,6 @@ class uiHeader extends uiElement
 
 	function __toString()
 	{
-		return("<h{$this->level}>".htmlentities($this->text)."</h{$this->level}>". $this->GenerateContent());
+		return($this->Tag("h".$this->level,htmlentities($this->text).$this->GenerateContent()));
 	}
 }

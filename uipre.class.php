@@ -12,8 +12,6 @@ class uiPre extends uiElement
 
 	function __toString()
 	{
-		$output=$this->Indent()."<pre>".htmlentities($this->text);
-
-		return($output.$this->GenerateContent()."</pre>");
+		return($this->Tag("pre",htmlentities($this->text).$this->GenerateContent()));
 	}
 }

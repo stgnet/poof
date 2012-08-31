@@ -49,9 +49,24 @@ function uidiv($class)
 	return new uidiv($class);
 }
 
+function uilead($text)
+{
+	return new uilead($text);
+}
+
 function uiheader($level,$text=false)
 {
 	return new uiheader($level,$text);
+}
+
+function ardir($path)
+{
+	return new ardir($path);
+}
+
+function arbase()
+{
+	return new arbase();
 }
 
 function uinavlist($list)

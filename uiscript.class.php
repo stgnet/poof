@@ -12,10 +12,6 @@ class uiScript extends uiElement
 
 	function __toString()
 	{
-		$output=$this->Indent()."<script type=\"text/javascript\">\n";
-		$output.=$this->js;
-		$output.=$this->Indent()."</script>";
-
-		return($output.$this->GenerateContent());
+		return($this->Tag("script type=\"text/javascript\"",$this->js).$this->GenerateContent());
 	}
 }

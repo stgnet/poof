@@ -12,21 +12,12 @@ class uiDebug extends uiElement
 
 	function __toString()
 	{
-		$output=$this->Indent()."<style type=\"text/css\">pre {background: #eee;}</style>";
-
-		$output.="<pre>";
-		if (empty($this->what))
-			$output.=htmlentities(print_r($GLOBALS,true));
+		if (isset($GLOBALS[$this->what]))
+			$text.=print_r($GLOBALS[$this->what],true);
 		else
-		{
-			$output.="[".$this->what."] => ";
-			if (isset($GLOBALS[$this->what]))
-				$output.=htmlentities(print_r($GLOBALS[$this->what],true));
-			else
-				$output.="** ERROR: NOT SET **";
-		}
-		$output.="</pre>";
+			$text.="** ERROR: {$this->what} NOT SET **";
 
-		return($output.$this->GenerateContent());
+		return($this->Tag("pre",htmlentities($text)));
+
 	}
 }

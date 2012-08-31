@@ -12,10 +12,11 @@ class uiNavList extends uiElement
 
 	function __toString()
 	{
-		$output=$this->Indent(1)."<ul class=\"nav\">";
+		$list='';
 		foreach ($this->list as $name => $href)
-			$output.=$this->Indent()."<li><a href=\"$href\">".htmlentities($name)."</a></li>";
-		$output.=$this->Indent(-1)."</ul>";
-		return($output.$this->GenerateContent());
+			$list.=$this->Tag("li",
+				$this->Tag("a href=\"$href\"",htmlentities($name))
+			);
+		return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
 	}
 }
