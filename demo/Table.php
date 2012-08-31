@@ -1,28 +1,10 @@
 <?php
-	require('poof.php');
+	require('../poof.php');
 
-	$meta=array(
-		'title'=>"POOF Framework Demonstration",
-		'keywords'=>"POOF, PHP, Framework, Object-oriented, Orthogonal",
-		'description'=>"Diagnostics tool for framework code",
-		'viewport'=>"width=device-width, initial-scale=1.0",
-		'author'=>"Scott Griepentrog scott@griepentrog.com",
-	);
+	require('navbar.inc');
 
-	$navmenu=array(
-		'One'=>"one.php",
-		'Two'=>"two.php",
-		'Three'=>"three.php",
-	);
-
-
-	echo uiPage($meta)->Add(
-		uiContainer("navbar")->Add(
-			uiContainer()->AddStyle("background: #fed;")->Add(
-				uiImage("img/poof.png","index.php")->AddClass("nav"),
-				uiNavList($navmenu)->AddClass("pull-right")
-			)
-		),
+	echo uiPage("POOF Demo")->Add(
+		$navbar,
 		uiContainer()->Add(
 			uiHero()->AddStyle("background: #def;")->Add(
 				uiHeader("Hello, World!"),
