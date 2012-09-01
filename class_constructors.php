@@ -59,6 +59,16 @@ function uiheader($level,$text=false)
 	return new uiheader($level,$text);
 }
 
+function uitable($db,$fields=NULL)
+{
+	return new uitable($db,$fields);
+}
+
+function event()
+{
+	return new event();
+}
+
 function ardir($path)
 {
 	return new ardir($path);
@@ -84,6 +94,11 @@ function uidebug($what=false)
 	return new uidebug($what);
 }
 
+function dbbase()
+{
+	return new dbbase();
+}
+
 function uipage($meta)
 {
 	return new uipage($meta);
@@ -97,4 +112,9 @@ function uiscript($code)
 function uihero()
 {
 	return new uihero();
+}
+
+function dbcsv($file)
+{
+	return new dbcsv($file);
 }

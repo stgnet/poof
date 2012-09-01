@@ -14,9 +14,15 @@ class uiNavList extends uiElement
 	{
 		$list='';
 		foreach ($this->list as $name => $href)
-			$list.=$this->Tag("li",
+		{
+			$extra="";
+			if (basename($href)==basename($_SERVER['SCRIPT_NAME']))
+				$extra=" class=\"active\"";
+			$list.=$this->Tag("li$extra",
 				$this->Tag("a href=\"$href\"",htmlentities($name))
 			);
+		}
+
 		return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
 	}
 }

@@ -6,8 +6,8 @@
 		$navmenu[ucwords(basename($file,".php"))]="demo/$file";
 
 	echo uiPage("POOF Demo")->Add(
-		uiContainer("navbar")->AddStyle("background: #fed;")->Add(
-			uiContainer()->Add(
+		uiContainer("navbar")->Add(
+			uiContainer("navbar-inner")->AddStyle("background: #fed;")->Add(
 				uiImage("img/poof.png","index.php")->AddClass("nav"),
 				uiNavList($navmenu)->AddClass("pull-right")
 			)

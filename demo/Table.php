@@ -1,16 +1,11 @@
 <?php
 	require('../poof.php');
-
 	require('navbar.inc');
 
 	echo uiPage("POOF Demo")->Add(
 		$navbar,
-		uiContainer()->Add(
-			uiHero()->AddStyle("background: #def;")->Add(
-				uiHeader("Hello, World!"),
-				uiParagraph("This is a demostration of POOF"),
-				uiButton("Download Code","http://github.com/stgnet/poof")->AddClass("btn-large")
-			)
+		uiContainer()->AddStyle("background: #def;")->Add(
+			uiTable(dbCsv("demodata.csv"))
 		),
 		uiContainer()->Add(
 			uiHeader(3,"The PHP code that generated this page:"),

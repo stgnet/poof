@@ -2,10 +2,10 @@
 
 spl_autoload_register('poof_autoload');
 
-require_once(dirname(__FILE__)."/error_handler.php");
 require_once(dirname(__FILE__)."/class_constructors.php");
+require_once(dirname(__FILE__)."/error_handler.php");
 
-// pass all php errors through our handler
+// pass all php errors through framework for better diagnostics
 set_error_handler('poof_error_handler');
 error_reporting(-1);
 
@@ -17,37 +17,16 @@ function poof_locate()
 	global $POOF_DIR;
 	global $POOF_URL;
 
-	// locate the poof library itself, set global
+	// locate the poof library itself, set globals
 
-	//$paths=array(dirname(__FILE__),".","poof","../poof","modules/stgnet_poof","../stgnet_poof");
-
-	//foreach ($paths as $path)
-	//{
-	$path=dirname(__FILE__);
-	$fullpath="$path/poof.php";
-	if (!file_exists($fullpath))
-		Fatal("unable to locate file path to poof library. \nLooking in: ".implode(", ",$paths)."\n");
-
-/*
-	$POOF_URL=dirname($_SERVER['SCRIPT_NAME'])."/".$path;
-	if ($path==".") $POOF_URL=substr($POOF_URL,0,-2);
-	if (substr($path,0,3)=="../") $POOF_URL=dirname(dirname($_SERVER['SCRIPT_NAME'])).substr($path,2);
-*/
+	$POOF_DIR=dirname(__FILE__);
+	if (!file_exists("$POOF_DIR/poof.php"))
+		Fatal("unable to locate file path to poof library");
 
 	$DocumentRoot=str_replace($_SERVER['SCRIPT_NAME'],"",$_SERVER['SCRIPT_FILENAME']);
 	$POOF_URL=str_replace($DocumentRoot,"",dirname(__FILE__));
 
-/*
-echo "<pre>";
-echo "DIR=".$path."\n";
-echo "URL=".$POOF_URL."\n";
-echo "FILE=".__FILE__."\n";
-echo "ROOT=".$DocumentRoot."\n";
-print_r($_SERVER);
-exit(0);
-*/
-
-	return($POOF_DIR=$path);
+	return($POOF_DIR);
 }
 
 // automatically load class files from the library when instantiated
@@ -71,7 +50,5 @@ function poof_autoload($class)
 
 	}
 
-	Fatal("unable to locate file path to poof/$file. \nLooking in: $POOF_DIR\n");
+	Fatal("unable to locate file path to poof/$file in $POOF_DIR\n");
 }
-
-?>
