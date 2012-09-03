@@ -2,22 +2,23 @@
 
 class uiNavBar extends uiElement
 {
-	private $menu;
-
-	function __construct($menu)
+	function __construct()
 	{
 		parent::__construct();
-		$this->ui_class="navbar";
-		$this->menu=$menu;
+		$this->ui_tag="div";
+		$this->ui_class="container";
 	}
 
 	function __toString()
 	{
-		$list='';
-		foreach ($this->menu as $name => $href)
-			$list.=$this->Tag("li",
-				$this->Tag("a href=\"$href\"",htmlentities($name))
-			);
-		return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
+		return(
+			$this->Tag("div class=\"navbar\"",
+				$this->Tag("div class=\"navbar-inner\"",
+					$this->Tag("div class=\"container\"",
+						$this->GenerateContent()
+					)
+				)
+			)
+		);
 	}
 }

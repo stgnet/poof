@@ -4,11 +4,15 @@
 
 class uiElement 
 {
-	protected $ui_name;
-	protected $ui_class;
-	protected $ui_style;
 	private $ui_parent;
 	private $ui_contents;
+	protected $ui_name;
+	protected $ui_tag;
+	protected $ui_class;
+	protected $ui_style;
+	protected $ui_attr;
+	protected $ui_html;
+	protected $ui_text;
 
 	function __construct()
 	{
@@ -17,8 +21,16 @@ class uiElement
 		if (empty($GLOBALS[$counter]))
 			$GLOBALS[$counter]=1;
 		$this->ui_name=$id.$GLOBALS[$counter]++;
+		$this->ui_tag="div";
 		$this->ui_class=false;
 		$this->ui_style=false;
+		$this->ui_attr=false;
+		$this->ui_html=false;
+		$this->ui_text=false;
+	}
+	function SetTag($tag)
+	{
+		$this->ui_tag=$tag;
 	}
 	function AddClass($class)
 	{
@@ -43,8 +55,11 @@ class uiElement
 		$args=func_get_args();
 		foreach ($args as $obj)
 		{
+			if (is_string($obj))
+				$obj=uiHtml($obj);
+
 			if (!$obj instanceof uiElement)
-				Fatal("uiElement::Add(".get_class($obj)."): incompatible object not based on uiElement!");
+				Fatal("uiElement::Add(".get_class($obj)."): incompatible object not based on uiElement! ");
 
 			if ($obj->ui_parent)
 				Fatal("uiElement::Add({$obj->ui_name}): already added to {$obj->ui_parent->ui_name}");
@@ -153,7 +168,7 @@ class uiElement
 	{
 		$untag=explode(' ',$tag)[0];
 
-		if (empty($contents) && $untag!="script")
+		if (empty($contents) && $untag!="script" && $untag!="i")
 			return($this->Indent()."<$tag />");
 
 		if (!substr_count($contents,"\n") || $untag=="pre")
@@ -161,14 +176,26 @@ class uiElement
 
 		return($this->Indent(1)."<$tag>$contents".$this->Indent(-1)."</$untag>");
 	}
-	function DivTag()
+	function GenerateTag()
 	{
-		$tag="div id=\"$this->ui_name\"";
+		$tag="{$this->ui_tag} id=\"$this->ui_name\"";
 		if ($this->ui_class)
 			$tag.=" class=\"{$this->ui_class}\"";
 		if ($this->ui_style)
 			$tag.=" style=\"{$this->ui_style}\"";
+		if ($this->ui_attr)
+			$tag.=" ".$this->ui_attr;
 		return($tag);
+	}
+	function GenerateContentArray()
+	{
+		// just like GenerateContent, except that it
+		// returns an array for each subelement (first level only)
+		// so that caller can wrap li tags or such
+		$content=array();
+		if ($this->ui_contents) foreach ($this->ui_contents as $element)
+			$content[]=$this->Tag($element->GenerateTag(),$element);
+		return($content);
 	}
 	function GenerateContent()
 	{
@@ -192,7 +219,7 @@ class uiElement
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">{$element->ui_name}  ({$element->ui_class})</div>\n";
 
-			$output.=$this->Tag($element->DivTag(),$element);
+			$output.=$this->Tag($element->GenerateTag(),$element);
 
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="</div>\n";
@@ -207,6 +234,6 @@ class uiElement
 	{
 		// this base class doesn't actually generate output,
 		// so just call call the elements
-		return($this->GenerateContent());
+		return($this->ui_html.htmlentities($this->ui_text).$this->GenerateContent());
 	}
 }

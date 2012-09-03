@@ -5,7 +5,7 @@
 	foreach (arDir("demo")->Match("*.php") as $file)
 		$navmenu[ucwords(basename($file,".php"))]="demo/$file";
 
-	echo uiPage("POOF Demo")->Add(
+	echo uiPage("POOF Demo")->AddStyle("background: #efd;")->Add(
 		uiContainer("navbar")->Add(
 			uiContainer("navbar-inner")->AddStyle("background: #fed;")->Add(
 				uiImage("img/poof.png","index.php")->AddClass("nav"),

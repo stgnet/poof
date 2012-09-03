@@ -4,6 +4,8 @@ class uiLead extends uiElement
 {
 	private $text;
 
+ERROR: delete or rewrite this cclass
+
 	function __construct($text)
 	{
 		parent::__construct();

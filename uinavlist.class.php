@@ -4,16 +4,18 @@ class uiNavList extends uiElement
 {
 	private $list;
 
-	function __construct($list)
+	function __construct($list=false)
 	{
 		parent::__construct();
+		$this->ui_tag="span";
 		$this->list=$list;
 	}
 
 	function __toString()
 	{
+		// if given a 'name'=>url list, display it
 		$list='';
-		foreach ($this->list as $name => $href)
+		if ($this->list) foreach ($this->list as $name => $href)
 		{
 			$extra="";
 			if (basename($href)==basename($_SERVER['SCRIPT_NAME']))
@@ -22,7 +24,12 @@ class uiNavList extends uiElement
 				$this->Tag("a href=\"$href\"",htmlentities($name))
 			);
 		}
+		foreach ($this->GenerateContentArray() as $element)
+		{
+			$list.=$this->Tag("li",$element);
+		}
+		return($this->Tag("ul class=\"nav\"",$list));
 
-		return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
+		//return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
 	}
 }

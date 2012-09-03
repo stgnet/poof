@@ -24,6 +24,16 @@
 	// php's internal errors are sent here
 	function poof_error_handler($errno, $errstr, $errfile, $errline)
 	{
+		global $poof_error_count;
+		if (empty($poof_error_count))
+			$poof_error_count=1;
+		else
+		{
+			$poof_error_count++;
+			if ($poof_error_count>3)
+				die("Aborting after too many errors\n");
+		}
+
 		// ignore warnings for certain functions
 		$exp=explode('(',$errstr);
 		if (in_array($exp[0],array("socket_connect","socket_shutdown","date","strtotime","strftime"))) return(true);
@@ -112,7 +122,6 @@
 
 		$output='';
 
-		//foreach (array_reverse(debug_backtrace()) as $stack)
 		foreach (debug_backtrace() as $stack)
 		{
 /*

@@ -2,19 +2,10 @@
 
 class uiImage extends uiElement
 {
-	private $src;
-	private $href;
-	function __construct($src,$href)
+	function __construct($src)
 	{
 		parent::__construct();
-		$this->src=$src;
-		$this->href=$href;
-	}
-
-	function __toString()
-	{
-		return($this->Tag("a href=\"{$this->href}\"",
-			$this->Tag("img src=\"{$this->src}\""))
-		);
+		$this->ui_tag="img";
+		$this->ui_attr="src=\"$src\"";
 	}
 }

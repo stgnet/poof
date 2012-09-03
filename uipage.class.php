@@ -69,7 +69,7 @@ class uiPage extends uiElement
 					$this->GenerateScripts()
 				).
 				$this->Tag("body",
-					$this->Tag($this->DivTag(),
+					$this->Tag($this->GenerateTag(),
 						$this->GenerateContent()
 					)
 				)

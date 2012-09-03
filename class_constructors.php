@@ -14,9 +14,29 @@ function test($one,$two=false)
 	return new test($one,$two);
 }
 
-function uinavbar($menu)
+function uidivider()
 {
-	return new uinavbar($menu);
+	return new uidivider();
+}
+
+function uihtml($html)
+{
+	return new uihtml($html);
+}
+
+function uinavbar()
+{
+	return new uinavbar();
+}
+
+function uiicon($name)
+{
+	return new uiicon($name);
+}
+
+function uilink($href,$text=false)
+{
+	return new uilink($href,$text);
 }
 
 function uipre($text)
@@ -24,9 +44,9 @@ function uipre($text)
 	return new uipre($text);
 }
 
-function uiimage($src,$href)
+function uiimage($src)
 {
-	return new uiimage($src,$href);
+	return new uiimage($src);
 }
 
 function uilist($list)
@@ -79,7 +99,7 @@ function arbase()
 	return new arbase();
 }
 
-function uinavlist($list)
+function uinavlist($list=false)
 {
 	return new uinavlist($list);
 }

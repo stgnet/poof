@@ -2,7 +2,7 @@
 	require('../poof.php');
 	require('navbar.inc');
 
-	echo uiPage("POOF Demo")->Add(
+	echo uiPage("POOF Demo")->AddStyle("background: #efd;")->Add(
 		$navbar,
 		uiContainer()->AddStyle("background: #def;")->Add(
 			uiTable(dbCsv("demodata.csv"))

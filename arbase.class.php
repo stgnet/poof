@@ -13,6 +13,7 @@
 		{
 			$pattern=str_replace("*",".*",$pattern);
 			$pattern=str_replace("?",".",$pattern);
+			$pattern="^$pattern$";
 			return($this->PregMatch($pattern));
 		}
 		// eliminate entries that don't match regular expression

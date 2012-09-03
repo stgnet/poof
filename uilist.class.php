@@ -7,6 +7,7 @@ class uiList extends uiElement
 	function __construct($list)
 	{
 		parent::__construct();
+		$this->ui_tag="ul";
 		$this->list=$list;
 	}
 
@@ -18,6 +19,6 @@ class uiList extends uiElement
 				$this->Tag("a href=\"$href\"",htmlentities($name))
 			);
 
-		return($this->Tag("ul",$list).$this->GenerateContent());
+		return($list.$this->GenerateContent());
 	}
 }
