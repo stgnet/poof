@@ -31,6 +31,16 @@ class uiElement
 	function SetTag($tag)
 	{
 		$this->ui_tag=$tag;
+		return($this);
+	}
+	function AddAttr($attr,$value)
+	{
+		$attr.='="'.htmlentities($value).'"';
+		if (empty($this->uiattr))
+			$this->ui_attr=$attr;
+		else
+			$this->ui_attr.=" ".$attr;
+		return($this);
 	}
 	function AddClass($class)
 	{

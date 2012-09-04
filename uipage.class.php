@@ -28,13 +28,24 @@ class uiPage extends uiElement
 	function GenerateScripts()
 	{
 		global $POOF_URL;
-		$scripts=array('/js/bootstrap.js','/js/jquery.js');
+		// jquery always goes first!
+		$scripts=array('/js/jquery.js','/js/bootstrap.js');
 		$output='';
 
 		foreach ($scripts as $script)
 			$output.=$this->Tag("script src=\"{$POOF_URL}{$script}\"");
-			//$output.=$this->Indent()."<script src=\"{$POOF_URL}{$script}\"></script>";
 
+		// active the bootstrap js components
+		$output.="<script type=\"text/javascript\">
+\$(document).ready(function(){
+	\$('.dropdown-toggle').dropdown();
+	\$('a[rel=\"popover\"]').popover();
+	\$('a[rel=\"tooltip\"]').tooltip();
+	\$('.nav-tabs').button();
+	\$('.carousel').carousel();
+	\$('.collapse').collapse();
+});
+</script>";
 		return($output);
 	}
 	function GenerateMeta()
@@ -65,14 +76,14 @@ class uiPage extends uiElement
 					$this->Tag("title",htmlentities($this->ui_meta['title'])).
 					$this->Tag("meta charset=\"utf-8\"").
 					$this->GenerateMeta().
-					$this->GenerateStyles().
-					$this->GenerateScripts()
+					$this->GenerateStyles()
 				).
 				$this->Tag("body",
 					$this->Tag($this->GenerateTag(),
 						$this->GenerateContent()
 					)
-				)
+				).
+					$this->GenerateScripts()
 			)
 		);
 	}

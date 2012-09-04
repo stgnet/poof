@@ -5,7 +5,13 @@
 	echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
 		$navbar,
 		uiContainer()->AddStyle("background: #efd;")->Add(
-			uiTable(dbCsv("demodata.csv"))
+			uiHeader("Demonstration of Tabs"),
+			uiTabbable(array(
+				"One"=>uiParagraph("This is the first tab"),
+				"Two"=>uiParagraph("This is the second tab"),
+				"Three"=>uiParagraph("This is the third tab")
+				)
+			)
 		),
 		uiContainer()->Add(
 			uiHeader(3,"The PHP code that generated this page:"),

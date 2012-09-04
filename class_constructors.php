@@ -1,5 +1,5 @@
 <?php
-function uibutton($text,$href)
+function uibutton($text,$href=false)
 {
 	return new uibutton($text,$href);
 }
@@ -7,6 +7,11 @@ function uibutton($text,$href)
 function uidaterange()
 {
 	return new uidaterange();
+}
+
+function uitooltip($text)
+{
+	return new uitooltip($text);
 }
 
 function test($one,$two=false)
@@ -17,6 +22,11 @@ function test($one,$two=false)
 function uidivider()
 {
 	return new uidivider();
+}
+
+function uicarousel($list=false)
+{
+	return new uicarousel($list);
 }
 
 function uihtml($html)
@@ -49,7 +59,7 @@ function uiimage($src)
 	return new uiimage($src);
 }
 
-function uilist($list)
+function uilist($list=false)
 {
 	return new uilist($list);
 }
@@ -77,6 +87,21 @@ function uilead($text)
 function uiheader($level,$text=false)
 {
 	return new uiheader($level,$text);
+}
+
+function uiblockquote()
+{
+	return new uiblockquote();
+}
+
+function uitabbable($list)
+{
+	return new uitabbable($list);
+}
+
+function uipopover($text)
+{
+	return new uipopover($text);
 }
 
 function uitable($db,$fields=NULL)
@@ -112,6 +137,11 @@ function uiparagraph($text)
 function uidebug($what=false)
 {
 	return new uidebug($what);
+}
+
+function uidropdown($text,$list=false)
+{
+	return new uidropdown($text,$list);
 }
 
 function dbbase()

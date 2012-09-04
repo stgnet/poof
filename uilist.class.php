@@ -4,7 +4,7 @@ class uiList extends uiElement
 {
 	private $list;
 
-	function __construct($list)
+	function __construct($list=false)
 	{
 		parent::__construct();
 		$this->ui_tag="ul";
@@ -14,11 +14,14 @@ class uiList extends uiElement
 	function __toString()
 	{
 		$list='';
-		foreach ($this->list as $name => $href)
+		if ($this->list) foreach ($this->list as $name => $href)
 			$list.=$this->Tag("li",
 				$this->Tag("a href=\"$href\"",htmlentities($name))
 			);
 
-		return($list.$this->GenerateContent());
+		foreach ($this->GenerateContentArray() as $element)
+			$list.=$this->Tag("li",$element);
+
+		return($list);
 	}
 }
