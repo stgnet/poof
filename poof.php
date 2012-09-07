@@ -10,7 +10,8 @@ set_error_handler('poof_error_handler');
 error_reporting(-1);
 
 // security considerations
-libxml_disable_entity_loader(true);
+if (function_exists("libxml_disable_entity_loader"))
+	libxml_disable_entity_loader(true);
 
 function poof_locate()
 {

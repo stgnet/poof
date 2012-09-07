@@ -176,7 +176,8 @@ class uiElement
 	}
 	function Tag($tag,$contents=false)
 	{
-		$untag=explode(' ',$tag)[0];
+		$untag=explode(' ',$tag);
+		$untag=$untag[0];
 
 		if (empty($contents) && $untag!="script" && $untag!="i")
 			return($this->Indent()."<$tag />");
