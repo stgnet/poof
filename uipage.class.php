@@ -44,6 +44,14 @@ class uiPage extends uiElement
 	\$('.nav-tabs').button();
 	\$('.carousel').carousel();
 	\$('.collapse').collapse();
+	\$('#{$this->ui_name}').bind('contextmenu',function(e){
+		if (e.ctrlKey)
+		{
+			alert('right click '+e.toElement.id);
+			console.log(\"rightclick=%o\",e);
+			return false;
+		}
+	});
 });
 </script>";
 		return($output);

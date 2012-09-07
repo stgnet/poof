@@ -204,7 +204,7 @@ class uiElement
 		// so that caller can wrap li tags or such
 		$content=array();
 		if ($this->ui_contents) foreach ($this->ui_contents as $element)
-			$content[]=$this->Tag($element->GenerateTag(),$element);
+			$content[]=$element;
 		return($content);
 	}
 	function GenerateContent()
@@ -229,21 +229,22 @@ class uiElement
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">{$element->ui_name}  ({$element->ui_class})</div>\n";
 
-			$output.=$this->Tag($element->GenerateTag(),$element);
+			//$output.=$this->Tag($element->GenerateTag(),$element);
+			$output.=$element;
 
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
 				$output.="</div>\n";
-
 		}
 		return($output);
 	}
 
 	// generate output, but also content from child elements
-	// child classes should overload this generate their own html output
+	// child classes can either preset ui_vars in constructor, or
+	// override this to generate specific output
 	function __toString()
 	{
-		// this base class doesn't actually generate output,
-		// so just call call the elements
-		return($this->ui_html.htmlentities($this->ui_text).$this->GenerateContent());
+		return($this->Tag($this->GenerateTag(),
+			$this->ui_html.htmlentities($this->ui_text).$this->GenerateContent()
+		));
 	}
 }

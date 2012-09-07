@@ -11,7 +11,7 @@ class uiNavBar extends uiElement
 
 	function __toString()
 	{
-		return(
+		return($this->Tag($this->GenerateTag(),
 			$this->Tag("div class=\"navbar\"",
 				$this->Tag("div class=\"navbar-inner\"",
 					$this->Tag("div class=\"container\"",
@@ -19,6 +19,6 @@ class uiNavBar extends uiElement
 					)
 				)
 			)
-		);
+		));
 	}
 }

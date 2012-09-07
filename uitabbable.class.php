@@ -33,10 +33,11 @@ class uiTabbable extends uiElement
 			$active='';
 		}
 
-		return($this->Tag("ul class=\"nav nav-tabs\"",$tabs).
+		return($this->Tag($this->GenerateTag(),
+			$this->Tag("ul class=\"nav nav-tabs\"",$tabs).
 			$this->Tag("div class=\"tab-content\"",$content).
 			$this->GenerateContent()
-		);
+		));
 
 		//return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
 	}

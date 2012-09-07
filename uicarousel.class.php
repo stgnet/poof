@@ -28,6 +28,8 @@ class uiCarousel extends uiElement
 			$list.=$this->Tag("div class=\"item$active\"",$element);
 			$active=false;
 		}
-		return($this->Tag("div class=\"carousel-inner\"",$list));
+		return($this->Tag($this->GenerateTag(),
+			$this->Tag("div class=\"carousel-inner\"",$list)
+		));
 	}
 }

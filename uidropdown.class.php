@@ -45,11 +45,12 @@ class uiDropdown extends uiElement
 		foreach ($this->GenerateContentArray() as $element)
 			$list.=$this->Tag("li",$element);
 
-		return($this->Tag($this->trigger->GenerateTag(),$this->trigger).
-				$this->Tag("ul class=\"dropdown-menu role=\"menu\"
-						aria-labelledby=\"$triggerid\"",
+		return($this->Tag($this->GenerateTag(),
+			$this->trigger.
+			$this->Tag("ul class=\"dropdown-menu role=\"menu\"
+					aria-labelledby=\"$triggerid\"",
 				$list
-				)
-		);
+			)
+		));
 	}
 }

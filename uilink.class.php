@@ -9,12 +9,4 @@ class uiLink extends uiElement
 		$this->ui_text=$text;
 		$this->ui_attr="href=\"$href\"";
 	}
-/*
-	function __toString()
-	{
-		return($this->Tag("a href=\"{$this->href}\"",
-			$this->text.$this->GenerateContent()
-		));
-	}
-*/
 }

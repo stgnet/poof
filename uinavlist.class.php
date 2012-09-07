@@ -26,9 +26,15 @@ class uiNavList extends uiElement
 		}
 		foreach ($this->GenerateContentArray() as $element)
 		{
-			$list.=$this->Tag("li",$element);
+			// make exception where element tag is 'li'
+			if ($element->ui_tag=="li")
+				$list.=$element;
+			else
+				$list.=$this->Tag("li",$element);
 		}
-		return($this->Tag("ul class=\"nav\"",$list));
+		return($this->Tag($this->GenerateTag(),
+			$this->Tag("ul class=\"nav\"",$list)
+		));
 
 		//return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
 	}
