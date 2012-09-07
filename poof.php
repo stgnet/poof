@@ -47,7 +47,7 @@ function poof_autoload($class)
 	if (empty($POOF_DIR))
 		poof_locate();
 
-	$file=strtolower("{$class}.class.php");
+	$file=strtolower("class/{$class}.php");
 
 	if (!empty($POOF_DIR))
 	{

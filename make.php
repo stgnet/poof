@@ -7,15 +7,15 @@
 		$output='<'.'?php';
 
 		// scan files in the directory
-		$d=dir(".");
+		$d=dir("class");
 		while ($file=$d->read())
 		{
 			// skip anything that isn't an autoload-able class
-			if (!preg_match('/^(.*)\.class\.php$/',$file,$match))
+			if (!preg_match('/^(.*)\.php$/',$file,$match))
 				continue;
 
 			$class=$match[1];
-			$contents=file_get_contents($file);
+			$contents=file_get_contents("class/$file");
 
 			// locate the construct function to get args - and warn if not found
 			if (!preg_match('/function\s+__construct\((.*)\)/',$contents,$match))
