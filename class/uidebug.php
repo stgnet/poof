@@ -12,6 +12,8 @@ class uiDebug extends uiElement
 
 	function __toString()
 	{
+		$text=$this->what." = ";
+
 		if (isset($GLOBALS[$this->what]))
 			$text.=print_r($GLOBALS[$this->what],true);
 		else
