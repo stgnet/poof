@@ -6,6 +6,8 @@
 	if (!empty($_GET['debug']))
 		$POOF_UI_DEBUG=true;
 
+	auDigest('TEST',array('admin'=>'secret'));
+
 	echo uiPage("POOF")->Add(
 		uiHeader("POOF Diagnostic Tool")->Add(
 			uiDebug('POOF_DIR'),

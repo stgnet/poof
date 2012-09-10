@@ -11,6 +11,11 @@ function ardir($path)
 	return new ardir($path);
 }
 
+function audigest($realm,$users,$fail=false)
+{
+	return new audigest($realm,$users,$fail);
+}
+
 function dbbase()
 {
 	return new dbbase();
