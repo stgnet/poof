@@ -17,6 +17,10 @@ class uiDropdown extends uiElement
 			"<b class=\"caret\"></b>"
 		);
 	}
+	function PreGenerate($page)
+	{
+		$page->ReadyScript('dropdown',"\$('.dropdown-toggle').dropdown();");
+	}
 
 	function __toString()
 	{

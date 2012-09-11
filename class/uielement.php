@@ -81,6 +81,14 @@ class uiElement
 		// Add() returns this to allow convenient tree building
 		return($this);
 	}
+	function PreGenerateWalk($page)
+	{
+		if (method_exists($this,"PreGenerate"))
+			$this->PreGenerate($page);
+
+		if ($this->ui_contents) foreach ($this->ui_contents as $element)
+			$element->PreGenerateWalk($page);
+	}
 
 	function GetPath()
 	{

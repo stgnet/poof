@@ -52,5 +52,15 @@ POOF includes and uses these existing projects:
 
 * [jQuery](http://jquery.com) for AJAX
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap) for CSS/HTML5
-** All bootstrap options are available and javascript enabled
+
+
+Future Improvements
+-------------------
+
+Planning on including components from:
+
+* [jQuery UI Bootstrap](http://addyosmani.github.com/jquery-ui-bootstrap/)
+* [Kickstrap](http://ajkochanowicz.github.com/Kickstrap)
+* [Colorpicker and Datepicker](http://www.eyecon.ro/colorpicker-and-datepicker-for-twitter-bootstrap.htm)
+
 

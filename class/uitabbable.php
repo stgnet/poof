@@ -8,7 +8,7 @@ class uiTabbable extends uiElement
 	{
 		parent::__construct();
 		$this->ui_tag="div";
-		$this->ui_tag="tabbable";
+		$this->ui_class="tabbable";
 		$this->list=$list;
 	}
 

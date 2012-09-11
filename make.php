@@ -1,5 +1,6 @@
 <?php
 	// run this after library changes to regenerate support files
+	require("error_handler.php");
 
 	function make_constructors()
 	{

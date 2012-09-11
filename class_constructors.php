@@ -6,7 +6,7 @@ function arbase()
 	return new arbase();
 }
 
-function ardir($path)
+function ardir($path=false)
 {
 	return new ardir($path);
 }
@@ -51,6 +51,16 @@ function uicarousel($list=false)
 	return new uicarousel($list);
 }
 
+function uicodearea($text)
+{
+	return new uicodearea($text);
+}
+
+function uicollapse($list)
+{
+	return new uicollapse($list);
+}
+
 function uicontainer($class=false)
 {
 	return new uicontainer($class);
@@ -84,6 +94,11 @@ function uidropdown($text,$list=false)
 function uielement()
 {
 	return new uielement();
+}
+
+function uiform()
+{
+	return new uiform();
 }
 
 function uiheader($level,$text=false)
@@ -141,7 +156,7 @@ function uipage($meta)
 	return new uipage($meta);
 }
 
-function uiparagraph($text)
+function uiparagraph($text=false)
 {
 	return new uiparagraph($text);
 }

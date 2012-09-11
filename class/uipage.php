@@ -3,47 +3,76 @@
 class uiPage extends uiElement
 {
 	private $ui_meta;
+	private $ui_styles;
+	private $ui_prescripts;
+	private $ui_postscripts;
+	private $ui_readyscripts;
 
 	function __construct($meta)
 	{
 		parent::__construct();
 		$this->ui_meta=$meta;
 
+		$this->ui_styles=array('/css/bootstrap.css');
+		$this->ui_prescripts=array();
+		// jquery always goes first!
+		$this->ui_postscripts=array('/js/jquery.js','/js/bootstrap.js');
+		$this->ui_readyscripts=array();
+
 		if (!is_array($meta))
 			$this->ui_meta=array('title'=>$meta);
+	}
+	function Stylesheet($name,$file)
+	{
+		$this->ui_styles[$name]=$file;
+	}
+	function PreScript($name,$file)
+	{
+		$this->ui_prescripts[$name]=$file;
+	}
+	function PostScript($name,$file)
+	{
+		$this->ui_postscripts[$name]=$file;
+	}
+	function ReadyScript($name,$code)
+	{
+		$this->ui_readyscripts[$name]=$code;
 	}
 	function GenerateStyles()
 	{
 		global $POOF_URL;
-		$styles=array('/css/bootstrap.css');
 
 		$output='';
 
-		foreach ($styles as $style)
+		foreach ($this->ui_styles as $style)
 			$output.=$this->Tag("link href=\"{$POOF_URL}{$style}\" rel=\"stylesheet\"");
-			//$output.=$this->Indent()."<link href=\"{$POOF_URL}{$style}\" rel=\"stylesheet\">";
 
 		return($output);
 	}
-	function GenerateScripts()
+	function GeneratePreScripts()
 	{
 		global $POOF_URL;
-		// jquery always goes first!
-		$scripts=array('/js/jquery.js','/js/bootstrap.js');
 		$output='';
 
-		foreach ($scripts as $script)
+		foreach ($this->ui_prescripts as $script)
+			$output.=$this->Tag("script src=\"{$POOF_URL}{$script}\"");
+
+		return($output);
+	}
+	function GeneratePostScripts()
+	{
+		global $POOF_URL;
+		$output='';
+
+		foreach ($this->ui_postscripts as $script)
 			$output.=$this->Tag("script src=\"{$POOF_URL}{$script}\"");
 
 		// active the bootstrap js components
-		$output.="<script type=\"text/javascript\">
-\$(document).ready(function(){
-	\$('.dropdown-toggle').dropdown();
-	\$('a[rel=\"popover\"]').popover();
-	\$('a[rel=\"tooltip\"]').tooltip();
+		$ready='';
+		foreach ($this->ui_readyscripts as $code)
+			$ready.=" ".$code."\n";
+/*
 	\$('.nav-tabs').button();
-	\$('.carousel').carousel();
-	\$('.collapse').collapse();
 	\$('#{$this->ui_name}').bind('contextmenu',function(e){
 		if (e.ctrlKey)
 		{
@@ -51,9 +80,13 @@ class uiPage extends uiElement
 			console.log(\"rightclick=%o\",e);
 			return false;
 		}
-	});
-});
-</script>";
+	})
+*/
+		$output.=$this->Tag("script type=\"text/javascript\"",
+			"\$(document).ready(function(){\n".
+			$ready.
+			"});\n</script>\n"
+		);
 		return($output);
 	}
 	function GenerateMeta()
@@ -68,7 +101,6 @@ class uiPage extends uiElement
 		return($output);
 	}
 
-	// other UI elements define their own Generate, but must also call GenerateContent
 	function __toString()
 	{
 
@@ -78,20 +110,25 @@ class uiPage extends uiElement
 				return;
 		}
 
+
+		// allow tree elements to pass scripts/css up to page generator
+		$this->PreGenerateWalk($this);
+
 		return("<!DOCTYPE html>".
 			$this->Tag("html lang=\"en\"",
 				$this->Tag("head",
 					$this->Tag("title",htmlentities($this->ui_meta['title'])).
 					$this->Tag("meta charset=\"utf-8\"").
 					$this->GenerateMeta().
-					$this->GenerateStyles()
+					$this->GenerateStyles().
+					$this->GeneratePreScripts()
 				).
 				$this->Tag("body",
 					$this->Tag($this->GenerateTag(),
 						$this->GenerateContent()
 					)
 				).
-					$this->GenerateScripts()
+					$this->GeneratePostScripts()
 			)
 		);
 	}

@@ -9,25 +9,31 @@
 			if (!is_array($users)) Fatal("arDigest: second argument is not array of user=>password");
 			if (!$fail) $fail="Authorization required.  Go away.";
 
+			// presume authorized when run from command line
+			if (php_sapi_name()=='cli')
+				return(true);
+
 			$nonce=md5(round(time()/60));
 			$stale=false;
 
 			if (!empty($_SERVER['PHP_AUTH_DIGEST']))
+			{
 				$digest=$this->http_digest_parse($_SERVER['PHP_AUTH_DIGEST']);
 
-			if ($digest['nonce']!=$nonce)
-				$stale=true;
+				if ($digest['nonce']!=$nonce)
+					$stale=true;
 
-			$user=$digest['username'];
+				$user=$digest['username'];
 
-			if (!empty($users[$user]))
-			{
-				$pass=$users[$user];
-				$A1=md5($user.':'.$realm.':'.$pass);
-				$A2=md5($_SERVER['REQUEST_METHOD'].':'.$digest['uri']);
-				$valid=md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
-				if ($digest['response']==$valid)
-					return($digest);
+				if (!empty($users[$user]))
+				{
+					$pass=$users[$user];
+					$A1=md5($user.':'.$realm.':'.$pass);
+					$A2=md5($_SERVER['REQUEST_METHOD'].':'.$digest['uri']);
+					$valid=md5($A1.':'.$digest['nonce'].':'.$digest['nc'].':'.$digest['cnonce'].':'.$digest['qop'].':'.$A2);
+					if ($digest['response']==$valid)
+						return($digest);
+				}
 			}
 
 			header('HTTP/1.1 401 Unauthorized');

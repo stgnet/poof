@@ -9,4 +9,9 @@ class uiPopover extends uiElement
 		$this->ui_tag="a";
 		$this->ui_attr="href=\"#\" rel=\"popover\" data-content=\"$text\"";
 	}
+
+	function PreGenerate($page)
+	{
+		$page->ReadyScript('popover',"\$('a[rel=\"popover\"]').popover();");
+	}
 }

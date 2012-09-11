@@ -7,7 +7,10 @@ class uiDebug extends uiElement
 	function __construct($what=false)
 	{
 		parent::__construct();
-		$this->what=$what;
+		if ($what)
+			$this->what=$what;
+		else
+			$this->what="GLOBALS";
 	}
 
 	function __toString()

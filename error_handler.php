@@ -232,3 +232,7 @@
 	{
 		poof_error_send_html($msg);
 	}
+
+	set_error_handler('poof_error_handler');
+	error_reporting(-1);
+

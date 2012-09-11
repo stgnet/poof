@@ -5,10 +5,6 @@ spl_autoload_register('poof_autoload');
 require_once(dirname(__FILE__)."/class_constructors.php");
 require_once(dirname(__FILE__)."/error_handler.php");
 
-// pass all php errors through framework for better diagnostics
-set_error_handler('poof_error_handler');
-error_reporting(-1);
-
 // security considerations
 if (function_exists("libxml_disable_entity_loader"))
 	libxml_disable_entity_loader(true);

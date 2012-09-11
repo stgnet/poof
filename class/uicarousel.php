@@ -11,6 +11,10 @@ class uiCarousel extends uiElement
 		$this->ui_class="carousel slide";
 		$this->list=$list;
 	}
+	function PreGenerate($page)
+	{
+		$page->ReadyScript('carousel',"\$('.carousel').carousel();");
+	}
 
 	function __toString()
 	{

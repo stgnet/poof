@@ -1,5 +1,5 @@
 <?php
-class dbcsv extends dbbase
+class dbCsv extends dbBase
 {
 	private $table;
 
