@@ -13,10 +13,10 @@ class uiPage extends uiElement
 		parent::__construct();
 		$this->ui_meta=$meta;
 
-		$this->ui_styles=array('/css/bootstrap.css');
+		$this->ui_styles=array('bootstrap.css');
 		$this->ui_prescripts=array();
 		// jquery always goes first!
-		$this->ui_postscripts=array('/js/jquery.js','/js/bootstrap.js');
+		$this->ui_postscripts=array('jquery.js','bootstrap.js');
 		$this->ui_readyscripts=array();
 
 		if (!is_array($meta))
@@ -38,6 +38,12 @@ class uiPage extends uiElement
 	{
 		$this->ui_readyscripts[$name]=$code;
 	}
+	private function pathfix($default,$path)
+	{
+		if ($path[0]=='/')
+			return($path);
+		return($default."/".$path);
+	}
 	function GenerateStyles()
 	{
 		global $POOF_URL;
@@ -45,7 +51,9 @@ class uiPage extends uiElement
 		$output='';
 
 		foreach ($this->ui_styles as $style)
-			$output.=$this->Tag("link href=\"{$POOF_URL}{$style}\" rel=\"stylesheet\"");
+			$output.=$this->Tag("link href=\"".
+				$this->pathfix("$POOF_URL/css",$style).
+				"\" rel=\"stylesheet\"");
 
 		return($output);
 	}
@@ -55,7 +63,9 @@ class uiPage extends uiElement
 		$output='';
 
 		foreach ($this->ui_prescripts as $script)
-			$output.=$this->Tag("script src=\"{$POOF_URL}{$script}\"");
+			$output.=$this->Tag("script src=\"".
+				$this->pathfix("$POOF_URL/js",$script).
+				"\"");
 
 		return($output);
 	}
@@ -65,7 +75,9 @@ class uiPage extends uiElement
 		$output='';
 
 		foreach ($this->ui_postscripts as $script)
-			$output.=$this->Tag("script src=\"{$POOF_URL}{$script}\"");
+			$output.=$this->Tag("script src=\"".
+				$this->pathfix("$POOF_URL/js",$script).
+				"\"");
 
 		// active the bootstrap js components
 		$ready='';

@@ -51,9 +51,9 @@ function uicarousel($list=false)
 	return new uicarousel($list);
 }
 
-function uicodearea($text)
+function uicodemirror($text)
 {
-	return new uicodearea($text);
+	return new uicodemirror($text);
 }
 
 function uicollapse($list)

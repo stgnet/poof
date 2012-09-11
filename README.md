@@ -48,16 +48,17 @@ Components in POOF
 Included Projects
 -----------------
 
-POOF includes and uses these existing projects:
+POOF includes and uses code from these fine open source projects:
 
 * [jQuery](http://jquery.com) for AJAX
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap) for CSS/HTML5
+* [Code Mirror](http://codemirror.net) for code viewing and editing
 
 
 Future Improvements
 -------------------
 
-Planning on including components from:
+Planning on including features from:
 
 * [jQuery UI Bootstrap](http://addyosmani.github.com/jquery-ui-bootstrap/)
 * [Kickstrap](http://ajkochanowicz.github.com/Kickstrap)

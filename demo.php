@@ -32,6 +32,6 @@
 		),
 		uiContainer()->Add(
 			uiHeader(3,"The PHP code that generated this page:"),
-			uiPre(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
+			uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))
 		)
 	);
