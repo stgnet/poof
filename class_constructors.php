@@ -190,3 +190,8 @@ function uitooltip($text)
 {
 	return new uitooltip($text);
 }
+
+function uiyoutube($url)
+{
+	return new uiyoutube($url);
+}

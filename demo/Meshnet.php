@@ -3,7 +3,7 @@
 
 	echo uiPage("Project Meshnet Clone as Demo")->Add(
 		uiParagraph("This is a duplication of the Project Meshnet bootstrap based page,
-				done with POOF as a demonstration")->AddClass("pagination-centered"),
+				done with POOF as a demonstration")->Center(),
 		uiNavBar()->Add(
 			uiNavList()->AddClass("pull-right")->Add(
 				uiLink("https://github.com/cjdelisle/cjdns")->Add(
@@ -50,6 +50,9 @@
 					" wiki"
 				)
 			)
+		),
+		uiContainer()->Center()->Add(
+			uiYoutube("https://www.youtube.com/embed/cK73sYM3g0Q")
 		),
 		uiContainer()->Add(
 			uiHero()->Add(

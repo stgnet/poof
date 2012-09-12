@@ -51,6 +51,18 @@ class uiElement
 		// chaining
 		return($this);
 	}
+	function Center()
+	{
+		return($this->AddClass("pagination-centered"));
+	}
+	function Right()
+	{
+		return($this->AddClass("pull-right"));
+	}
+	function Left()
+	{
+		return($this->AddClass("pull-left"));
+	}
 	function AddStyle($style)
 	{
 		if (empty($this->ui_style))
@@ -186,8 +198,9 @@ class uiElement
 	{
 		$untag=explode(' ',$tag);
 		$untag=$untag[0];
+		$dontclose=array('script','i','iframe');
 
-		if (empty($contents) && $untag!="script" && $untag!="i")
+		if (empty($contents) && !in_array($untag,$dontclose))//$untag!="script" && $untag!="i")
 			return($this->Indent()."<$tag />");
 
 		if (!substr_count($contents,"\n") || $untag=="pre")
