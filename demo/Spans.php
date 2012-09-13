@@ -2,15 +2,14 @@
 	require('../poof.php');
 	require('navbar.inc');
 
-	$red="#f88";
-	$green="#8f8";
-	$blue="#aaf";
-	$grey="#aaa";
+	$red="#f44";
+	$green="#4f4";
+	$blue="#77f";
 
 	echo uiPage("POOF Demo")->Background("#def")->Add(
 		$navbar,
 		uiContainer()->Background("#efd")->Add(
-			uiHeader("Alignment Demonstration")
+			uiHeader("Spans Demonstration")
 		),
 
 		uiParagraph(""),
