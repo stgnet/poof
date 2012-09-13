@@ -2,7 +2,7 @@
 	require('poof.php');
 
 	$navmenu=array('Home'=>"demo.php");
-	foreach (arDir("demo")->Match("*.php") as $file)
+	foreach (arDir("demo")->Match("*.php")->Sort() as $file)
 		$navmenu[ucwords(basename($file,".php"))]=$file;
 
 	$carousel=arDir("img")->Match("*/poof?.png");

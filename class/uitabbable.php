@@ -12,6 +12,11 @@ class uiTabbable extends uiElement
 		$this->list=$list;
 	}
 
+	function PreGenerate($page)
+	{
+		$page->ReadyScript('button',"\$('.nav-tabs').button();");
+	}
+
 	function __toString()
 	{
 		$tabs='';

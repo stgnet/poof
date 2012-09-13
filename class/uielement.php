@@ -51,6 +51,8 @@ class uiElement
 		// chaining
 		return($this);
 	}
+
+	// style & formatting
 	function Center()
 	{
 		return($this->AddClass("pagination-centered"));
@@ -62,6 +64,14 @@ class uiElement
 	function Left()
 	{
 		return($this->AddClass("pull-left"));
+	}
+	function Border($width=1,$color='#888',$style='solid')
+	{
+		return($this->AddStyle("border: {$width}px $style $color;"));
+	}
+	function Background($color)
+	{
+		return($this->AddStyle("background: $color;"));
 	}
 	function AddStyle($style)
 	{
@@ -249,7 +259,7 @@ class uiElement
 
 			// debugging aid:
 			if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
-				$output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">{$element->ui_name}  ({$element->ui_class})</div>\n";
+				$output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">".$element->GenerateTag()."</div>\n";
 
 			//$output.=$this->Tag($element->GenerateTag(),$element);
 			$output.=$element;

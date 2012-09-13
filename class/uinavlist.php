@@ -11,6 +11,12 @@ class uiNavList extends uiElement
 		$this->list=$list;
 	}
 
+/*
+	function PreGenerate($page)
+	{
+		$page->ReadyScript('button',"\$('.nav').button();");
+	}
+*/
 	function __toString()
 	{
 		// if given a 'name'=>url list, display it

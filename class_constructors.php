@@ -76,7 +76,7 @@ function uidebug($what=false)
 	return new uidebug($what);
 }
 
-function uidiv($class)
+function uidiv($class=false)
 {
 	return new uidiv($class);
 }
@@ -171,9 +171,19 @@ function uipre($text)
 	return new uipre($text);
 }
 
+function uirow($fluid=true)
+{
+	return new uirow($fluid);
+}
+
 function uiscript($code)
 {
 	return new uiscript($code);
+}
+
+function uispan($number,$offset=false)
+{
+	return new uispan($number,$offset);
 }
 
 function uitabbable($list)
@@ -191,7 +201,7 @@ function uitooltip($text)
 	return new uitooltip($text);
 }
 
-function uiyoutube($url)
+function uiyoutube($url,$width=640,$height=false)
 {
-	return new uiyoutube($url);
+	return new uiyoutube($url,$width,$height);
 }

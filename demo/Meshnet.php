@@ -2,8 +2,9 @@
 	require('../poof.php');
 
 	echo uiPage("Project Meshnet Clone as Demo")->Add(
-		uiParagraph("This is a duplication of the Project Meshnet bootstrap based page,
-				done with POOF as a demonstration")->Center(),
+		uiParagraph("This is a duplication of the Project Meshnet bootstrap based page, done with ")->Center()->Add(
+			uiLink("../demo.php","POOF")
+		),
 		uiNavBar()->Add(
 			uiNavList()->AddClass("pull-right")->Add(
 				uiLink("https://github.com/cjdelisle/cjdns")->Add(

@@ -1,6 +1,6 @@
 <?php
 	$navmenu=array('Home'=>"../demo.php");
-	foreach (arDir(".")->Match("*.php") as $file)
+	foreach (arDir(".")->Match("*.php")->Sort() as $file)
 		$navmenu[ucwords(basename($file,".php"))]=$file;
 
 	$navbar=uiContainer("navbar")->Add(

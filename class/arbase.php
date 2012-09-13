@@ -39,9 +39,13 @@
 
 			return($this);
 		}
+		public function Sort()
+		{
+			$this->asort();
+			return($this);
+		}
 		public function __call($func,$argv)
 		{
-			echo "UNSUPPORTED: _call($func)\n";
-			exit(1);
+			Fatal("Unsupported call to array class: $func()");
 		}
 	}
