@@ -229,6 +229,13 @@ class uiElement
 			$tag.=" ".$this->ui_attr;
 		return($tag);
 	}
+	function ContentArray()
+	{
+		if ($this->ui_contents)
+			return($this->ui_contents);
+		else
+			return(array());
+	}
 	function GenerateContentArray()
 	{
 		// just like GenerateContent, except that it

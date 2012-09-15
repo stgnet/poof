@@ -47,7 +47,24 @@ function $class($args)
 	return new $class($justargs);
 }
 ";
+
+
+			preg_match_all('/POOF_CONSTRUCT:\s+(\S+)/',$contents,$matches,PREG_SET_ORDER);
+			foreach ($matches as $match)
+			{
+				$alternate=strtolower($match[1]);
+				//print("Adding alternate $alternate for $class\n");
+
+				$output.="
+function $alternate($args)
+{
+	return new $class($justargs);
+}
+";
+
+			}
 		}
+
 		file_put_contents("class_constructors.php",$output);
 	}
 

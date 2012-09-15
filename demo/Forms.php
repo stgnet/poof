@@ -3,9 +3,9 @@
 	require('navbar.inc');
 
 	$fields=array(
-		'username'=>array('type'=>"text",'placeholder'=>"email"),
-		'password'=>array('type'=>"password",'placeholder'=>"password"),
-		'remember'=>array('type'=>"checkbox")
+		'username'=>array('type'=>"text",'desc'=>"Email"),
+		'password'=>array('type'=>"password",'desc'=>"Password"),
+		'remember'=>array('type'=>"checkbox",'desc'=>"Remember Me")
 	);
 
 /*

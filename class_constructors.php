@@ -131,9 +131,19 @@ function uiimage($src)
 	return new uiimage($src);
 }
 
-function uiinput($name,$type='text',$attr=false)
+function uiinput_text($name,$attr=false)
 {
-	return new uiinput($name,$type,$attr);
+	return new uiinput_text($name,$attr);
+}
+
+function uiinput_password($name,$attr=false)
+{
+	return new uiinput_text($name,$attr);
+}
+
+function uiinput_checkbox($name,$attr=false)
+{
+	return new uiinput_text($name,$attr);
 }
 
 function uilabel($text=false)

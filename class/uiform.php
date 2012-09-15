@@ -4,10 +4,12 @@ class uiForm extends uiElement
 {
 	protected $record;
 	protected $fields;
+	protected $style;
 
 	function __construct($fields=false,$record=false,$style=false)
 	{
 		parent::__construct();
+		$this->style=$style;
 		$this->ui_tag="form";
 		if ($style)
 		{
@@ -39,8 +41,45 @@ class uiForm extends uiElement
 			if (!isset($this->record[$name]))
 				$this->record[$name]='';
 		}
+
+		// add each field to this form
+
+		foreach ($this->fields as $name => $attributes)
+		{
+			$type="text";
+			if (!empty($attributes['type']))
+				$type=$attributes['type'];
+
+			$class="uiInput_$type";
+			$this->Add($class($attributes));
+		}
+		
+	}
+	function __toString()
+	{
+		$output='';
+		foreach ($this->ContentArray() as $element)
+		{
+			$desc=$element->GetDescription();
+
+			if ($this->style=='inline')
+			{
+				if ($desc)
+					$element->AddAttr('placeholder',$desc);
+				$output.=$element;
+				continue;
+			}
+			$for=$element->ui_name;
+
+			$group=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
+			$group.=$this->Tag("div class=\"controls\"",$element);
+
+			$output.=$this->Tag("div class=\"control-group\"",$group);
+		}
+		return($this->Tag($this->GenerateTag(),$output));
 	}
 
+/*
 	function __toString()
 	{
 		$input_attr=array('type','size','readonly','placeholder');
@@ -56,9 +95,12 @@ class uiForm extends uiElement
 				if (in_array($attrname,$input_attr))
 					$tag.=" $attrname=\"$attrvalue\"";
 			}
-			$output.=$this->Tag($tag);
+			$group =$this->Tag("label class=\"control-label\" for=\"$fieldname\"",$fieldname);
+			$group.=$this->Tag("div class=\"controls\"",$this->Tag($tag));
+			$output.=$this->Tag("div class=\"control-group\"",$group);
 		}
 		return($this->Tag($this->GenerateTag(),$output));
 	}
+*/
 
 }
