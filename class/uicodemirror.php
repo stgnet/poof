@@ -7,6 +7,7 @@ class uiCodeMirror extends uiElement
 		parent::__construct();
 		$this->ui_tag="textarea";
 		$this->ui_text=$text;
+//		$this->ui_attr="rows=\"40\" cols=\"80\"";
 	}
 	function PreGenerate($page)
 	{

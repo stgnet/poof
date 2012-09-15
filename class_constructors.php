@@ -66,6 +66,11 @@ function uicontainer($class=false)
 	return new uicontainer($class);
 }
 
+function uicontainerfluid($class=false)
+{
+	return new uicontainerfluid($class);
+}
+
 function uidaterange()
 {
 	return new uidaterange();
@@ -96,9 +101,9 @@ function uielement()
 	return new uielement();
 }
 
-function uiform()
+function uiform($fields=false,$record=false,$style=false)
 {
-	return new uiform();
+	return new uiform($fields,$record,$style);
 }
 
 function uiheader($level,$text=false)
@@ -126,9 +131,24 @@ function uiimage($src)
 	return new uiimage($src);
 }
 
+function uiinput($name,$type='text',$attr=false)
+{
+	return new uiinput($name,$type,$attr);
+}
+
+function uilabel($text=false)
+{
+	return new uilabel($text);
+}
+
 function uilead($text)
 {
 	return new uilead($text);
+}
+
+function uilegend($text=false)
+{
+	return new uilegend($text);
 }
 
 function uilink($href,$text=false)
@@ -171,9 +191,14 @@ function uipre($text)
 	return new uipre($text);
 }
 
-function uirow($fluid=true)
+function uirow($class=false)
 {
-	return new uirow($fluid);
+	return new uirow($class);
+}
+
+function uirowfluid($class=false)
+{
+	return new uirowfluid($class);
 }
 
 function uiscript($code)

@@ -18,9 +18,13 @@
 		{
 			// skip anything that isn't an autoload-able class
 			if (!preg_match('/^(.*)\.php$/',$file,$match))
+			{
+				if ($file[0]!='.') print("WARNING: skipping $file\n");
 				continue;
+			}
 
 			$class=$match[1];
+//print($class."\n");
 			$contents=file_get_contents("class/$file");
 
 			// locate the construct function to get args - and warn if not found

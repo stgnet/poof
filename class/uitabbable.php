@@ -31,9 +31,7 @@ class uiTabbable extends uiElement
 				$this->Tag("a href=\"#{$div->ui_name}\" data-toggle=\"tab\"",$name)
 			);
 
-			$content.=$this->Tag($div->GenerateTag(),
-				$this->Tag($element->GenerateTag(),$element)
-			);
+			$content.=$this->Tag($div->GenerateTag(),$element);
 
 			$active='';
 		}
