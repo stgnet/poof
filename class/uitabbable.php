@@ -24,6 +24,7 @@ class uiTabbable extends uiElement
 		$active=' active';
 		if ($this->list) foreach ($this->list as $name => $element)
 		{
+			$content.="\n<!-- TAB: $name -->";
 
 			$div=uiDiv("tab-pane$active");
 
@@ -35,6 +36,7 @@ class uiTabbable extends uiElement
 
 			$active='';
 		}
+			$content.="\n<!-- END TABS -->";
 
 		return($this->Tag($this->GenerateTag(),
 			$this->Tag("ul class=\"nav nav-tabs\"",$tabs).

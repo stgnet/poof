@@ -9,7 +9,8 @@ class uiButton extends uiElement
 		{
 			$this->ui_tag="a";
 			$this->ui_class="btn";
-			$this->ui_attr="href=\"$href\"";
+			//$this->ui_attr="href=\"$href\"";
+			$this->AddAttr('href',$href);
 			$this->ui_text=$text;
 		}
 		else

@@ -9,6 +9,11 @@ class uiYoutube extends uiElement
 
 		parent::__construct();
 		$this->ui_tag="iframe";
-		$this->ui_attr="width=\"$width\" height=\"$height\" src=\"$url\" frameborder=\"0\" allowfullscreen";
+		//$this->ui_attr="width=\"$width\" height=\"$height\" src=\"$url\" frameborder=\"0\" allowfullscreen";
+		$this->AddAttr('width',$width);
+		$this->AddAttr('height',$height);
+		$this->AddAttr('src',$url);
+		$this->AddAttr('frameborder',"0");
+		$this->AddAttr('allowfullscreen',true);
 	}
 }

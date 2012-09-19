@@ -2,31 +2,33 @@
 
 // These are alternate names for this class:
 // POOF_CONSTRUCT: uiInput_Password
-// POOF_CONSTRUCT: uiInput_Checkbox
+// POOF_CONSTRUCT: uiInput_hidden
+// POOF_CONSTRUCT: uiInput_image
+// POOF_CONSTRUCT: uiInput_reset
+// POOF_CONSTRUCT: uiInput_submit
 
-class uiInput_Text extends uiElement
+// HTML5:
+// POOF_CONSTRUCT: uiInput_color
+// POOF_CONSTRUCT: uiInput_date
+// POOF_CONSTRUCT: uiInput_datetime
+// POOF_CONSTRUCT: uiInput_datetime_local
+// POOF_CONSTRUCT: uiInput_email
+// POOF_CONSTRUCT: uiInput_month
+// POOF_CONSTRUCT: uiInput_number
+// POOF_CONSTRUCT: uiInput_range
+// POOF_CONSTRUCT: uiInput_search
+// POOF_CONSTRUCT: uiInput_tel
+// POOF_CONSTRUCT: uiInput_time
+// POOF_CONSTRUCT: uiInput_url
+// POOF_CONSTRUCT: uiInput_week
+
+class uiInput_Text extends uiInput_Base
 {
-	protected $attr;
-
 	function __construct($attr=false)
 	{
-		parent::__construct();
-		if (!$attr)
-			$attr=array('type'=>"text",'name'=>$this->ui_name);
+		$valid=array('type','name');
+		parent::__construct($attr,$valid);
 
 		$this->ui_tag="input";
-		$this->attr=$attr;
-
-		foreach ($attr as $name => $value)
-		{
-			if (in_array($name,array('type','name','placeholder')))
-				$this->ui_attr.=" $name=\"$value\"";
-		}
-	}
-	function GetDescription()
-	{
-		if (!empty($this->attr['desc']))
-			return($this->attr['desc']);
-		return(false);
 	}
 }

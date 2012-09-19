@@ -6,8 +6,9 @@ class uiTooltip extends uiElement
 	{
 		parent::__construct();
 		$this->ui_tag="a";
-		$this->ui_attr="rel=\"tooltip\" title=\"".
-			htmlentities($text)."\"";
+		//$this->ui_attr="rel=\"tooltip\" title=\"".htmlentities($text)."\"";
+		$this->AddAttr('rel',"tooltip");
+		$this->AddAttr('title',$text);
 	}
 	function PreGenerate($page)
 	{

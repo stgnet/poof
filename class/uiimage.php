@@ -6,6 +6,7 @@ class uiImage extends uiElement
 	{
 		parent::__construct();
 		$this->ui_tag="img";
-		$this->ui_attr="src=\"$src\"";
+		//$this->ui_attr="src=\"$src\"";
+		$this->AddAttr('src',$src);
 	}
 }

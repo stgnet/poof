@@ -24,7 +24,7 @@ class uiElement
 		$this->ui_tag="div";
 		$this->ui_class=false;
 		$this->ui_style=false;
-		$this->ui_attr=false;
+		$this->ui_attr=array();
 		$this->ui_html=false;
 		$this->ui_text=false;
 	}
@@ -33,13 +33,9 @@ class uiElement
 		$this->ui_tag=$tag;
 		return($this);
 	}
-	function AddAttr($attr,$value)
+	function AddAttr($name,$value)
 	{
-		$attr.='="'.htmlentities($value).'"';
-		if (empty($this->uiattr))
-			$this->ui_attr=$attr;
-		else
-			$this->ui_attr.=" ".$attr;
+		$this->ui_attr[$name]=htmlentities($value);
 		return($this);
 	}
 	function AddClass($class)
@@ -204,11 +200,15 @@ class uiElement
 			$POOF_UI_LEVEL+=$adjust;
 		return($output);
 	}
-	function Tag($tag,$contents=false)
+	function Tag($tag,$cont=false)
 	{
 		$untag=explode(' ',$tag);
 		$untag=$untag[0];
 		$dontclose=array('script','i','iframe');
+
+		// this prevents elements' __toString()
+		// from being called more than once
+		$contents=(string)$cont;
 
 		if (empty($contents) && !in_array($untag,$dontclose))//$untag!="script" && $untag!="i")
 			return($this->Indent()."<$tag />");
@@ -225,8 +225,8 @@ class uiElement
 			$tag.=" class=\"{$this->ui_class}\"";
 		if ($this->ui_style)
 			$tag.=" style=\"{$this->ui_style}\"";
-		if ($this->ui_attr)
-			$tag.=" ".$this->ui_attr;
+		foreach ($this->ui_attr as $name => $value)
+			$tag.=" $name=\"$value\"";
 		return($tag);
 	}
 	function ContentArray()

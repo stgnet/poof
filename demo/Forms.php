@@ -2,30 +2,51 @@
 	require('../poof.php');
 	require('navbar.inc');
 
-	$fields=array(
+	$login=array(
 		'username'=>array('type'=>"text",'desc'=>"Email"),
 		'password'=>array('type'=>"password",'desc'=>"Password"),
-		'remember'=>array('type'=>"checkbox",'desc'=>"Remember Me")
+		'remember'=>array('type'=>"checkbox",'desc'=>"Remember Me"),
+		'submit'=>array('type'=>"button",'value'=>"Sign In")
 	);
-
-/*
-	$form1=uiDiv()->Add(
-		uiForm()->Add(
-			uiLegend("Legend goes here"),
-			uiLabel("Username"),
-			uiInput('username','text',array('placeholder'=>"user@gmail.com"))
-		)
+	$search=array(
+		'search'=>array('type'=>"text",'class'=>"search-query",'desc'=>"Enter Query"),
+		'submit'=>array('type'=>"button",'value'=>"Search")
 	);
-*/
+	$misc=array(
+		'one'=>array('type'=>"checkbox",'desc'=>"One"),
+		'two'=>array('type'=>"checkbox",'desc'=>"Two"),
+		'three'=>array('type'=>"checkbox",'desc'=>"Three"),
+		'radio'=>array('type'=>"radio",'desc'=>"Select one",
+			'options'=>array(
+				'alpha'=>"Alpha",
+				'beta'=>"Beta",
+				'gamma'=>"Gamma",
+			),
+		),
+		'beta'=>array('type'=>"radio",'desc'=>"Beta"),
+		'gamma'=>array('type'=>"radio",'desc'=>"Gamma"),
+		'compass'=>array('type'=>"select",'desc'=>"Choose direction",
+			'options'=>array(
+				'N'=>"North",
+				'S'=>"South",
+				'E'=>"East",
+				'W'=>"West"
+			)
+		),
+		'submit'=>array('type'=>"button",'value'=>"Save"),
+		'cancel'=>array('type'=>"cancel",'value'=>"Cancel")
+	);
 
 	echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
 		$navbar,
 		uiContainer()->AddStyle("background: #efd;")->Add(
-			uiHeader("Demonstration of Forms"),
+			uiHeader("Form Demonstration"),
 			uiTabbable(array(
-				"Default"=>uiForm($fields),
-				"Inline"=>uiForm($fields,false,"inline"),
-				"Horizontal"=>uiForm($fields,false,"horizontal")
+				"Default"=>uiForm($login),
+				"Inline"=>uiForm($login,false,"inline"),
+				"Horizontal"=>uiForm($login,false,"horizontal"),
+				"Search"=>uiForm($search,false,"search"),
+				"Misc"=>uiForm($misc,false,"horizontal")
 				)
 			)
 		),

@@ -136,6 +136,36 @@ function uiimage($src)
 	return new uiimage($src);
 }
 
+function uiinput_base($attr=false,$valid)
+{
+	return new uiinput_base($attr,$valid);
+}
+
+function uiinput_button($attr=false)
+{
+	return new uiinput_button($attr);
+}
+
+function uiinput_cancel($attr=false)
+{
+	return new uiinput_button($attr);
+}
+
+function uiinput_checkbox($attr=false)
+{
+	return new uiinput_checkbox($attr);
+}
+
+function uiinput_radio($attr=false)
+{
+	return new uiinput_radio($attr);
+}
+
+function uiinput_select($attr=false)
+{
+	return new uiinput_select($attr);
+}
+
 function uiinput_text($attr=false)
 {
 	return new uiinput_text($attr);
@@ -146,9 +176,94 @@ function uiinput_password($attr=false)
 	return new uiinput_text($attr);
 }
 
-function uiinput_checkbox($attr=false)
+function uiinput_hidden($attr=false)
 {
 	return new uiinput_text($attr);
+}
+
+function uiinput_image($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_reset($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_submit($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_color($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_date($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_datetime($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_datetime_local($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_email($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_month($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_number($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_range($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_search($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_tel($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_time($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_url($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_week($attr=false)
+{
+	return new uiinput_text($attr);
+}
+
+function uiinput_textarea($attr=false)
+{
+	return new uiinput_textarea($attr);
 }
 
 function uilabel($text=false)

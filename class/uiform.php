@@ -64,17 +64,31 @@ class uiForm extends uiElement
 
 			if ($this->style=='inline')
 			{
+				// place no divs
 				if ($desc)
-					$element->AddAttr('placeholder',$desc);
+					$element->SetInlineDescription($desc);
 				$output.=$element;
 				continue;
 			}
+
+			if ($this->style=='search')
+			{
+				if ($desc)
+					$element->SetInlineDescription($desc);
+			}
+
 			$for=$element->ui_name;
 
-			$group=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
-			$group.=$this->Tag("div class=\"controls\"",$element);
-
-			$output.=$this->Tag("div class=\"control-group\"",$group);
+			$group='';
+			if ($this->style!='search')
+				$group=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
+			if ($this->style=='horizontal')
+			{
+				$group.=$this->Tag("div class=\"controls\"",$element);
+				$output.=$this->Tag("div class=\"control-group\"",$group);
+			}
+			else
+				$output.=$group.$element;
 		}
 		return($this->Tag($this->GenerateTag(),$output));
 	}

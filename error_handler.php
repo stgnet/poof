@@ -116,7 +116,7 @@
 		$script=basename($_SERVER['PHP_SELF']);
 		syslog(LOG_ERR,"$script: $msg");
 	}
-	function poof_error_trace()
+	function poof_error_trace($detailed=false)
 	{
 		$eliminate=array("\t","\n","\r");
 
@@ -136,12 +136,15 @@
 
 			$output.="===> FUNCTION {$stack['function']} (";
 
+if ($detailed)
+{
 				$sep='';
 				foreach ($stack['args'] as $arg)
 				{
 					$output.=$sep.str_replace($eliminate," ",print_r($arg,true));
 					$sep=', ';
 				}
+}
 				$output.=")\n";
 
 				/*
@@ -156,7 +159,7 @@
 
 				if (!empty($stack['object']))
 				{
-					$output.=print_r($stack['object'],true);
+if ($detailed)					$output.=print_r($stack['object'],true);
 					/*
 					foreach ($stack['object'] as $key => $value)
 					{
