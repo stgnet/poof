@@ -12,6 +12,7 @@ class uiPage extends uiElement
 	function __construct($meta)
 	{
 		parent::__construct();
+		$this->ui_tag="body";
 		$this->ui_meta=$meta;
 
 		$this->ui_styles=array('bootstrap.css');
@@ -150,12 +151,10 @@ class uiPage extends uiElement
 					$this->GenerateStyles().
 					$this->GeneratePreScripts()
 				).
-				$this->Tag("body",
-					$this->Tag($this->GenerateTag(),
-						$this->GenerateContent()
-					)
+				$this->Tag($this->GenerateTag(),
+					$this->GenerateContent()
 				).
-					$this->GeneratePostScripts()
+				$this->GeneratePostScripts()
 			)
 		);
 	}
