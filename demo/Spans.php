@@ -4,11 +4,11 @@
 
 	$red="#f44";
 	$green="#4f4";
-	$blue="#77f";
+	$blue="#88f";
 
 	echo uiPage("POOF Demo")->Background("#def")->Add(
 		$navbar,
-		uiContainer()->Background("#efd")->Add(
+		uiContainer()->Background("#efd")->Center()->Add(
 			uiHeader("Spans Demonstration")
 		),
 
