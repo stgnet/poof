@@ -11,6 +11,11 @@ function ardir($path=false)
 	return new ardir($path);
 }
 
+function arfile($file)
+{
+	return new arfile($file);
+}
+
 function audigest($realm,$users,$fail=false)
 {
 	return new audigest($realm,$users,$fail);
@@ -24,6 +29,11 @@ function dbbase()
 function dbcsv($file)
 {
 	return new dbcsv($file);
+}
+
+function dbflat($file,$fields)
+{
+	return new dbflat($file,$fields);
 }
 
 function event()
