@@ -11,16 +11,17 @@ class uiGoogleAnalytics extends uiElement
 		$this->account=$account;
 		$this->domain=$domain;
 	}
-	function __toScript()
+	function __toString()
 	{
-		return('');
+		// don't generate a tag for this element
+		return($this->GenerateContent());
 	}
 	function PreGenerate($page)
 	{
 		$account=$this->account;
 		$domain=$this->domain;
 		$page->HeadScript('googleanalytics-'.$this->ui_name,"
- var _gaq = _gaq || [];
+  var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '$account']);
 ".($domain?"  _gaq.push(['_setDomainName', '$domain']);
 ":"")."  _gaq.push(['_trackPageview']);
@@ -29,8 +30,7 @@ class uiGoogleAnalytics extends uiElement
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+  })();");
 
-");
 	}
 }
