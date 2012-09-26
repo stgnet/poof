@@ -24,11 +24,11 @@
 
 class uiInput_Text extends uiInput_Base
 {
-	function __construct($attr=false)
-	{
-		$valid=array('type','name');
-		parent::__construct($attr,$valid);
+    public function __construct($attr=false)
+    {
+        $valid=array('type','name');
+        parent::__construct($attr,$valid);
 
-		$this->ui_tag="input";
-	}
+        $this->ui_tag="input";
+    }
 }

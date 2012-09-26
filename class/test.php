@@ -1,9 +1,9 @@
 <?php
 
-class test 
+class test
 {
-	function __construct($one,$two=false)
-	{
-	}
+    public function __construct($one,$two=false)
+    {
+    }
 
 }

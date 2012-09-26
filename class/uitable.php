@@ -1,43 +1,42 @@
 <?php
 
-class uiTable extends uiElement
+class uitable extends uiElement
 {
-	var $fields;
-	var $db;
+    public $fields;
+    public $db;
 
-	function __construct($db,$fields=NULL)
-	{
-		parent::__construct();
-		if ($fields)
-			$this->fields=$fields;
-		else
-			$this->fields=$this->DefaultFields($db);
+    public function __construct($db,$fields=NULL)
+    {
+        parent::__construct();
+        if ($fields)
+            $this->fields=$fields;
+        else
+            $this->fields=$this->DefaultFields($db);
 
-		$this->db=$db;
-	}
+        $this->db=$db;
+    }
 
-	function __toString()
-	{
-		$row='';
-		foreach ($this->fields as $field => $header)
-			$row.=$this->Tag("th",htmlentities($header));
+    public function __toString()
+    {
+        $row='';
+        foreach ($this->fields as $field => $header)
+            $row.=$this->Tag("th",htmlentities($header));
 
-		$table=$this->Tag("thead",
-			$this->Tag("tr",$row)
-		);
+        $table=$this->Tag("thead",
+            $this->Tag("tr",$row)
+        );
 
-		$body='';
-		foreach ($this->db->records() as $record)
-		{
-			$row='';
-			foreach ($this->fields as $field => $header)
-				$row.=$this->Tag("td",htmlentities($record[$field]));
+        $body='';
+        foreach ($this->db->records() as $record) {
+            $row='';
+            foreach ($this->fields as $field => $header)
+                $row.=$this->Tag("td",htmlentities($record[$field]));
 
-			$body.=$this->Tag("tr",$row);
-		}
+            $body.=$this->Tag("tr",$row);
+        }
 
-		$table.=$this->Tag("tbody",$body);
+        $table.=$this->Tag("tbody",$body);
 
-		return($this->Tag("table class=\"table\"",$table));
-	}
+        return($this->Tag("table class=\"table\"",$table));
+    }
 }

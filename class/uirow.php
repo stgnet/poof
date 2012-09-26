@@ -1,13 +1,13 @@
 <?php
 
-class uiRow extends uiElement
+class uirow extends uiElement
 {
-	function __construct($class=false)
-	{
-		parent::__construct();
-		$this->ui_tag="div";
-		$this->ui_class="row";
-		if ($class)
-			$this->AddClass($class);
-	}
+    public function __construct($class=false)
+    {
+        parent::__construct();
+        $this->ui_tag="div";
+        $this->ui_class="row";
+        if ($class)
+            $this->AddClass($class);
+    }
 }

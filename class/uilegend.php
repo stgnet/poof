@@ -1,11 +1,11 @@
 <?php
 
-class uiLegend extends uiElement
+class uilegend extends uiElement
 {
-	function __construct($text=false)
-	{
-		parent::__construct();
-		$this->ui_tag="legend";
-		$this->ui_text=$text;
-	}
+    public function __construct($text=false)
+    {
+        parent::__construct();
+        $this->ui_tag="legend";
+        $this->ui_text=$text;
+    }
 }

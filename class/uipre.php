@@ -1,11 +1,11 @@
 <?php
 
-class uiPre extends uiElement
+class uipre extends uiElement
 {
-	function __construct($text)
-	{
-		parent::__construct();
-		$this->ui_tag="pre";
-		$this->ui_text=$text;
-	}
+    public function __construct($text)
+    {
+        parent::__construct();
+        $this->ui_tag="pre";
+        $this->ui_text=$text;
+    }
 }

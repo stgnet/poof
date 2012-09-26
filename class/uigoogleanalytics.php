@@ -1,26 +1,22 @@
 <?php
 
-class uiGoogleAnalytics extends uiElement
+class uigoogleanalytics extends uiElement
 {
-	protected $account;
-	protected $domain;
+    protected $account;
+    protected $domain;
 
-	function __construct($account,$domain=false)
-	{
-		parent::__construct();
-		$this->account=$account;
-		$this->domain=$domain;
-	}
-	function __toString()
-	{
-		// don't generate a tag for this element
-		return($this->GenerateContent());
-	}
-	function PreGenerate($page)
-	{
-		$account=$this->account;
-		$domain=$this->domain;
-		$page->HeadScript('googleanalytics-'.$this->ui_name,"
+    public function __construct($account,$domain=false)
+    {
+        parent::__construct();
+        $this->account=$account;
+        $this->domain=$domain;
+        $this->ui_tag=false;
+    }
+    public function PreGenerate($page)
+    {
+        $account=$this->account;
+        $domain=$this->domain;
+        $page->HeadScript('googleanalytics-'.$this->ui_name,"
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '$account']);
 ".($domain?"  _gaq.push(['_setDomainName', '$domain']);
@@ -32,5 +28,5 @@ class uiGoogleAnalytics extends uiElement
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();");
 
-	}
+    }
 }

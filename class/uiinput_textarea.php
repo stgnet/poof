@@ -2,11 +2,11 @@
 
 class uiInput_Text extends uiInput_Base
 {
-	function __construct($attr=false)
-	{
-		$valid=array('type','name','rows','cols');
-		parent::__construct($attr,$valid);
+    public function __construct($attr=false)
+    {
+        $valid=array('type','name','rows','cols');
+        parent::__construct($attr,$valid);
 
-		$this->ui_tag="textarea";
-	}
+        $this->ui_tag="textarea";
+    }
 }
