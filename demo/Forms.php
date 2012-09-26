@@ -9,7 +9,8 @@
         'submit'=>array('type'=>"button",'value'=>"Sign In")
     );
     $search=array(
-        'search'=>array('type'=>"text",'class'=>"search-query",'desc'=>"Enter Query"),
+        'search'=>array('type'=>"text",'class'=>"search-query",'desc'=>"Enter Query",
+            'options'=>array("CSS","HTML","PHP","jQuery","MySQL","Bootstrap")),
         'submit'=>array('type'=>"button",'value'=>"Search")
     );
     $misc=array(

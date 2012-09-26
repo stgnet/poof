@@ -30,5 +30,16 @@ class uiInput_Text extends uiInput_Base
         parent::__construct($attr,$valid);
 
         $this->ui_tag="input";
+
+        if (!empty($attr['options'])) 
+        {
+            $listname=$this->ui_name."_list";
+            $this->AddAttr('list',$listname);
+            $list='';
+            foreach($attr['options'] as $option)
+                $list.=$this->Tag("option value=\"$option\"");
+            $this->ui_html.=$this->Tag("datalist id=\"$listname\"",$list);
+        }
+
     }
 }
