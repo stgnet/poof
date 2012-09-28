@@ -100,7 +100,7 @@ class uipage extends uiElement
             $ready.=" ".$code."\n";
 /*
     \$('.nav-tabs').button();
-    \$('#{$this->ui_name}').bind('contextmenu',function(e){
+    \$('#{$this->ui_id}').bind('contextmenu',function(e){
         if (e.ctrlKey) {
             alert('right click '+e.toElement.id);
             console.log(\"rightclick=%o\",e);
@@ -133,8 +133,8 @@ class uipage extends uiElement
     {
 
         if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST') {
-            if ($this->HandlePost())
-                return;
+            if ($this->PassToPostHandler())
+                return('');
         }
 
         // allow tree elements to pass scripts/css up to page generator
@@ -151,6 +151,9 @@ class uipage extends uiElement
                     $this->GeneratePreScripts()
                 ).
                 $this->Tag($this->GenerateTag(),
+//                    print_r($_SERVER,true).
+//                    print_r($_GET,true).
+//                    print_r($_POST,true).
                     $this->GenerateContent()
                 ).
                 $this->GeneratePostScripts()

@@ -16,7 +16,7 @@ class uiInput_Base extends uiElement
             if ($name=='class')
                 $this->AddClass($value);
             else
-            if (in_array($name,$valid))
+            if (in_array($name,$valid) || $name=='name')
                 $this->AddAttr($name,$value);
 
         }

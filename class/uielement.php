@@ -6,13 +6,15 @@ class uielement
 {
     private $ui_parent;
     private $ui_contents;
-    protected $ui_name;
     protected $ui_tag;
+    protected $ui_id;
     protected $ui_class;
     protected $ui_style;
     protected $ui_attr;
     protected $ui_html;
     protected $ui_text;
+    protected $ui_postfunc;
+    protected $ui_name;
 
     public function __construct()
     {
@@ -20,19 +22,32 @@ class uielement
         $counter="POOF_UI_DIV_".$id;
         if (empty($GLOBALS[$counter]))
             $GLOBALS[$counter]=1;
-        $this->ui_name=$id.$GLOBALS[$counter]++;
+        $this->ui_id=$id.$GLOBALS[$counter]++;
         $this->ui_tag="div";
         $this->ui_class=false;
         $this->ui_style=false;
         $this->ui_attr=array();
         $this->ui_html=false;
         $this->ui_text=false;
+        $this->ui_postfunc=false;
+        $this->ui_name=false;
     }
+    /*
     public function SetTag($tag)
     {
         $this->ui_tag=$tag;
 
         return($this);
+    }
+    */
+    public function SetName($name)
+    {
+        $this->ui_name=$name;
+        return($this);
+    }
+    public function GetName()
+    {
+        return($this->ui_name);
     }
     public function AddAttr($name,$value)
     {
@@ -92,7 +107,7 @@ class uielement
                 Fatal("uiElement::Add(".get_class($obj)."): incompatible object not based on uiElement! ");
 
             if ($obj->ui_parent)
-                Fatal("uiElement::Add({$obj->ui_name}): already added to {$obj->ui_parent->ui_name}");
+                Fatal("uiElement::Add({$obj->ui_id}): already added to {$obj->ui_parent->ui_id}");
 
             $this->ui_contents[]=$obj;
             $obj->ui_parent=&$this;
@@ -134,7 +149,7 @@ class uielement
         $path='';
         $walk=&$this;
         while ($walk) {
-            $path="/".$walk->ui_name.$path;
+            $path="/".$walk->ui_id.$path;
             $walk=$walk->ui_parent;
         }
         $action.=$path;
@@ -153,7 +168,19 @@ class uielement
 
         return($fields);
     }
-    public function HandlePost()
+    public function Post($func)
+    {
+        $this->ui_postfunc=$func;
+        return($this);
+    }
+    public function __call($method,$args)
+    {
+        if ($this->{$method} instanceof Closure)
+            return call_user_func_array($this->{$method},$args);
+        else
+            return parent::__call($method,$args);
+    }
+    public function PassToPostHandler()
     {
         global $_FILES;
 
@@ -162,13 +189,19 @@ class uielement
         $self=$_SERVER['PHP_SELF'];
 
         if ($action==$self) {
-            if (!method_exists($this,"POST"))
-                Fatal("class element does not implement POST");
+            if ($this->ui_postfunc)
+            {
+                $_SERVER['REQUEST_METHOD']="--handled--";
+                $this->ui_postfunc($_POST);
+                return(true);
+            }
+            if (!method_exists($this,"PostHandler"))
+                Fatal("class element does not implement PostHandler - $self");
 
             if (empty($_FILES))
-                return($this->POST($_POST));
+                return($this->PostHandler($_POST));
             else
-                return($this->POST($_POST,$_FILES));
+                return($this->PostHandler($_POST,$_FILES));
         }
 
         $path=substr($_SERVER['PHP_SELF'],strlen($action)+1);
@@ -177,9 +210,9 @@ class uielement
         $subpath=explode('/',$path);
         $post_is_for=$subpath[0];
 
-        foreach ($this->ui_contents as $element) {
-            if ($element->ui_name==$post_is_for) {
-                return($element->HandlePost());
+        if ($this->ui_contents) foreach ($this->ui_contents as $element) {
+            if ($element->ui_id==$post_is_for) {
+                return($element->PassToPostHandler());
             }
         }
         Fatal("unable to locate post element '$post_is_for'");
@@ -219,7 +252,9 @@ class uielement
     }
     public function GenerateTag()
     {
-        $tag="{$this->ui_tag} id=\"$this->ui_name\"";
+        $tag="{$this->ui_tag} id=\"$this->ui_id\"";
+        if ($this->ui_name)
+            $tag.=" name=\"{$this->ui_name}\"";
         if ($this->ui_class)
             $tag.=" class=\"{$this->ui_class}\"";
         if ($this->ui_style)
@@ -253,14 +288,14 @@ class uielement
 
         if (empty($this->ui_parent)) {
             if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST') {
-                if ($this->HandlePost())
-                    return;
+                if ($this->PassToPostHandler())
+                    return('');
             }
         }
 
         $output='';
         if ($this->ui_contents) foreach ($this->ui_contents as $element) {
-            if (!$element->ui_name) Fatal("UI Element Name not set");
+            if (!$element->ui_id) Fatal("UI Element Name not set");
 
             // debugging aid:
             if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))

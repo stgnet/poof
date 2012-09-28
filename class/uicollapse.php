@@ -29,8 +29,8 @@ class uicollapse extends uiElement
 
             $group=$this->Tag("div class=\"accordian-heading\"",
                 $this->Tag("a class=\"accordian-toggle\"
-data-toggle=\"collapse\" data-parent=\"#{$this->ui_name}\"
-href=\"#{$div->ui_name}\" ",$name)
+data-toggle=\"collapse\" data-parent=\"#{$this->ui_id}\"
+href=\"#{$div->ui_id}\" ",$name)
             );
 
             $group.=$this->Tag($div->GenerateTag(),

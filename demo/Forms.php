@@ -35,17 +35,30 @@
         'submit'=>array('type'=>"button",'value'=>"Save"),
         'cancel'=>array('type'=>"cancel",'value'=>"Cancel")
     );
+    $target=uiDiv()->Add("Post data will appear here");
+    $postfunc=function($data) {
+        echo uiPre(print_r($data,true))->Background("#ff8");
+    };
+
+    $tabs=array(
+        'Default'=>uiForm($login)->OnSubmit($target)->Post($postfunc),
+        'Inline'=>uiForm($login,false,"inline")->OnSubmit($target)->Post($postfunc),
+        'Horizontal'=>uiForm($login,false,"horizontal")->OnSubmit($target)->Post($postfunc),
+        'Search'=>uiForm($search,false,"search")->OnSubmit($target)->Post($postfunc),
+        'Misc'=>uiForm($misc,false,"horizontal")->OnSubmit($target)->Post($postfunc)
+    );
 
     echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
         $navbar,
-        uiContainer()->AddStyle("background: #efd;")->Add(
-            uiHeader("Form Demonstration"),
-            uiTabbable(array(
-                "Default"=>uiForm($login),
-                "Inline"=>uiForm($login,false,"inline"),
-                "Horizontal"=>uiForm($login,false,"horizontal"),
-                "Search"=>uiForm($search,false,"search"),
-                "Misc"=>uiForm($misc,false,"horizontal")
+        uiContainer()->Background("#efd")->Add(
+            uiRow()->Add(
+                uiSpan(8)->Add(
+                    uiHeader("Form Demonstration"),
+                    uiTabbable($tabs)
+                ),
+                uiSpan(4)->Background("#fff")->Add(
+                    uiParagraph()->Add("&nbsp;"),
+                    uiWell()->Add($target)
                 )
             )
         ),

@@ -5,10 +5,12 @@ class uiform extends uiElement
     protected $record;
     protected $fields;
     protected $style;
+    protected $target;
 
     public function __construct($fields=false,$record=false,$style=false)
     {
         parent::__construct();
+        $this->target=false;
         $this->style=$style;
         $this->ui_tag="form";
         if ($style) {
@@ -38,6 +40,13 @@ class uiform extends uiElement
                 $this->record[$name]='';
         }
 
+        // insure name is in attributes
+        foreach ($this->fields as $name => $pairs)
+        {
+            if (!isset($pair['name']))
+                $pair['name']=$name;
+        }
+
         // add each field to this form
 
         foreach ($this->fields as $name => $attributes) {
@@ -46,9 +55,39 @@ class uiform extends uiElement
                 $type=$attributes['type'];
 
             $class="uiInput_$type";
-            $this->Add($class($attributes));
+            $this->Add($class($attributes)->SetName($name));
         }
 
+    }
+    public function OnSubmit($element)
+    {
+        $this->target=$element;
+        return($this);
+    }
+    public function PreGenerate($page)
+    {
+        if (!$this->target) return;
+
+        $form='#'.$this->ui_id;
+        $url=$this->GetAction();
+        $target='#'.$this->target->ui_id;
+        $page->ReadyScript('form-onsubmit-'.$this->ui_id,"
+            \$('{$form}').submit(function(){
+                \$.ajax({
+                    type: \"POST\",
+                    url: \"$url\",
+                    data: \$(this).serialize(),
+                    success: function(data) {
+                        \$('{$target}').empty().append(data);
+                    },
+                    error: function(xhr) {
+                        alert(xhr.status+\" \"+xhr.statusText+\": \"+xhr.responseText);
+                    }
+                });
+                return false;
+            });");
+
+                //\$('{$target}').load('{$url}',$('{$form}').serializeArray());
     }
     public function __toString()
     {
@@ -69,7 +108,7 @@ class uiform extends uiElement
                     $element->SetInlineDescription($desc);
             }
 
-            $for=$element->ui_name;
+            $for=$element->ui_id;
 
             $group='';
             if ($this->style!='search')
@@ -83,28 +122,4 @@ class uiform extends uiElement
 
         return($this->Tag($this->GenerateTag(),$output));
     }
-
-/*
-    public function __toString()
-    {
-        $input_attr=array('type','size','readonly','placeholder');
-        $output='';
-        foreach ($this->fields as $fieldname => $attributes) {
-            $tag="input id=\"$fieldname\" name=\"$fieldname\"";
-            if ($this->record[$fieldname])
-                $tag.=" value=\"{$this->record[$fieldname]}\"";
-
-            foreach ($attributes as $attrname => $attrvalue) {
-                if (in_array($attrname,$input_attr))
-                    $tag.=" $attrname=\"$attrvalue\"";
-            }
-            $group =$this->Tag("label class=\"control-label\" for=\"$fieldname\"",$fieldname);
-            $group.=$this->Tag("div class=\"controls\"",$this->Tag($tag));
-            $output.=$this->Tag("div class=\"control-group\"",$group);
-        }
-
-        return($this->Tag($this->GenerateTag(),$output));
-    }
-*/
-
 }

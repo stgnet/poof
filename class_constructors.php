@@ -16,6 +16,11 @@ function arfile($file)
     return new arfile($file);
 }
 
+function arscrape($text)
+{
+    return new arscrape($text);
+}
+
 function audigest($realm,$users,$fail=false)
 {
     return new audigest($realm,$users,$fail);
@@ -364,6 +369,11 @@ function uitable($db,$fields=NULL)
 function uitooltip($text)
 {
     return new uitooltip($text);
+}
+
+function uiwell($class=false)
+{
+    return new uiwell($class);
 }
 
 function uiyoutube($url,$width=640,$height=false)

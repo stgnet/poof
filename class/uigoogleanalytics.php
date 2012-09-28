@@ -16,7 +16,7 @@ class uigoogleanalytics extends uiElement
     {
         $account=$this->account;
         $domain=$this->domain;
-        $page->HeadScript('googleanalytics-'.$this->ui_name,"
+        $page->HeadScript('googleanalytics-'.$this->ui_id,"
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', '$account']);
 ".($domain?"  _gaq.push(['_setDomainName', '$domain']);

@@ -11,9 +11,9 @@ class uiInput_Radio extends uiInput_Base
         if (empty($attr['options'])) Fatal("Radio requires options list");
         $index=1;
         foreach ($attr['options'] as $value => $desc) {
-            $id=$this->ui_name.'_'.$index++;
+            $id=$this->ui_id.'_'.$index++;
             $this->ui_html.=$this->Tag("label class=\"radio\"",
-                $this->Tag("input type=\"radio\" name=\"{$this->ui_name}\" id=\"$id\" value=\"$value\"").htmlentities($desc));
+                $this->Tag("input type=\"radio\" name=\"{$this->ui_id}\" id=\"$id\" value=\"$value\"").htmlentities($desc));
         }
     }
     public function SetInlineDescription($desc)

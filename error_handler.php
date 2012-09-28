@@ -130,13 +130,17 @@
 
             $output.="===> FUNCTION {$stack['function']} (";
 
-if ($detailed) {
+//if ($detailed) {
                 $sep='';
                 foreach ($stack['args'] as $arg) {
-                    $output.=$sep.str_replace($eliminate," ",print_r($arg,true));
+                    $list=str_replace($eliminate,"",print_r($arg,true));
+                    $list=str_replace(array("     ","    ","   ","  ")," ",$list);
+                    if (strlen($list)>27)
+                        $list=substr($list,0,27)."...";
+                    $output.=$sep.$list;
                     $sep=', ';
                 }
-}
+//}
                 $output.=")\n";
 
                 /*

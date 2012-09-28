@@ -18,8 +18,8 @@ class uicodemirror extends uiElement
         $page->PreScript('codemirror-css',"codemirror/mode/css/css.js");
         $page->PreScript('codemirror-clike',"codemirror/mode/clike/clike.js");
         $page->PreScript('codemirror-php',"codemirror/mode/php/php.js");
-        $page->ReadyScript('codemirror-'.$this->ui_name,"
-            var editor = CodeMirror.fromTextArea(document.getElementById(\"{$this->ui_name}\"), {
+        $page->ReadyScript('codemirror-'.$this->ui_id,"
+            var editor = CodeMirror.fromTextArea(document.getElementById(\"{$this->ui_id}\"), {
                 lineNumbers: true,
                 matchBrackets: true,
                 mode: \"application/x-httpd-php\",

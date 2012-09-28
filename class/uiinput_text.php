@@ -26,14 +26,14 @@ class uiInput_Text extends uiInput_Base
 {
     public function __construct($attr=false)
     {
-        $valid=array('type','name');
+        $valid=array('type');
         parent::__construct($attr,$valid);
 
         $this->ui_tag="input";
 
         if (!empty($attr['options'])) 
         {
-            $listname=$this->ui_name."_list";
+            $listname=$this->ui_id."_list";
             $this->AddAttr('list',$listname);
             $list='';
             foreach($attr['options'] as $option)

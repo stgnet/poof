@@ -26,7 +26,7 @@ class uidropdown extends uiElement
     {
         global $poof_ui_collapse;
 
-        $triggerid=$this->trigger->ui_name;
+        $triggerid=$this->trigger->ui_id;
         $list='';
 
 /*
