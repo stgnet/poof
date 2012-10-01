@@ -1,11 +1,11 @@
 <?php
 
-class uiHtml extends uiElement
+class uihtml extends uiElement
 {
-	function __construct($html)
-	{
-		parent::__construct();
-		$this->ui_tag="span";
-		$this->ui_html=$html;
-	}
+    public function __construct($html)
+    {
+        parent::__construct();
+        $this->ui_tag="span";
+        $this->ui_html=$html;
+    }
 }

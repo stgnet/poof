@@ -1,11 +1,11 @@
 <?php
 
-class uiLabel extends uiElement
+class uilabel extends uiElement
 {
-	function __construct($text=false)
-	{
-		parent::__construct();
-		$this->ui_tag="label";
-		$this->ui_text=$text;
-	}
+    public function __construct($text=false)
+    {
+        parent::__construct();
+        $this->ui_tag="label";
+        $this->ui_text=$text;
+    }
 }

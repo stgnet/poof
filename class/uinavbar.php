@@ -1,24 +1,24 @@
 <?php
 
-class uiNavBar extends uiElement
+class uinavbar extends uiElement
 {
-	function __construct()
-	{
-		parent::__construct();
-		$this->ui_tag="div";
-		$this->ui_class="container";
-	}
+    public function __construct()
+    {
+        parent::__construct();
+        $this->ui_tag="div";
+        $this->ui_class="container";
+    }
 
-	function __toString()
-	{
-		return($this->Tag($this->GenerateTag(),
-			$this->Tag("div class=\"navbar\"",
-				$this->Tag("div class=\"navbar-inner\"",
-					$this->Tag("div class=\"container\"",
-						$this->GenerateContent()
-					)
-				)
-			)
-		));
-	}
+    public function __toString()
+    {
+        return($this->Tag($this->GenerateTag(),
+            $this->Tag("div class=\"navbar\"",
+                $this->Tag("div class=\"navbar-inner\"",
+                    $this->Tag("div class=\"container\"",
+                        $this->GenerateContent()
+                    )
+                )
+            )
+        ));
+    }
 }

@@ -1,10 +1,10 @@
 <?php
 
-class uiBlockQuote extends uiElement
+class uiblockquote extends uiElement
 {
-	function __construct()
-	{
-		parent::__construct();
-		$this->ui_tag="blockquote";
-	}
+    public function __construct()
+    {
+        parent::__construct();
+        $this->ui_tag="blockquote";
+    }
 }

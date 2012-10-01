@@ -24,11 +24,22 @@
 
 class uiInput_Text extends uiInput_Base
 {
-	function __construct($attr=false)
-	{
-		$valid=array('type','name');
-		parent::__construct($attr,$valid);
+    public function __construct($attr=false)
+    {
+        $valid=array('type');
+        parent::__construct($attr,$valid);
 
-		$this->ui_tag="input";
-	}
+        $this->ui_tag="input";
+
+        if (!empty($attr['options'])) 
+        {
+            $listname=$this->ui_id."_list";
+            $this->AddAttr('list',$listname);
+            $list='';
+            foreach($attr['options'] as $option)
+                $list.=$this->Tag("option value=\"$option\"");
+            $this->ui_html.=$this->Tag("datalist id=\"$listname\"",$list);
+        }
+
+    }
 }

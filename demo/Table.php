@@ -1,6 +1,6 @@
 <?php
-	require('../poof.php');
-	require('navbar.inc');
+    require '../poof.php';
+    require 'navbar.inc';
 
 	echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
 		$navbar,

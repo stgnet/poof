@@ -1,120 +1,125 @@
 <?php
 
-class uiForm extends uiElement
+class uiform extends uiElement
 {
-	protected $record;
-	protected $fields;
-	protected $style;
+    protected $record;
+    protected $fields;
+    protected $style;
+    protected $target;
 
-	function __construct($fields=false,$record=false,$style=false)
-	{
-		parent::__construct();
-		$this->style=$style;
-		$this->ui_tag="form";
-		if ($style)
-		{
-			if (substr($style,0,5)!="form-")
-				$style="form-".$style;
-			$this->ui_class=$style;
-		}
+    public function __construct($fields=false,$record=false,$style=false)
+    {
+        parent::__construct();
+        $this->target=false;
+        $this->style=$style;
+        $this->ui_tag="form";
+        if ($style) {
+            if (substr($style,0,5)!="form-")
+                $style="form-".$style;
+            $this->ui_class=$style;
+        }
 
-		if ($record && is_array($record))
-			$this->record=$record;
-		else
-			$this->record=array();
+        if ($record && is_array($record))
+            $this->record=$record;
+        else
+            $this->record=array();
 
-		// generate field list from record list if not supplied
-		if ($fields)
-			$this->fields=$fields;
-		else
-		{
-			$this->fields=array();
-			if ($record) foreach ($record as $name => $value)
-			{
-				// have to stupidly presume text field
-				$this->fields[$name]=array('type'=>"text");
-			}
-		}
-		// and insure that all keys exist
-		foreach ($this->fields as $name => $pairs)
-		{
-			if (!isset($this->record[$name]))
-				$this->record[$name]='';
-		}
+        // generate field list from record list if not supplied
+        if ($fields)
+            $this->fields=$fields;
+        else {
+            $this->fields=array();
+            if ($record) foreach ($record as $name => $value) {
+                // have to stupidly presume text field
+                $this->fields[$name]=array('type'=>"text");
+            }
+        }
+        // and insure that all keys exist
+        foreach ($this->fields as $name => $pairs) {
+            if (!isset($this->record[$name]))
+                $this->record[$name]='';
+        }
 
-		// add each field to this form
+        // insure name is in attributes
+        foreach ($this->fields as $name => $pairs)
+        {
+            if (!isset($pair['name']))
+                $pair['name']=$name;
+        }
 
-		foreach ($this->fields as $name => $attributes)
-		{
-			$type="text";
-			if (!empty($attributes['type']))
-				$type=$attributes['type'];
+        // add each field to this form
 
-			$class="uiInput_$type";
-			$this->Add($class($attributes));
-		}
-		
-	}
-	function __toString()
-	{
-		$output='';
-		foreach ($this->ContentArray() as $element)
-		{
-			$desc=$element->GetDescription();
+        foreach ($this->fields as $name => $attributes) {
+            $type="text";
+            if (!empty($attributes['type']))
+                $type=$attributes['type'];
 
-			if ($this->style=='inline')
-			{
-				// place no divs
-				if ($desc)
-					$element->SetInlineDescription($desc);
-				$output.=$element;
-				continue;
-			}
+            $class="uiInput_$type";
+            $this->Add($class($attributes)->SetName($name));
+        }
 
-			if ($this->style=='search')
-			{
-				if ($desc)
-					$element->SetInlineDescription($desc);
-			}
+    }
+    public function OnSubmit($element)
+    {
+        $this->target=$element;
+        return($this);
+    }
+    public function PreGenerate($page)
+    {
+        if (!$this->target) return;
 
-			$for=$element->ui_name;
+        $form='#'.$this->ui_id;
+        $url=$this->GetAction();
+        $target='#'.$this->target->ui_id;
+        $page->ReadyScript('form-onsubmit-'.$this->ui_id,"
+            \$('{$form}').submit(function(){
+                \$.ajax({
+                    type: \"POST\",
+                    url: \"$url\",
+                    data: \$(this).serialize(),
+                    success: function(data) {
+                        \$('{$target}').empty().append(data);
+                    },
+                    error: function(xhr) {
+                        alert(xhr.status+\" \"+xhr.statusText+\": \"+xhr.responseText);
+                    }
+                });
+                return false;
+            });");
 
-			$group='';
-			if ($this->style!='search')
-				$group=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
-			if ($this->style=='horizontal')
-			{
-				$group.=$this->Tag("div class=\"controls\"",$element);
-				$output.=$this->Tag("div class=\"control-group\"",$group);
-			}
-			else
-				$output.=$group.$element;
-		}
-		return($this->Tag($this->GenerateTag(),$output));
-	}
+                //\$('{$target}').load('{$url}',$('{$form}').serializeArray());
+    }
+    public function __toString()
+    {
+        $output='';
+        foreach ($this->ContentArray() as $element) {
+            $desc=$element->GetDescription();
 
-/*
-	function __toString()
-	{
-		$input_attr=array('type','size','readonly','placeholder');
-		$output='';
-		foreach ($this->fields as $fieldname => $attributes)
-		{
-			$tag="input id=\"$fieldname\" name=\"$fieldname\"";
-			if ($this->record[$fieldname])
-				$tag.=" value=\"{$this->record[$fieldname]}\"";
+            if ($this->style=='inline') {
+                // place no divs
+                if ($desc)
+                    $element->SetInlineDescription($desc);
+                $output.=$element;
+                continue;
+            }
 
-			foreach ($attributes as $attrname => $attrvalue)
-			{
-				if (in_array($attrname,$input_attr))
-					$tag.=" $attrname=\"$attrvalue\"";
-			}
-			$group =$this->Tag("label class=\"control-label\" for=\"$fieldname\"",$fieldname);
-			$group.=$this->Tag("div class=\"controls\"",$this->Tag($tag));
-			$output.=$this->Tag("div class=\"control-group\"",$group);
-		}
-		return($this->Tag($this->GenerateTag(),$output));
-	}
-*/
+            if ($this->style=='search') {
+                if ($desc)
+                    $element->SetInlineDescription($desc);
+            }
 
+            $for=$element->ui_id;
+
+            $group='';
+            if ($this->style!='search')
+                $group=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
+            if ($this->style=='horizontal') {
+                $group.=$this->Tag("div class=\"controls\"",$element);
+                $output.=$this->Tag("div class=\"control-group\"",$group);
+            } else
+                $output.=$group.$element;
+        }
+
+        return($this->Tag($this->GenerateTag(),$output));
+    }
 }

@@ -1,13 +1,13 @@
 <?php
 
-class uiParagraph extends uiElement
+class uiparagraph extends uiElement
 {
-	private $text;
+    private $text;
 
-	function __construct($text=false)
-	{
-		parent::__construct();
-		$this->ui_tag="p";
-		$this->ui_text=$text;
-	}
+    public function __construct($text=false)
+    {
+        parent::__construct();
+        $this->ui_tag="p";
+        $this->ui_text=$text;
+    }
 }
