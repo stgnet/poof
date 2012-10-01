@@ -121,6 +121,11 @@ function uiform($fields=false,$record=false,$style=false)
     return new uiform($fields,$record,$style);
 }
 
+function uigittip($username)
+{
+    return new uigittip($username);
+}
+
 function uigoogleanalytics($account,$domain=false)
 {
     return new uigoogleanalytics($account,$domain);
