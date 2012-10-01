@@ -24,9 +24,9 @@ your own website.
 
 Hello World
 -----------
-A code example:
+A minimalistic code example:
 
-	require('/poof/poof.php');
+	require('poof/poof.php');
 
 	echo uiPage("Page Title")->Add(
 		uiContainer()->Add(
@@ -38,8 +38,8 @@ A code example:
 	);
 
 
-Components in POOF
-------------------
+Class Types in POOF
+-------------------
 
 * uiXXX - user interface components for modern style web page creation on the fly from program code
 * arXXX - array handling and manipulation
