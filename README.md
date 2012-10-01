@@ -65,4 +65,11 @@ Planning on including features from:
 * [Kickstrap](http://ajkochanowicz.github.com/Kickstrap)
 * [Colorpicker and Datepicker](http://www.eyecon.ro/colorpicker-and-datepicker-for-twitter-bootstrap.htm)
 
+Project Resources
+-----------------
+* [Source on github](https://github.com/stgnet/poof)
+* Documentation (still to come)
+* [Pivotal Tracker](https://www.pivotaltracker.com/projects/641527)
+* [Travis-CI Build Status](http://travis-ci.org/stgnet/poof) ![](https://secure.travis-ci.org/stgnet/poof.png)
+* [GitTip](https://www.gittip.com/stgnet/)
 
