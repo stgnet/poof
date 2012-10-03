@@ -2,7 +2,7 @@
 
 // new uiElement base class replaces ui and uibase classes
 
-class uielement
+class uielement extends pfBase
 {
     private $ui_parent;
     private $ui_contents;
@@ -173,13 +173,6 @@ class uielement
         $this->ui_postfunc=$func;
         return($this);
     }
-    public function __call($method,$args)
-    {
-        if ($this->{$method} instanceof Closure)
-            return call_user_func_array($this->{$method},$args);
-        else
-            return parent::__call($method,$args);
-    }
     public function PassToPostHandler()
     {
         global $_FILES;
@@ -299,7 +292,7 @@ class uielement
 
             // debugging aid:
             if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
-                $output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">".$element->GenerateTag()."</div>\n";
+                $output.="<div style=\"margin: 10px; border: 3px #aaa solid;box-shadow: 5px 5px 2px #444 ;\"><div style=\"background-color: #aaa;\">".htmlentities("<".$element->GenerateTag().">")."</div>\n";
 
             //$output.=$this->Tag($element->GenerateTag(),$element);
             $output.=$element;

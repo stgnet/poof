@@ -2,9 +2,9 @@
     require '../poof.php';
     require 'navbar.inc';
 
-    echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
+    echo uiPage("POOF Demo")->background("#def")->Add(
         $navbar,
-        uiContainer()->AddStyle("background: #efd;")->Add(
+        uiContainer()->background("#efd")->Add(
             uiHeader("Demonstration of Tooltip"),
             uiParagraph()->Add(
                 "Hover ",

@@ -64,12 +64,14 @@ Planning on including features from:
 * [jQuery UI Bootstrap](http://addyosmani.github.com/jquery-ui-bootstrap/)
 * [Kickstrap](http://ajkochanowicz.github.com/Kickstrap)
 * [Colorpicker and Datepicker](http://www.eyecon.ro/colorpicker-and-datepicker-for-twitter-bootstrap.htm)
+* [Balanced Payments](https://www.balancedpayments.com/)
 
 Project Resources
 -----------------
 * [Source on github](https://github.com/stgnet/poof)
+* [Demonstration with code examples](http://poof.stg.net)
 * Documentation (still to come)
 * [Pivotal Tracker](https://www.pivotaltracker.com/projects/641527)
-* [Travis-CI Build Status](http://travis-ci.org/stgnet/poof) ![](https://secure.travis-ci.org/stgnet/poof.png)
+* [Travis-CI](http://travis-ci.org/stgnet/poof) ![](https://secure.travis-ci.org/stgnet/poof.png)
 * [GitTip](https://www.gittip.com/stgnet/)
 

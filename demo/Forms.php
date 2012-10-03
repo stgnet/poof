@@ -33,7 +33,6 @@
             )
         ),
         'submit'=>array('type'=>"button",'value'=>"Save"),
-        'cancel'=>array('type'=>"cancel",'value'=>"Cancel")
     );
     $target=uiDiv()->Add("Post data will appear here");
     $postfunc=function($data) {
@@ -48,7 +47,7 @@
         'Misc'=>uiForm($misc,false,"horizontal")->OnSubmit($target)->Post($postfunc)
     );
 
-    echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
+    echo uiPage("POOF Demo")->Background("#def")->Add(
         $navbar,
         uiContainer()->Background("#efd")->Add(
             uiRow()->Add(

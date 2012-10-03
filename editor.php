@@ -37,13 +37,13 @@
 
     echo uiPage("Code Editor")->Add(
         uiContainer("navbar")->Add(
-            uiContainer("navbar-inner")->AddStyle("background: #fed;")->Add(
+            uiContainer("navbar-inner")->background("#fed")->Add(
                 uiImage("img/poof.png","index.php")->AddClass("nav"),
                 uiNavList($navmenu)->AddClass("pull-right")
             )
         ),
         uiContainer()->Add(
-            uiHero()->AddStyle("background: #efd;")->Add(
+            uiHero()->background("#efd")->Add(
                 uiCarousel($carousel)->AddClass("pull-right"),
                 uiHeader("Hello, World!"),
                 uiParagraph("This is a demostration of")->Add(

@@ -2,9 +2,9 @@
     require '../poof.php';
     require 'navbar.inc';
 
-    echo uiPage("POOF Demo")->AddStyle("background: #def;")->Add(
+    echo uiPage("POOF Demo")->Background("#def")->Add(
         $navbar,
-        uiContainer()->AddStyle("background: #efd;")->Add(
+        uiContainer()->background("#efd")->Add(
             uiHeader("Demonstration of Tabs"),
             uiTabbable(array(
                 "One"=>uiParagraph("This is the first tab"),

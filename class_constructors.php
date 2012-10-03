@@ -16,11 +16,6 @@ function arfile($file)
     return new arfile($file);
 }
 
-function arscrape($text)
-{
-    return new arscrape($text);
-}
-
 function audigest($realm,$users,$fail=false)
 {
     return new audigest($realm,$users,$fail);
@@ -44,6 +39,21 @@ function dbflat($file,$fields)
 function event()
 {
     return new event();
+}
+
+function mlbase($text)
+{
+    return new mlbase($text);
+}
+
+function mlscrape($text)
+{
+    return new mlscrape($text);
+}
+
+function pfbase()
+{
+    return new pfbase();
 }
 
 function test($one,$two=false)

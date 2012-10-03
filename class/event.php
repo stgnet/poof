@@ -1,5 +1,5 @@
 <?php
-class event
+class event extends pfBase
 {
     protected $EventList;
 
