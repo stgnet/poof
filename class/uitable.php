@@ -8,6 +8,9 @@ class uitable extends uiElement
     public function __construct($db,$fields=NULL)
     {
         parent::__construct();
+        $this->ui_tag="table";
+        $this->AddClass("table");
+
         if ($fields)
             $this->fields=$fields;
         else
@@ -37,6 +40,6 @@ class uitable extends uiElement
 
         $table.=$this->Tag("tbody",$body);
 
-        return($this->Tag("table class=\"table\"",$table));
+        return($this->Tag($this->GenerateTag(),$table));
     }
 }
