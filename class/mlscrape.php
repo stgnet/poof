@@ -7,10 +7,14 @@
             if (!$text) return;
 
             $ctx=stream_context_create(array(
-                'http'=>array('timeout'=>3)
+                'http'=>array('timeout'=>10)
             ));
             if (substr($text,0,7)=="http://" || substr($text,0,8)=="https://")
+            {
+                $url=$text;
                 $text=file_get_contents($text,0,$ctx);
+                    //$text="Unable to get contents of $url\n".print_r($e,true);
+            }
 
             parent::__construct($text);
         }

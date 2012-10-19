@@ -34,5 +34,9 @@
         uiContainer()->Add(
             uiHeader(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))
+        ),
+        uiParagraph(),
+        uiContainer()->Add(
+            uiDebug("_SESSION")
         )
     );

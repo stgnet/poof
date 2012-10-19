@@ -10,10 +10,10 @@ the conventional multi-file MVC or template approach.
 
 Design Concepts
 ---------------
-
 * High level code is extremely easy to read, compact, and correlates directly to result
-* Object chains similar to EDEN allow flexibility and extensibility
+* Object chains similar to [EDEN](http://eden.openovate.com/) allow flexibility and extensibility
 * Many complex operations are reduced to a line or few of code
+* Each class *foobar* has convenience function `foobar()` that returns `new foobar()`
 
 Getting Started
 ---------------
@@ -38,17 +38,26 @@ A minimalistic code example:
 	);
 
 
+Bug Reports, Feature Requests, Code Contributions
+-------------------------------------------------
+* Report issue on [GitHub](https://github.com/stgnet/poof/issues)
+* Join project, view or add stories on [PivotalTracker](https://www.pivotaltracker.com/projects/641527)
+* Email scott@griepentrog.com
+
 Class Types in POOF
 -------------------
-
 * uiXXX - user interface components for modern style web page creation on the fly from program code
 * arXXX - array handling and manipulation
 * dbXXX - database (SQL, CSV, etc) interface
 * mlXXX - markup langage (nested tree structure)
 
+LICENSE
+-------
+
+POOF is licensed under [Apache License V2](http://www.apache.org/license/LICENSE-2.0)
+
 Included Projects
 -----------------
-
 POOF includes and uses code from these fine open source projects:
 
 * [jQuery](http://jquery.com) for AJAX
@@ -58,13 +67,13 @@ POOF includes and uses code from these fine open source projects:
 
 Future Improvements
 -------------------
-
 Planning on including features from:
 
 * [jQuery UI Bootstrap](http://addyosmani.github.com/jquery-ui-bootstrap/)
 * [Kickstrap](http://ajkochanowicz.github.com/Kickstrap)
 * [Colorpicker and Datepicker](http://www.eyecon.ro/colorpicker-and-datepicker-for-twitter-bootstrap.htm)
 * [Balanced Payments](https://www.balancedpayments.com/)
+* [PHP Colors](http://mexitek.github.com/phpColors/)
 
 Project Resources
 -----------------

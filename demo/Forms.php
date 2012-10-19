@@ -36,11 +36,17 @@
     );
     $target=uiDiv()->Add("Post data will appear here");
     $postfunc=function($data) {
+        $_SESSION['demo_form']=$data;
         echo uiPre(print_r($data,true))->Background("#ff8");
     };
 
+    if (empty($_SESSION['demo_form']))
+        $data=array();
+    else
+        $data=$_SESSION['demo_form'];
+
     $tabs=array(
-        'Default'=>uiForm($login)->OnSubmit($target)->Post($postfunc),
+        'Default'=>uiForm($login,$data)->OnSubmit($target)->Post($postfunc),
         'Inline'=>uiForm($login,false,"inline")->OnSubmit($target)->Post($postfunc),
         'Horizontal'=>uiForm($login,false,"horizontal")->OnSubmit($target)->Post($postfunc),
         'Search'=>uiForm($search,false,"search")->OnSubmit($target)->Post($postfunc),
@@ -64,5 +70,10 @@
         uiContainer()->Add(
             uiHeader(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
+        ),
+        uiParagraph(),
+        uiContainer()->Add(
+            uiPre(session_id()),
+            uiDebug("_SESSION")
         )
     );
