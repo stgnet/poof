@@ -22,7 +22,9 @@ class uicarousel extends uiElement
         $active=' active';
         if ($this->list) foreach ($this->list as $name => $src) {
             $list.=$this->Tag("div class=\"item$active\"",
-                $this->Tag("img src=\"$src\"")
+                ($src instanceof uiElement?$src:
+                    $this->Tag("img src=\"$src\"")
+                )
             );
             $active=false;
         }
