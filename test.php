@@ -9,6 +9,8 @@
 
     //auDigest('TEST',array('admin'=>'secret'));
 
+
+    siDiscern()->Event("build");
     echo uiPage("POOF")->Add(
         uiHeader("POOF Diagnostic Tool")->Add(
             uiDebug('POOF_DIR'),
@@ -20,11 +22,5 @@
         uiDebug('_POST')
     );
 
-
-    /*
-    ob_end_flush();
-    flush();
-    session_write_close();
-    sleep(10);
-    */
+    siDiscern()->Event("done");
 

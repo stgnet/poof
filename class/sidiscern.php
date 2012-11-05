@@ -7,21 +7,77 @@
 
 class siDiscern extends pfSingleton
 {
+    private $events;
+
     public function __construct()
     {
+        $server=array(
+            'HTTP_HOST',
+            'HTTP_USER_AGENT',
+            'HTTP_REFERER',
+            'REMOTE_ADDR',
+            'REMOTE_PORT',
+            'SCRIPT_FILENAME',
+            'REQUEST_METHOD',
+            'REQUEST_URI',
+            'REQUEST_TIME',
+            'REQUEST_TIME_FLOAT',
+        );
+
+        // build data to report on init event
+        $data=array();
+        foreach ($server as $var)
+            if (!empty($_SERVER[$var]))
+                $data[$var]=$_SERVER[$var];
+        $data['SAPI']=php_sapi_name();
+        $data['SESSION']=session_id();
+
+        $this->events=array();
+        $this->Event("init",$data);
         register_shutdown_function(array($this,"Shutdown"));
+    }
+
+    public function Event($name,$data=false)
+    {
+        if (is_array($data))
+            $data=json_encode($data);
+        $event=array(
+            'pid'=>getmypid(),
+            'time'=>microtime(true),
+            'name'=>"$name",
+            'data'=>"$data"
+        );
+
+        $this->events[]=$event;
     }
 
     public function Shutdown()
     {
-        passthru("pwd ; ls");
-        file_put_contents("/tmp/discern.csv","test\n");
-        ob_end_flush();
-        flush();
-        sleep(10);
-    }
+        $discfile="/tmp/discern.csv";
 
-    public function __toString()
-    {
+        if (connection_aborted())
+        {
+            // user CANCELLED web page before completed
+            $this->Event("abort");
+        }
+        else
+        {
+            // normal completion
+            $this->Event("shutdown");
+
+            // flush the output to make sure user sees page immediately
+            if (php_sapi_name()!="cli")
+                ob_end_flush();
+            flush();
+        }
+
+        // log the events for later processing
+        $fp=fopen($discfile,"a");
+        if ($fp)
+        {
+            foreach ($this->events as $event)
+                fputcsv($fp,$event);
+            fclose($fp);
+        }
     }
 }

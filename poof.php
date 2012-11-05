@@ -20,22 +20,29 @@
 
 spl_autoload_register('poof_autoload');
 
+// load functions mapped to class constructors
 require_once(dirname(__FILE__)."/class_constructors.php");
+
+// load error handling
 require_once(dirname(__FILE__)."/error_handler.php");
 
 // security considerations
 if (function_exists("libxml_disable_entity_loader"))
     libxml_disable_entity_loader(true);
 
+// always start session handling (produces no error if SAPI=cli)
 session_start();
+
+// load instrumentation class and initialize it
+siDiscern();
 
 function poof_locate()
 {
-    global $POOF_DIR;
-    global $POOF_URL;
-    global $POOF_CWD;
-    global $POOF_ROOT;
-    global $POOF_FILE;
+    global $POOF_FILE;  // path to this file
+    global $POOF_DIR;   // base directory for poof library
+    global $POOF_ROOT;  // directory path to poof library
+    global $POOF_URL;   // URL path to poof library
+    global $POOF_CWD;   // the current directory
 
     // locate the poof library itself, set globals
 

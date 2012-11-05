@@ -101,6 +101,8 @@
 
         $msg=basename($_SERVER['PHP_SELF']).": $errstr [$errnostr] in $errfile line $errline";
 
+        siDiscern()->Event("error","$errstr [$errnostr] in $errfile line $errline");
+
         poof_error_send($msg);
         if ($fatal) exit($errno);
         return(true); // don't fall through to PHP handler, it's already been 'handled'
