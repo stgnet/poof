@@ -41,12 +41,12 @@ function event()
     return new event();
 }
 
-function mlbase($text)
+function mlbase($text=false)
 {
     return new mlbase($text);
 }
 
-function mlscrape($text)
+function mlscrape($text=false)
 {
     return new mlscrape($text);
 }
@@ -54,6 +54,18 @@ function mlscrape($text)
 function pfbase()
 {
     return new pfbase();
+}
+
+function pfsingleton()
+{
+    return new pfsingleton();
+}
+
+function sidiscern()
+{
+    if (empty($GLOBALS['sidiscern']))
+        $GLOBALS['sidiscern']=new sidiscern();
+    return $GLOBALS['sidiscern'];
 }
 
 function test($one,$two=false)

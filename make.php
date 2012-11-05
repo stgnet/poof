@@ -23,7 +23,11 @@
 
             $class=$match[1];
 //print($class."\n");
+
             $contents=file_get_contents("class/$file");
+            $singleton=false;
+            if (strstr($contents,"extends pfSingleton"))
+                $singleton=true;
 
             // locate the construct function to get args - and warn if not found
             if (!preg_match('/function\s+__construct\((.*)\)/',$contents,$match)) {
@@ -40,7 +44,18 @@
             }
             $justargs=implode(',',$pairs);
 
-            $output.="
+            if ($singleton)
+                $output.="
+function $class($args)
+{
+    if (empty(\$GLOBALS['$class']))
+        \$GLOBALS['$class']=new $class($justargs);
+    return \$GLOBALS['$class'];
+}
+";
+
+            else
+                $output.="
 function $class($args)
 {
     return new $class($justargs);
