@@ -21,9 +21,9 @@ Getting Started
 * View the demo at [poof.stg.net](http://poof.stg.net) for coding examples
 * Clone POOF to your project directory
 
-    # mkdir myproject ; cd myproject
-    # git clone https://github.com/stgnet/poof
-    # cp poof/demo.php index.php
+    mkdir myproject ; cd myproject
+    git clone https://github.com/stgnet/poof
+    cp poof/demo.php index.php
     etc...
 
 
