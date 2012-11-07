@@ -61,16 +61,26 @@ function pfsingleton()
     return new pfsingleton();
 }
 
-function sidiscern()
+function sidiscern($init_time=false)
 {
     if (empty($GLOBALS['sidiscern']))
-        $GLOBALS['sidiscern']=new sidiscern();
+        $GLOBALS['sidiscern']=new sidiscern($init_time);
     return $GLOBALS['sidiscern'];
 }
 
 function test($one,$two=false)
 {
     return new test($one,$two);
+}
+
+function uiarticle($class=false)
+{
+    return new uiarticle($class);
+}
+
+function uiaside($class=false)
+{
+    return new uiaside($class);
 }
 
 function uiblockquote()
@@ -138,6 +148,11 @@ function uielement()
     return new uielement();
 }
 
+function uifooter($class=false)
+{
+    return new uifooter($class);
+}
+
 function uiform($fields=false,$record=false,$style=false)
 {
     return new uiform($fields,$record,$style);
@@ -153,14 +168,24 @@ function uigoogleanalytics($account,$domain=false)
     return new uigoogleanalytics($account,$domain);
 }
 
-function uiheader($level,$text=false)
+function uiheader($class=false)
 {
-    return new uiheader($level,$text);
+    return new uiheader($class);
+}
+
+function uiheading($level,$text=false)
+{
+    return new uiheading($level,$text);
 }
 
 function uihero()
 {
     return new uihero();
+}
+
+function uihgroup($class=false)
+{
+    return new uihgroup($class);
 }
 
 function uihtml($html)
@@ -333,6 +358,11 @@ function uilist($list=false)
     return new uilist($list);
 }
 
+function uinav($class=false)
+{
+    return new uinav($class);
+}
+
 function uinavbar()
 {
     return new uinavbar();
@@ -378,6 +408,11 @@ function uiscript($code)
     return new uiscript($code);
 }
 
+function uisection($class=false)
+{
+    return new uisection($class);
+}
+
 function uispan($number,$offset=false)
 {
     return new uispan($number,$offset);
@@ -391,6 +426,11 @@ function uitabbable($list)
 function uitable($db,$fields=NULL)
 {
     return new uitable($db,$fields);
+}
+
+function uitheme($page)
+{
+    return new uitheme($page);
 }
 
 function uitooltip($text)

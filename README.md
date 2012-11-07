@@ -55,11 +55,12 @@ Bug Reports, Feature Requests, Code Contributions
 
 Class Types in POOF
 -------------------
-* uiXXX - user interface components for modern style web page creation on the fly from program code
+* uiXXX - user interface components for programmatic html5 generation
 * arXXX - array handling and manipulation
 * dbXXX - database (SQL, CSV, etc) interface
 * mlXXX - markup langage (nested tree structure)
 * siXXX - singleton class (not true singleton, just convenience wrapper) 
+* pfXXX - poof base classes (and misc)
 
 LICENSE 
 ------- 

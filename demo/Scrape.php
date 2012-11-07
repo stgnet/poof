@@ -8,7 +8,7 @@
         $url=$data['URL'];
         if (!$url || substr($url,0,7)!="http://")
         {
-            echo uiHeader(3,"Please enter a valid url")->Background("#f00");
+            echo uiHeading(3,"Please enter a valid url")->Background("#f00");
             return;
         }
         $page=mlScrape($url);
@@ -34,7 +34,7 @@
         ),
         uiContainer()->Add($target),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
         )
     );

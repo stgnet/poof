@@ -1,5 +1,6 @@
 <?php
     require 'poof.php';
+    poof_theme('united');
 
     $navmenu=array('Home'=>"demo.php");
     foreach (arDir("demo")->Match("*.php")->Sort() as $file)
@@ -7,18 +8,20 @@
 
     $carousel=arDir("img")->Match("*/poof?.png");
 
-    echo uiPage("POOF Demo")->Background("#def")->Add(
+    echo uiPage("POOF Demo")->Add(
         uiGoogleAnalytics('UA-34982565-1','poof.stg.net'),
-        uiContainer("navbar")->Add(
-            uiContainer("navbar-inner")->Background("#fed")->Add(
-                uiImage("img/poof.png","index.php")->AddClass("nav"),
+        uiDiv("navbar")->AddClass("navbar-static-top navbar-inverse")->Add(
+            // add uiContainer here to limit width of navbar
+            uiDiv("navbar-inner")->Add(
+                uiLink("#","POOF")->AddClass("brand"),
+                //uiImage("img/poof.png","index.php")->AddClass("nav"),
                 uiNavList($navmenu)->AddClass("pull-right")
             )
         ),
         uiContainer()->Add(
-            uiHero()->Background("#efd")->Add(
+            uiHero()->Add(
                 uiCarousel($carousel)->AddClass("pull-right"),
-                uiHeader("Hello, World!"),
+                uiHeading("Hello, World!"),
                 uiParagraph("This is a demostration of")->Add(
                     uiTooltip("Programmatic Object-oriented Orthogonal Framework")->Add(
                         "POOF"
@@ -29,10 +32,24 @@
                         //uiLink("http://somewhere","Download")
                         uiTooltip("Not currently available")->Add("Download")
                 )
+            ),
+            uiHeading("Section testing"),
+            uiDiv()->Add(
+                uiSection()->Add(
+                    uiHeader()->Add(
+                        uiDiv()->Right()->Add(
+                            uiButton("Push Me")
+                        )
+                    ),
+                    uiHeading(1,"Dashboard"),
+                    uiDiv()->Add(
+                        uiParagraph("Some paragraph text...")
+                    )
+                )
             )
         ),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))
         ),
         uiParagraph(),

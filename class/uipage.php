@@ -15,15 +15,19 @@ class uipage extends uiElement
         $this->ui_tag="body";
         $this->ui_meta=$meta;
 
-        $this->ui_styles=array('bootstrap.css');
+        $this->ui_styles=array();
         $this->ui_prescripts=array();
         // jquery always goes first!
-        $this->ui_postscripts=array('jquery.js','bootstrap.js');
+        $this->ui_postscripts=array();
         $this->ui_headscripts=array();
         $this->ui_readyscripts=array();
 
         if (!is_array($meta))
             $this->ui_meta=array('title'=>$meta);
+
+
+        // activate the theme (it calls back to add elements)
+        uiTheme($this);
     }
     public function Stylesheet($name,$file)
     {
@@ -45,12 +49,6 @@ class uipage extends uiElement
     {
         $this->ui_readyscripts[$name]=$code;
     }
-    private function pathfix($default,$path)
-    {
-        if ($path[0]=='/')
-            return($path);
-        return($default."/".$path);
-    }
     public function GenerateStyles()
     {
         global $POOF_URL;
@@ -59,7 +57,7 @@ class uipage extends uiElement
 
         foreach ($this->ui_styles as $style)
             $output.=$this->Tag("link href=\"".
-                $this->pathfix("$POOF_URL/css",$style).
+                poof_url("css/$style").
                 "\" rel=\"stylesheet\"");
 
         return($output);
@@ -72,7 +70,7 @@ class uipage extends uiElement
 
         foreach ($this->ui_prescripts as $script)
             $output.=$this->Tag("script src=\"".
-                $this->pathfix("$POOF_URL/js",$script).
+                poof_url("js/$script").
                 "\"");
 
         $head='';
@@ -91,10 +89,10 @@ class uipage extends uiElement
 
         foreach ($this->ui_postscripts as $script)
             $output.=$this->Tag("script src=\"".
-                $this->pathfix("$POOF_URL/js",$script).
+                poof_url("js/$script").
                 "\"");
 
-        // active the bootstrap js components
+        // active the js components
         $ready='';
         foreach ($this->ui_readyscripts as $code)
             $ready.=" ".$code."\n";
@@ -133,13 +131,16 @@ class uipage extends uiElement
     {
 
         if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST') {
+            siDiscern()->Event('post');
             if ($this->PassToPostHandler())
                 return('');
         }
 
         // allow tree elements to pass scripts/css up to page generator
+        siDiscern()->Event('pregen');
         $this->PreGenerateWalk($this);
 
+        siDiscern()->Event('generate');
         return("<!DOCTYPE html>".
             $this->Tag("html lang=\"en\"",
                 $this->Tag("head",
@@ -158,6 +159,7 @@ class uipage extends uiElement
                 ).
                 $this->GeneratePostScripts()
             )
+            .(siDiscern()->Event('output')?'':'')
         );
     }
 

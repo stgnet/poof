@@ -5,7 +5,7 @@
     echo uiPage("POOF Demo")->Background("#def")->Add(
         $navbar,
         uiContainer()->background("#efd")->Add(
-            uiHeader("Demonstration of Popover"),
+            uiHeading("Demonstration of Popover"),
             uiParagraph()->Add(
                 "Click ",
                 uiPopover("Text to pop over")->Add("HERE"),
@@ -13,7 +13,7 @@
             )
         ),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
         )
     );

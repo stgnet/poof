@@ -18,6 +18,10 @@
  * limitations under the License.
  * ========================================================== */
 
+// for siDiscern(), make note of actual start time
+$poof_init_time=microtime(true);
+
+// register our autoloader
 spl_autoload_register('poof_autoload');
 
 // load functions mapped to class constructors
@@ -34,33 +38,72 @@ if (function_exists("libxml_disable_entity_loader"))
 session_start();
 
 // load instrumentation class and initialize it
-siDiscern();
+// (yes, I know this adds overhead, trust me you'll like it)
+siDiscern($poof_init_time);
 
-function poof_locate()
+// allow selection of a theme (multiple possible)
+function poof_theme($name)
+{
+    global $POOF_DIR;
+    global $POOF_THEMES;
+    if (empty($POOF_DIR)) poof_locate();
+    if (!is_dir("$POOF_DIR/theme/$name"))
+        Fatal("poof_theme(): unable to locate theme '$name'");
+    $POOF_THEMES[]=$name;
+}
+
+// locate a file from the library
+function poof_locate($path)
 {
     global $POOF_FILE;  // path to this file
     global $POOF_DIR;   // base directory for poof library
     global $POOF_ROOT;  // directory path to poof library
     global $POOF_URL;   // URL path to poof library
     global $POOF_CWD;   // the current directory
+    global $POOF_THEMES;    // array of directories to check first
 
-    // locate the poof library itself, set globals
+    if (empty($POOF_DIR))
+    {
+        // locate the poof library itself, set globals
+        $POOF_FILE=__FILE__;
+        $POOF_CWD=getcwd();
+        $POOF_DIR=dirname($POOF_FILE);
+        if (!file_exists("$POOF_DIR/poof.php"))
+            Fatal("unable to locate file path to poof library");
 
-    $POOF_FILE=__FILE__;
-    $POOF_CWD=getcwd();
-    $POOF_DIR=dirname($POOF_FILE);
-    if (!file_exists("$POOF_DIR/poof.php"))
-        Fatal("unable to locate file path to poof library");
+        $POOF_ROOT=str_replace($_SERVER['SCRIPT_NAME'],"",$_SERVER['SCRIPT_FILENAME']);
+        if (!$POOF_ROOT && !empty($_SERVER['HOME']))
+            $POOF_ROOT=$_SERVER['HOME'];
+        if (!$POOF_ROOT)
+            $POOF_ROOT=$POOF_CWD;
 
-    $POOF_ROOT=str_replace($_SERVER['SCRIPT_NAME'],"",$_SERVER['SCRIPT_FILENAME']);
-    if (!$POOF_ROOT && !empty($_SERVER['HOME']))
-        $POOF_ROOT=$_SERVER['HOME'];
-    if (!$POOF_ROOT)
-        $POOF_ROOT=$POOF_CWD;
+        $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
+        $POOF_THEMES=array();
+    }
+    if ($path)
+    {
+        $path=strtolower($path);
+        // default must be last theme checked
+        foreach (array_merge($POOF_THEMES,array('default')) as $theme)
+        {
+            $test="$POOF_DIR/theme/$theme/$path";
+            if (file_exists($test))
+                return($test);
+        }
+        $test="$POOF_DIR/$path";
+        if (file_exists($test))
+            return($test);
+        Fatal("poof_locate(): did not find '$test'");
+    }
+    return(false);
+}
 
-    $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
-
-    return($POOF_DIR);
+function poof_url($path)
+{
+    global $POOF_URL,$POOF_ROOT;
+    $filepath=poof_locate($path);
+    $relpath=str_replace($POOF_ROOT,$POOF_URL,$filepath);
+    return($relpath);
 }
 
 // automatically load class files from the library when instantiated
@@ -68,20 +111,13 @@ function poof_autoload($class)
 {
     global $POOF_DIR;
 
-    if (empty($POOF_DIR))
-        poof_locate();
+    $path=poof_locate("class/{$class}.php");
 
-    $file=strtolower("class/{$class}.php");
-
-    if (!empty($POOF_DIR)) {
-        $path="{$POOF_DIR}/$file";
-        if (is_file($path)) {
-            require_once($path);
-
-            return(true);
-        }
-
+    if (is_file($path))
+    {
+        require_once($path);
+        return(true);
     }
 
-    Fatal("unable to locate file path to poof/$file in $POOF_DIR\n");
+    Fatal("unable to locate file '$path'\n");
 }

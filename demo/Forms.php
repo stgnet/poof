@@ -58,7 +58,7 @@
         uiContainer()->Background("#efd")->Add(
             uiRow()->Add(
                 uiSpan(8)->Add(
-                    uiHeader("Form Demonstration"),
+                    uiHeading("Form Demonstration"),
                     uiTabbable($tabs)
                 ),
                 uiSpan(4)->Background("#fff")->Add(
@@ -68,7 +68,7 @@
             )
         ),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
         ),
         uiParagraph(),

@@ -9,10 +9,8 @@
 
     //auDigest('TEST',array('admin'=>'secret'));
 
-
-    siDiscern()->Event("build");
     echo uiPage("POOF")->Add(
-        uiHeader("POOF Diagnostic Tool")->Add(
+        uiHeading("POOF Diagnostic Tool")->Add(
             uiDebug('POOF_DIR'),
             uiDebug('POOF_URL')
         ),
@@ -21,6 +19,4 @@
         uiDebug('_GET'),
         uiDebug('_POST')
     );
-
-    siDiscern()->Event("done");
 

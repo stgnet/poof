@@ -9,7 +9,7 @@ class siDiscern extends pfSingleton
 {
     private $events;
 
-    public function __construct()
+    public function __construct($init_time=false)
     {
         $server=array(
             'HTTP_HOST',
@@ -33,22 +33,26 @@ class siDiscern extends pfSingleton
         $data['SESSION']=session_id();
 
         $this->events=array();
-        $this->Event("init",$data);
+        $this->Event("init",$data,$init_time);
+        $this->Event("main");
         register_shutdown_function(array($this,"Shutdown"));
     }
 
-    public function Event($name,$data=false)
+    public function Event($name,$data=false,$time=false)
     {
         if (is_array($data))
             $data=json_encode($data);
         $event=array(
             'pid'=>getmypid(),
-            'time'=>microtime(true),
+            'time'=>($time?$time:microtime(true)),
+            'memi'=>memory_get_usage(false),
+            'meme'=>memory_get_usage(true),
             'name'=>"$name",
             'data'=>"$data"
         );
 
         $this->events[]=$event;
+        return($this);
     }
 
     public function Shutdown()

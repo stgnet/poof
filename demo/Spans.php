@@ -9,7 +9,7 @@
     echo uiPage("POOF Demo")->Background("#def")->Add(
         $navbar,
         uiContainer()->Background("#efd")->Center()->Add(
-            uiHeader("Spans Demonstration")
+            uiHeading("Spans Demonstration")
         ),
 
         uiParagraph(""),
@@ -41,24 +41,24 @@
             uiParagraph("Paragraph in separate container center")->Background($blue)->Center()
         ),
 
-        uiHeader(3,"SPANS WITHOUT CONTAINER, FLUID OFF:")->Center(),
+        uiHeading(3,"SPANS WITHOUT CONTAINER, FLUID OFF:")->Center(),
         AllTheSpans("",false),
 
-        uiHeader(3,"SPANS INSIDE CONTAINER, FLUID OFF:")->Center(),
+        uiHeading(3,"SPANS INSIDE CONTAINER, FLUID OFF:")->Center(),
         uiContainer()->Add(
             AllTheSpans(' in container',false)
         ),
 
-        uiHeader(3,"SPANS WITHOUT CONTAINER, FLUID ON:")->Center(),
+        uiHeading(3,"SPANS WITHOUT CONTAINER, FLUID ON:")->Center(),
         AllTheSpans(" fluid",true),
 
-        uiHeader(3,"SPANS INSIDE CONTAINER, FLUID ON:")->Center(),
+        uiHeading(3,"SPANS INSIDE CONTAINER, FLUID ON:")->Center(),
         uiContainer()->Add(
             AllTheSpans(' in container and fluid',true)
         ),
 
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
         )
     );

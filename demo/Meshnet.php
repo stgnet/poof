@@ -57,7 +57,7 @@
         ),
         uiContainer()->Add(
             uiHero()->Add(
-                uiHeader(3,"Our object is..."),
+                uiHeading(3,"Our object is..."),
                 uiParagraph("")->Add(
                     uiButton("more info","https://wiki.projectmeshnet.org/The_Plan")->AddClass("pull-right")
                 )
@@ -65,7 +65,7 @@
             uiDiv("row pagination-centered")->Add(
                 uiDiv("span3")->Add(
                     uiDiv("well")->Add(
-                        uiHeader("Get Started"),
+                        uiHeading("Get Started"),
                         uiParagraph("")->Add(
                             uiButton("guide","https://wiki.projectmeshnet.org/Getting_Started")->AddStyle("btn-large")
                         )
@@ -73,7 +73,7 @@
                 ),
                 uiDiv("span3")->Add(
                     uiDiv("well")->Add(
-                        uiHeader("Software"),
+                        uiHeading("Software"),
                         uiParagraph("")->Add(
                             uiButton("cjdns","https://github.com/cjdelisle/cjdns/")->AddStyle("btn-large")
                         )
@@ -81,7 +81,7 @@
                 ),
                 uiDiv("span3")->Add(
                     uiDiv("well")->Add(
-                        uiHeader("Hardware"),
+                        uiHeading("Hardware"),
                         uiParagraph("")->Add(
                             uiButton("meshlocals","https://wiki.projectmeshnet.org/MeshLocal")->AddStyle("btn-large")
                         )
@@ -89,7 +89,7 @@
                 ),
                 uiDiv("span3")->Add(
                     uiDiv("well")->Add(
-                        uiHeader("Discuss"),
+                        uiHeading("Discuss"),
                         uiParagraph("")->Add(
                             uiButton("dev chat","http://chat.efnet.org:9090/?channels=%23cjdns&Login=Login")->AddStyle("btn-large")
                         )
@@ -99,7 +99,7 @@
 
         ),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
         )
     );

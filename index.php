@@ -18,7 +18,7 @@
         uiContainer()->Add(
             uiHero()->Background("#efd")->Add(
                 uiCarousel($carousel)->AddClass("pull-right"),
-                uiHeader("Hello, World!"),
+                uiHeading("Hello, World!"),
                 uiParagraph("This is a demostration of")->Add(
                     uiTooltip("Programmatic Object-oriented Orthogonal Framework")->Add(
                         "POOF"
@@ -32,7 +32,7 @@
             )
         ),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))
         )
     );

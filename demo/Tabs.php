@@ -5,7 +5,7 @@
     echo uiPage("POOF Demo")->Background("#def")->Add(
         $navbar,
         uiContainer()->background("#efd")->Add(
-            uiHeader("Demonstration of Tabs"),
+            uiHeading("Demonstration of Tabs"),
             uiTabbable(array(
                 "One"=>uiParagraph("This is the first tab"),
                 "Two"=>uiParagraph("This is the second tab"),
@@ -14,7 +14,7 @@
             )
         ),
         uiContainer()->Add(
-            uiHeader(3,"The PHP code that generated this page:"),
+            uiHeading(3,"The PHP code that generated this page:"),
             uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable")
         )
     );
