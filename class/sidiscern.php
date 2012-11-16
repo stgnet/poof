@@ -31,6 +31,7 @@ class siDiscern extends pfSingleton
                 $data[$var]=$_SERVER[$var];
         $data['SAPI']=php_sapi_name();
         $data['SESSION']=session_id();
+        $data['PHPVERSION']=phpversion();
 
         $this->events=array();
         $this->Event("init",$data,$init_time);
@@ -50,14 +51,25 @@ class siDiscern extends pfSingleton
             'name'=>"$name",
             'data'=>"$data"
         );
-
         $this->events[]=$event;
         return($this);
+    }
+    public function Flush()
+    {
+        $discfile="/tmp/discern.csv";
+        // log the events for later processing
+        $fp=fopen($discfile,"a");
+        if ($fp)
+        {
+            foreach ($this->events as $event)
+                fputcsv($fp,$event);
+            fclose($fp);
+        }
+        $this->events=array();
     }
 
     public function Shutdown()
     {
-        $discfile="/tmp/discern.csv";
 
         if (connection_aborted())
         {
@@ -74,14 +86,6 @@ class siDiscern extends pfSingleton
                 ob_end_flush();
             flush();
         }
-
-        // log the events for later processing
-        $fp=fopen($discfile,"a");
-        if ($fp)
-        {
-            foreach ($this->events as $event)
-                fputcsv($fp,$event);
-            fclose($fp);
-        }
+        $this->Flush();
     }
 }

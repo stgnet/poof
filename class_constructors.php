@@ -31,6 +31,11 @@ function dbcsv($file)
     return new dbcsv($file);
 }
 
+function dbcsv_daemon($path)
+{
+    return new dbcsv_daemon($path);
+}
+
 function dbflat($file,$fields)
 {
     return new dbflat($file,$fields);
@@ -56,6 +61,16 @@ function pfbase()
     return new pfbase();
 }
 
+function pfdaemon($name,$path=false)
+{
+    return new pfdaemon($name,$path);
+}
+
+function pfdaemonserver($sock,$server)
+{
+    return new pfdaemonserver($sock,$server);
+}
+
 function pfsingleton()
 {
     return new pfsingleton();
@@ -66,11 +81,6 @@ function sidiscern($init_time=false)
     if (empty($GLOBALS['sidiscern']))
         $GLOBALS['sidiscern']=new sidiscern($init_time);
     return $GLOBALS['sidiscern'];
-}
-
-function test($one,$two=false)
-{
-    return new test($one,$two);
 }
 
 function uiarticle($class=false)

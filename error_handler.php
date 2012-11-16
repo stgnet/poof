@@ -101,7 +101,6 @@
 
         $msg=basename($_SERVER['PHP_SELF']).": $errstr [$errnostr] in $errfile line $errline";
 
-        siDiscern()->Event("error","$errstr [$errnostr] in $errfile line $errline");
 
         poof_error_send($msg);
         if ($fatal) exit($errno);
@@ -222,13 +221,22 @@ if ($detailed)					$output.=print_r($stack['object'],true);
         print("\n\n<br/><hr/><p><font size=\"+2\" color=\"red\">\n");
         print("ERROR: $msg\n");
         print("</font></p>");
-        print("<pre>".htmlentities(poof_error_trace())."</pre>");
+//        print("<pre>".htmlentities(poof_error_trace())."</pre>");
         print("<hr/><br/>\n");
+    }
+    function poof_error_send_text($msg)
+    {
+        print("ERROR: $msg\n");
+//        print(htmlentities(poof_error_trace()));
     }
 
     function poof_error_send($msg)
     {
-        poof_error_send_html($msg);
+        siDiscern()->Event("error",$msg);
+        if (php_sapi_name()=="cli")
+            poof_error_send_text($msg);
+        else
+            poof_error_send_html($msg);
     }
 
     set_error_handler('poof_error_handler');
