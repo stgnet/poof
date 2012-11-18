@@ -5,27 +5,26 @@
 class pfDaemonConnection extends pfDaemon
 {
     private $server;
+    public $name;
+    public $peer;
 
     function __construct($sock,$server)
     {
         $this->sock=$sock;
         $this->server=$server;
+        $this->_Write($server->name);
     }
     function _Process()
     {
         $test=socket_recv($this->sock,$data,1,MSG_PEEK);
-        if ($test===0) return(false); // disconnected
-
-        $code=false;
-        $data=$this->_Read($code);
-        if ($data===false) return(true);
-        if ($code==PFD_REQ_NAME)
+        if ($test===0)
         {
-            $this->_Write(PFD_ANS_NAME,$this->server->name);
-            return(true);
+            siDiscern()->Event("disconnected",array('name'=>$this->name,'peer'=>$this->peer))->Flush();
+            return(false); // disconnected
         }
-        if ($code!=PFD_REQ_FUNC)
-            return(false);
+
+        $data=$this->_Read();
+        if ($data===false) return(true);
 
         $request=json_decode($data,true);
         if (empty($request['name']))
@@ -36,13 +35,13 @@ class pfDaemonConnection extends pfDaemon
 
         if (method_exists($this->server,$request['name']))
         {
-
             $return=call_user_func_array(array($this->server,$request['name']),$request['args']);
             $response=array('return'=>$return);
         }
         else
-            $response=array('error'=>"method not found");
-        $this->_Write(PFD_ANS_FUNC,json_encode($response));
+            $response=array('error'=>"method '{$request['name']}' not found");
+
+        $this->_Write(json_encode($response));
         return(true);
     }
 }
@@ -55,20 +54,30 @@ class pfDaemonServer extends pfDaemon
 
         if (empty($argv[2]) || $argv[2]!="debug")
         {
+            siDiscern()->Event("daemonizing");
             if (!function_exists("posix_setsid"))
                 Fatal("posix_setsid not found - install php-process please");
+
             $pid=pcntl_fork();
             if ($pid<0) Fatal("pcntl_fork failed $pid");
             if ($pid)
+            {
                 // i am the parent
+                siDiscern()->Event("parent-exit");
                 exit(0);
+            }
 
             // disconnect from session
             posix_setsid();
+
             fclose(STDIN);
             fclose(STDOUT);
             fclose(STDERR);
+            fopen("/dev/null","r");
+            fopen("/dev/null","r");
+            fopen("/dev/null","r");
         }
+        siDiscern()->Event("daemon")->Flush();
         
         // listen for connections
         pfDaemon::__construct($name);
@@ -92,10 +101,13 @@ class pfDaemonServer extends pfDaemon
 
         $lastactive=time();
 
-        $timeout=300;
+        $timeout=30;
 
         while (time()-$lastactive<$timeout)
         {
+            $cc=count($connections);
+            $age=time()-$lastactive;
+            siDiscern()->Event("active",array('connections'=>$cc,'age'=>$age))->Flush();
             if (count($connections))
                 $lastactive=time();
 
@@ -112,7 +124,7 @@ class pfDaemonServer extends pfDaemon
                 sleep(1);
                 continue;
             }
-            if (!$select) continue; // don't bother checking, stay idle
+//            if (!$select) continue; // don't bother checking, stay idle
 
             $remove=array();
             foreach ($connections as $index => $connection)
@@ -134,12 +146,29 @@ class pfDaemonServer extends pfDaemon
             $new_sock=socket_accept($this->sock);
             if ($new_sock===false)
             {
+                if (socket_last_error($this->sock)===0)
+                    continue;
                 Warning("pfDaemonServer: socket_accept: ".$this->_SockErr());
                 sleep(1);
                 continue;
             }
+            $addr='unknown';
+            $port='invalid';
+            socket_getsockname($new_sock,$addr,$port);
+            $name="$addr:$port";
 
-            $connections[]=new pfDaemonConnection($new_sock,$this);
+            $addr='unknown';
+            $port='invalid';
+            socket_getpeername($new_sock,$addr,$port);
+            $peer="$addr:$port";
+
+            siDiscern()->Event("accept",array('name'=>$name,'peer'=>$peer))->Flush();
+
+            $accept=new pfDaemonConnection($new_sock,$this);
+            $accept->name=$name;
+            $accept->peer=$peer;
+
+            $connections[]=$accept;
         }
     }
     public function __call($name,$args)

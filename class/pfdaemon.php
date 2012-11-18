@@ -1,11 +1,7 @@
 <?php
 
 // Daemon provides background server with IPC via TCP localhost
-
-define("PFD_REQ_NAME",1);
-define("PFD_ANS_NAME",2);
-define("PFD_REQ_FUNC",3);
-define("PFD_ANS_FUNC",4);
+//declare(ticks=1);
 
 class pfDaemon extends pfBase
 {
@@ -37,48 +33,66 @@ class pfDaemon extends pfBase
         $errno=socket_last_error($this->sock);
         return(socket_strerror($errno)." [$errno]");
     }
-    public function _Write($code,$data)
+    public function _Write($data)
     {
-        //siDiscern()->Event("pfd_write",array('code'=>$code,'data'=>$data))->Flush();
+        siDiscern()->Event("pfd_write",array('data'=>$data))->Flush();
 
-        $packet=pack("N2",$code,strlen($data));
-        if (strlen($packet)!=8)
+        $packet=pack("N",strlen($data));
+        if (strlen($packet)!=4)
             Fatal("pfDaemon::_Request() incorrect packet length ".strlen($packet));
         $packet.=$data;
         if (socket_write($this->sock,$packet)===false)
             Warning("pfDaemon::_Request() socket_write ".
                 $this->_SockErr());
     }
-    public function _Read(&$code)
+    public function _Read()
     {
-        if (strlen($this->head)<8)
+        if (strlen($this->head)<4)
         {
+            // first, fail if there isn't data to read 
+            $r=array($this->sock);
+            $w=NULL;
+            $e=NULL;
+            $select=socket_select($r,$w,$e,5);
+            if ($select===false)
+            {
+                Warning("pfDaemon::_Read() socket_select: ".$this->_SockErr());
+                return(false);
+            }
+            if (!$select)
+            {
+                Warning("pfDaemon::_Read() no data to read after 5 secs");
+                return(false);
+            }
+
             $this->data='';
-            $want=8-strlen($this->head);
-            //siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
+            $want=4-strlen($this->head);
+            siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
             $data=socket_read($this->sock,$want);
             $got=strlen($data);
-            //siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
+            siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
             if ($data===false)
             {
                 Warning("pfDaemon::_Read() socket_read ".$this->SockErr());
                 return(false);
             }
             $this->head.=$data;
-            if (strlen($this->head)<8)
+            if (strlen($this->head)<4)
                 return(false);
         }
-        $unpacked=unpack("N2",$this->head);
-        $code=$unpacked[1];
-        $len=$unpacked[2];
+        $unpacked=unpack("N",$this->head);
+        $len=$unpacked[1];
+            siDiscern()->Event("pfd_read",array('len'=>$len))->Flush();
+        if ($len>32767)
+            Fatal("Invalid size ".bin2hex($this->head));
 
         if (strlen($this->data)<$len)
         {
             $want=$len-strlen($this->data);
-            //siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
+            siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
             $data=socket_read($this->sock,$len-strlen($this->data));
             $got=strlen($data);
-            //siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
+            siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
             if ($data===false)
             {
                 Warning("pfDaemon::_Read() socket_read ".$this->SockErr());
@@ -99,6 +113,7 @@ class pfDaemon extends pfBase
         {
             if (!$this->sock)
             {
+                    siDiscern()->Event("create")->Flush();
                 $this->sock=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
                 if (!$this->sock)
                 {
@@ -107,7 +122,8 @@ class pfDaemon extends pfBase
                     sleep(1);
                     continue;
                 }
-                if (socket_connect($this->sock,'localhost',$this->port)===false)
+                    siDiscern()->Event("connect",array('to'=>"127.0.0.1:{$this->port}"))->Flush();
+                if (socket_connect($this->sock,'127.0.0.1',$this->port)===false)
                 {
                     if (socket_last_error($this->sock)!=111)
                     {
@@ -119,9 +135,18 @@ class pfDaemon extends pfBase
                     }
 
                     // connection refused indicates daemon is not running
-                    $error=shell_exec("php {$this->path} -daemon");
+                    $cmd="php {$this->path} -daemon";
+                    siDiscern()->Event("exec",array('cmd'=>$cmd))->Flush();
+                    $error=shell_exec($cmd);
                     if ($error)
                         Warning("pfDaemon::_Request() fork of {$this->path} had result: $error");
+                    siDiscern()->Event("exec-complete",array('cmd'=>$cmd))->Flush();
+
+                    socket_close($this->sock);
+                    $this->sock=false;
+                    sleep(1);
+                    continue;
+/*
 
                     // retry several times quickly to avoid delay
                     $retry=100;
@@ -140,15 +165,17 @@ class pfDaemon extends pfBase
                         // got a connection, drop through
                         break;
                     }
+*/
                     if (!$this->sock)
                         continue;
                 }
 
                 // after connect, always confirm identity
-                $this->_Write(PFD_REQ_NAME,"");
-                $response=$this->_Read($code);
-                if (!$response || $code!=PFD_ANS_NAME)
+                //$this->_Write(PFD_REQ_NAME,"");
+                $response=$this->_Read();
+                if (!$response)
                 {
+                    Warning("no response after connect");
                     socket_close($this->sock);
                     $this->sock=false;
                     sleep(1);
@@ -163,10 +190,11 @@ class pfDaemon extends pfBase
                     continue;
                 }
             }
-            $this->_Write(PFD_REQ_FUNC,$data);
-            $response=$this->_Read($code);
-            if (!$response || $code!=PFD_ANS_FUNC)
+            $this->_Write($data);
+            $response=$this->_Read();
+            if (!$response)
             {
+                Warning("No response to request");
                 socket_close($this->sock);
                 $this->sock=false;
                 sleep(1);

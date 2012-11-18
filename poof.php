@@ -34,9 +34,12 @@ require_once(dirname(__FILE__)."/error_handler.php");
 if (function_exists("libxml_disable_entity_loader"))
     libxml_disable_entity_loader(true);
 
-// always start session handling (produces no error if SAPI=cli)
-session_set_cookie_params(0); // persistant user tracking for discern
-session_start();
+// always start session handling 
+if (php_sapi_name()!="cli")
+{
+    session_set_cookie_params(0); // persistant user tracking for discern
+    session_start();
+}
 
 // load instrumentation class and initialize it
 // (yes, I know this adds overhead, trust me you'll like it)

@@ -11,6 +11,8 @@ class siDiscern extends pfSingleton
 
     public function __construct($init_time=false)
     {
+        global $argv;
+
         $server=array(
             'HTTP_HOST',
             'HTTP_USER_AGENT',
@@ -30,6 +32,7 @@ class siDiscern extends pfSingleton
             if (!empty($_SERVER[$var]))
                 $data[$var]=$_SERVER[$var];
         $data['SAPI']=php_sapi_name();
+        $data['ARGV']=(empty($argv)?"-not-set-":$argv);
         $data['SESSION']=session_id();
         $data['PHPVERSION']=phpversion();
 
@@ -70,16 +73,17 @@ class siDiscern extends pfSingleton
 
     public function Shutdown()
     {
+        $error=error_get_last();
 
         if (connection_aborted())
         {
             // user CANCELLED web page before completed
-            $this->Event("abort");
+            $this->Event("abort",$error);
         }
         else
         {
             // normal completion
-            $this->Event("shutdown");
+            $this->Event("shutdown",$error);
 
             // flush the output to make sure user sees page immediately
             if (php_sapi_name()!="cli")
