@@ -1,22 +1,15 @@
 <?php
-    // load base library
     require 'poof.php';
-    siDiscern();
 
-    global $POOF_UI_DEBUG;
-    if (!empty($_GET['debug']))
-        $POOF_UI_DEBUG=true;
-
-    //auDigest('TEST',array('admin'=>'secret'));
-
-    echo uiPage("POOF")->Add(
-        uiHeading("POOF Diagnostic Tool")->Add(
-            uiDebug('POOF_DIR'),
-            uiDebug('POOF_URL')
-        ),
-        uiDebug('_SESSION'),
-        uiDebug('_SERVER'),
-        uiDebug('_GET'),
-        uiDebug('_POST')
-    );
-
+	echo uiPage("POOF Demo")->Add(
+        uiHeading("Table Edit Test"),
+		uiContainer()->Add(
+			uiEditable(dbCsv("demodata.csv"))
+		),
+		uiContainer()->Add(
+			uiHeading(3,"The PHP code that generated this page:"),
+			uiCodeMirror(file_get_contents($_SERVER['SCRIPT_FILENAME']))->AddClass("pre-scrollable"),
+			uiHeading(3,"Contents of demodata.csv:"),
+			uiCodeMirror(file_get_contents("demodata.csv"))
+		)
+	);

@@ -94,7 +94,7 @@ function poof_locate($path)
         $test="$POOF_DIR/$path";
         if (file_exists($test))
             return($test);
-        Fatal("poof_locate(): did not find '$test'");
+        //Warning("poof_locate(): did not find '$test'");
     }
     return(false);
 }
@@ -120,5 +120,6 @@ function poof_autoload($class)
         return(true);
     }
 
-    Fatal("unable to locate file '$path'\n");
+    //Fatal("unable to locate file '$path'\n");
+    return(false);
 }

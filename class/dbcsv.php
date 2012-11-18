@@ -1,8 +1,10 @@
 <?php
-class dbcsv extends dbBase
+class dbCsv extends pfBase
 {
-    private $table;
+    //private $table;
+    private $path;
 
+    /*
     private function ReadCsv($file)
     {
         $this->table=array();
@@ -21,10 +23,18 @@ class dbcsv extends dbBase
             $this->table[]=$record;
         }
     }
+    */
 
     public function __construct($file)
     {
-        $this->ReadCsv($file);
+        global $dbcsv_daemon;
+
+        if ($file[0]=="/")
+            $this->path=$file;
+        else
+            $this->path=getcwd()."/".$file;
+
+        $dbcsv_daemon=pfDaemon("dbcsv");
     }
 
     public function keys()
@@ -33,7 +43,9 @@ class dbcsv extends dbBase
     }
     public function fields()
     {
-        return(array_keys($this->table[0]));
+        global $dbcsv_daemon;
+        //return(array_keys($this->table[0]));
+        return($dbcsv_daemon->fields($this->path));
     }
     public function escape($data)
     {
@@ -41,7 +53,8 @@ class dbcsv extends dbBase
     }
     public function records($where=NULL,$limit=NULL)
     {
-        return($this->table);
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->records($this->path,$where));
     }
     public function lookup($where)
     {

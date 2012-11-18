@@ -39,6 +39,8 @@ class pfDaemon extends pfBase
     }
     public function _Write($code,$data)
     {
+        //siDiscern()->Event("pfd_write",array('code'=>$code,'data'=>$data))->Flush();
+
         $packet=pack("N2",$code,strlen($data));
         if (strlen($packet)!=8)
             Fatal("pfDaemon::_Request() incorrect packet length ".strlen($packet));
@@ -52,7 +54,11 @@ class pfDaemon extends pfBase
         if (strlen($this->head)<8)
         {
             $this->data='';
-            $data=socket_read($this->sock,8-strlen($this->head));
+            $want=8-strlen($this->head);
+            //siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
+            $data=socket_read($this->sock,$want);
+            $got=strlen($data);
+            //siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
             if ($data===false)
             {
                 Warning("pfDaemon::_Read() socket_read ".$this->SockErr());
@@ -68,7 +74,11 @@ class pfDaemon extends pfBase
 
         if (strlen($this->data)<$len)
         {
+            $want=$len-strlen($this->data);
+            //siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
             $data=socket_read($this->sock,$len-strlen($this->data));
+            $got=strlen($data);
+            //siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
             if ($data===false)
             {
                 Warning("pfDaemon::_Read() socket_read ".$this->SockErr());
@@ -83,7 +93,7 @@ class pfDaemon extends pfBase
     }
     public function _Request($data)
     {
-        $timeout=300;
+        $timeout=10;
         $started=time();
         while (time()-$started<$timeout)
         {

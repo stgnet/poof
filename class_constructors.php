@@ -153,6 +153,11 @@ function uidropdown($text,$list=false)
     return new uidropdown($text,$list);
 }
 
+function uieditable($db,$fields=NULL)
+{
+    return new uieditable($db,$fields);
+}
+
 function uielement()
 {
     return new uielement();
