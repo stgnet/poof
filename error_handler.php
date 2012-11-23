@@ -19,6 +19,7 @@
     function Warning($msg)
     {
         poof_error_send("WARNING: ".$msg);
+        return(false);
     }
 
     // php's internal errors are sent here

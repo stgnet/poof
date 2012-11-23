@@ -14,7 +14,7 @@ class pfDaemon extends pfBase
     private $head;
     private $data;
 
-    function __construct($name,$path=false)
+    public function __construct($name,$path=false)
     {
         $this->name=$name;
         $this->port=50000+hexdec(substr(md5($name),-3));
@@ -28,6 +28,11 @@ class pfDaemon extends pfBase
         $this->head='';
         $this->data='';
     }
+    public function __destruct()
+    {
+        if ($this->sock)
+            socket_close($this->sock);
+    }
     public function _SockErr()
     {
         $errno=socket_last_error($this->sock);
@@ -35,7 +40,7 @@ class pfDaemon extends pfBase
     }
     public function _Write($data)
     {
-        siDiscern()->Event("pfd_write",array('data'=>$data))->Flush();
+        //siDiscern()->Event("pfd_write",array('data'=>$data))->Flush();
 
         $packet=pack("N",strlen($data));
         if (strlen($packet)!=4)
@@ -67,10 +72,10 @@ class pfDaemon extends pfBase
 
             $this->data='';
             $want=4-strlen($this->head);
-            siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
+            //siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
             $data=socket_read($this->sock,$want);
             $got=strlen($data);
-            siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
+            //siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
             if ($data===false)
             {
                 Warning("pfDaemon::_Read() socket_read ".$this->SockErr());
@@ -82,17 +87,17 @@ class pfDaemon extends pfBase
         }
         $unpacked=unpack("N",$this->head);
         $len=$unpacked[1];
-            siDiscern()->Event("pfd_read",array('len'=>$len))->Flush();
+            //siDiscern()->Event("pfd_read",array('len'=>$len))->Flush();
         if ($len>32767)
             Fatal("Invalid size ".bin2hex($this->head));
 
         if (strlen($this->data)<$len)
         {
             $want=$len-strlen($this->data);
-            siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
+            //siDiscern()->Event("pfd_read",array('want'=>$want))->Flush();
             $data=socket_read($this->sock,$len-strlen($this->data));
             $got=strlen($data);
-            siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
+            //siDiscern()->Event("pfd_read",array('got'=>$got))->Flush();
             if ($data===false)
             {
                 Warning("pfDaemon::_Read() socket_read ".$this->SockErr());
@@ -107,13 +112,13 @@ class pfDaemon extends pfBase
     }
     public function _Request($data)
     {
-        $timeout=10;
+        $timeout=15;
         $started=time();
         while (time()-$started<$timeout)
         {
             if (!$this->sock)
             {
-                    siDiscern()->Event("create")->Flush();
+                    //siDiscern()->Event("create")->Flush();
                 $this->sock=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
                 if (!$this->sock)
                 {
@@ -122,7 +127,7 @@ class pfDaemon extends pfBase
                     sleep(1);
                     continue;
                 }
-                    siDiscern()->Event("connect",array('to'=>"127.0.0.1:{$this->port}"))->Flush();
+                    //siDiscern()->Event("connect",array('to'=>"127.0.0.1:{$this->port}"))->Flush();
                 if (socket_connect($this->sock,'127.0.0.1',$this->port)===false)
                 {
                     if (socket_last_error($this->sock)!=111)
@@ -136,17 +141,17 @@ class pfDaemon extends pfBase
 
                     // connection refused indicates daemon is not running
                     $cmd="php {$this->path} -daemon";
-                    siDiscern()->Event("exec",array('cmd'=>$cmd))->Flush();
+                    //siDiscern()->Event("exec",array('cmd'=>$cmd))->Flush();
                     $error=shell_exec($cmd);
                     if ($error)
                         Warning("pfDaemon::_Request() fork of {$this->path} had result: $error");
-                    siDiscern()->Event("exec-complete",array('cmd'=>$cmd))->Flush();
+                    //siDiscern()->Event("exec-complete",array('cmd'=>$cmd))->Flush();
 
                     socket_close($this->sock);
                     $this->sock=false;
                     sleep(1);
                     continue;
-/*
+
 
                     // retry several times quickly to avoid delay
                     $retry=100;
@@ -165,13 +170,12 @@ class pfDaemon extends pfBase
                         // got a connection, drop through
                         break;
                     }
-*/
+
                     if (!$this->sock)
                         continue;
                 }
 
                 // after connect, always confirm identity
-                //$this->_Write(PFD_REQ_NAME,"");
                 $response=$this->_Read();
                 if (!$response)
                 {
@@ -209,8 +213,12 @@ class pfDaemon extends pfBase
     {
         $data=json_encode(array('name'=>$name,'args'=>$args));
         $response=json_decode($this->_Request($data),true);
-        if (!empty($response['return']))
+        if (is_array($response) && array_key_exists('return',$response))
             return($response['return']);
+
+        if (is_array($response) && array_key_exists('error',$response))
+            Fatal("{$this->name}::$name(): ".$response['error']);
+
         Fatal("pfDaemon:_call($name) returned ".print_r($response,true));
     }
 }

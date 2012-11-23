@@ -27,6 +27,49 @@ class dbbase extends event
 
         return($mine);
     }
+    public function guid()
+    {
+        mt_srand((double) microtime() * 10000);
+        return(md5(uniqid(rand(), true)));
+    }
+    public function MatchWhere($record,$where)
+    {
+        if (!is_array($where))
+            return(Warning("MatchWhere not array: ".json_encode($where)));
+
+        // if all arrays, treat it as chained AND's
+        $ands=true;
+        foreach ($where as $condition)
+            if (!is_array($condition))
+                $ands=false;
+
+        if ($ands)
+        {
+            foreach ($where as $condition)
+                if (!$this->MatchWhere($record,$condition))
+                    return(false);
+            return(true);
+        }
+
+        if (count($where)==2)
+        {
+            if (empty($where[0]) || empty($where[1]))
+                Fatal("MatchWhere invalid array: ".json_encode($where));
+
+            if (is_string($where[0]) && (is_string($where[1]) || is_numeric($where[1])))
+            {
+                $field=$where[0];
+                if (!array_key_exists($field,$record))
+                    return(Warning("MatchWhere field '$field' does not exist in record"));
+                if ($record[$field]==$where[1])
+                    return(true);
+                else
+                    return(false);
+            }
+            return(Warning("MatchWhere invalid types in array: ".json_encode($where)));
+        }
+        return(Warning("MatchWhere unimplemented comparison: ".json_encode($where)));
+    }
 
     protected function WhereToString($input,$db)
     {

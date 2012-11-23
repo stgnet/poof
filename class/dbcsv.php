@@ -37,14 +37,26 @@ class dbCsv extends pfBase
         $dbcsv_daemon=pfDaemon("dbcsv");
     }
 
+    public function SetFields($fields)
+    {
+        global $dbcsv_daemon;
+        $dbcsv_daemon->SetFields($this->path,$fields);
+        return($this);
+    }
+    public function SetKey($key)
+    {
+        global $dbcsv_daemon;
+        $dbcsv_daemon->SetKey($this->path,$key);
+        return($this);
+    }
     public function keys()
     {
-        Fatal("Not implemented");
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->keys($this->path));
     }
     public function fields()
     {
         global $dbcsv_daemon;
-        //return(array_keys($this->table[0]));
         return($dbcsv_daemon->fields($this->path));
     }
     public function escape($data)
@@ -58,23 +70,28 @@ class dbCsv extends pfBase
     }
     public function lookup($where)
     {
-        Fatal("Not implemented");
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->lookup($this->path,$where));
     }
     public function unary($where)
     {
-        Fatal("Not implemented");
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->unary($this->path,$where));
     }
     public function update($record,$where=NULL)
     {
-        Fatal("Not implemented");
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->update($this->path,$record,$where));
     }
     public function insert($record)
     {
-        Fatal("Not implemented");
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->insert($this->path,$record));
     }
-    public function delete($record=NULL,$where=NULL)
+    public function delete($record=NULL)
     {
-        Fatal("Not implemented");
+        global $dbcsv_daemon;
+        return($dbcsv_daemon->delete($this->path,$record));
     }
 
 }
