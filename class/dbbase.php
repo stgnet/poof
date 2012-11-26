@@ -37,6 +37,22 @@ class dbbase extends event
         if (!is_array($where))
             return(Warning("MatchWhere not array: ".json_encode($where)));
 
+        // if keys match fields in record, use as record
+        $keys=true;
+        $comparison=true;
+        foreach ($where as $key => $value)
+        {
+            if (!array_key_exists($key,$record))
+            {
+                $keys=false;
+                break;
+            }
+            if ($record[$key]!=$value)
+                $comparison=false;
+        }
+        if ($keys)
+            return($comparison);
+
         // if all arrays, treat it as chained AND's
         $ands=true;
         foreach ($where as $condition)
@@ -50,6 +66,7 @@ class dbbase extends event
                     return(false);
             return(true);
         }
+
 
         if (count($where)==2)
         {

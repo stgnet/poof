@@ -15,7 +15,7 @@ class dbcsv_file extends dbBase
     private $last; // last time file read
     public $fields; // array of fields (can be expanded beyond last read)
     public $header; // array of fields on last read
-    private $writewhen; // when non-zero, when to write changed file
+    public $writewhen; // when non-zero, when to write changed file
     public $key; // key field (unique id)
     public $keyhigh; // highest value of key field
 
@@ -272,25 +272,9 @@ class dbcsv_daemon extends pfDaemonServer
                 return($record);
         return(null);
     }
-    function delete($path,$record)
+    function delete($path,$where)
     {
         $file=$this->findfile($path);
-
-        $where=false;
-        $match=array();
-        foreach ($record as $key => $value)
-        {
-            if (!in_array($key,$file->fields))
-            {
-                // presume $record is actually a $where
-                $where=$record;
-                break;
-            }
-            // build where that matches record
-            $match[]=array($key,$value);
-        }
-        if (!$where)
-            $where=$match;
 
         $delete=array();
         foreach ($file->table as $index => $record)
@@ -300,13 +284,31 @@ class dbcsv_daemon extends pfDaemonServer
         }
 
         foreach ($delete as $index)
-        {
             unset($file->table[$index]);
-        }
 
         if (count($delete))
             $file->write();
 
+        return(null);
+    }
+    function update($path,$updated)
+    {
+        $file=$this->findfile($path);
+
+        if (!$file->key)
+            return(new pfDaemonError("no key field set for $path"));
+
+        if (!array_key_exists($file->key,$updated))
+            return(new pfDaemonError("no key field in record to update $path"));
+
+        $where=array($file->key,$updated[$file->key]);
+
+        foreach ($file->table as $index => $record)
+        {
+            if ($file->MatchWhere($record,$where))
+                $file->table[$index]=$updated;
+        }
+        $file->write();
         return(null);
     }
 

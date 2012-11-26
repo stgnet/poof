@@ -169,7 +169,49 @@
 4,tuv,wxyz
 ",file_get_contents($file));
 
+        }
+        function test_update()
+        {
+            $file="tests/test9.csv";
+            unlink($file);
 
+            $fields=array('key','alpha','beta');
+
+            $test9=dbcsv($file)->SetFields($fields)->SetKey('key');
+
+            $test9->insert(array('alpha'=>"abc",'beta'=>"def"));
+            $test9->insert(array('alpha'=>"ghi",'beta'=>"jkl"));
+            $test9->insert(array('alpha'=>"nmo",'beta'=>"pqrs"));
+            $test9->insert(array('alpha'=>"tuv",'beta'=>"wxyz"));
+
+            $record=$test9->lookup(array('key','3'));
+
+            $this->assertArrayHasKey('alpha',$record);
+            $this->assertEquals('nmo',$record['alpha']);
+
+            $record=$test9->lookup(array('key'=>'3'));
+
+            $this->assertArrayHasKey('alpha',$record);
+            $this->assertEquals('nmo',$record['alpha']);
+
+            // now change value
+
+            $record['alpha']='octothorpe';
+            $test9->update($record);
+
+            // look it up again and confirm
+            $record=$test9->lookup(array('key'=>'3'));
+
+            $this->assertEquals('octothorpe',$record['alpha']);
+
+            sleep(4);
+
+            $this->assertEquals("key,alpha,beta
+1,abc,def
+2,ghi,jkl
+3,octothorpe,pqrs
+4,tuv,wxyz
+",file_get_contents($file));
         }
     }
 ?>
