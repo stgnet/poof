@@ -9,16 +9,16 @@
         }
 
         // eliminate entries that don't match pattern (* and ? wildcards)
-        public function Match($pattern)
+        public function Match($pattern,$negate=false)
         {
             $pattern=str_replace("*",".*",$pattern);
             $pattern=str_replace("?",".",$pattern);
             $pattern="^$pattern$";
 
-            return($this->PregMatch($pattern));
+            return($this->PregMatch($pattern,$negate));
         }
         // eliminate entries that don't match regular expression
-        public function PregMatch($regexp)
+        public function PregMatch($regexp,$negate=false)
         {
             $separator="|";
             if (substr_count($regexp,$separator))
@@ -30,9 +30,18 @@
             $pattern=$separator.$regexp.$separator;
 
             $remove=array();
-            foreach ($this as $index => $item) {
-                if (!preg_match($pattern,$item))
-                    $remove[]=$index;
+            foreach ($this as $index => $item)
+            {
+                if ($negate)
+                {
+                    if (preg_match($pattern,$item))
+                        $remove[]=$index;
+                }
+                else
+                {
+                    if (!preg_match($pattern,$item))
+                        $remove[]=$index;
+                }
             }
             foreach ($remove as $index)
                 unset($this[$index]);
@@ -42,6 +51,22 @@
         public function Sort()
         {
             $this->asort();
+
+            return($this);
+        }
+        public function isDir()
+        {
+            $remove=array();
+            foreach ($this as $index => $item)
+            {
+                // while technically "." and ".." are directories,
+                // this functions excludes them
+                if (!is_dir($item) || $item=="." || $item=="..")
+                    $remove[]=$index;
+            }
+
+            foreach ($remove as $index)
+                unset($this[$index]);
 
             return($this);
         }

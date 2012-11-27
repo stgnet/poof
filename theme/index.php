@@ -1,26 +1,24 @@
 <?php
-    require 'poof.php';
-    poof_theme('stg');
+    require '../poof.php';
 
-    $navmenu=array('Home'=>"demo.php");
-    foreach (arDir("demo")->Match("*.php")->Sort() as $file)
-        $navmenu[basename($file,".php")]=$file;
+    if (!empty($_GET['theme']))
+        poof_theme($_GET['theme']);
 
-    $carousel=arDir("img")->Match("*/poof?.png");
+    $navmenu=array('Default'=>"index.php");
+    foreach (arDir()->isDir()->Sort() as $theme)
+        $navmenu[ucwords($theme)]="index.php?theme=$theme";
 
-    echo uiPage("POOF Demo")->Add(
+    echo uiPage("POOF Themes")->Add(
         uiGoogleAnalytics('UA-34982565-1','poof.stg.net'),
-        uiDiv("navbar")/*->AddClass("navbar-static-top navbar-inverse")*/->Add(
+        uiDiv("navbar")->Add(
             // add uiContainer here to limit width of navbar
             uiDiv("navbar-inner")->Add(
-                uiLink("#","POOF")->AddClass("brand"),
-                //uiImage("img/poof.png","index.php")->AddClass("nav"),
+                uiLink("#","POOF Themes")->AddClass("brand"),
                 uiNavList($navmenu)->AddClass("pull-right")
             )
         ),
         uiContainer()->Add(
             uiHero()->Add(
-                uiCarousel($carousel)->AddClass("pull-right"),
                 uiHeading("Hello, World!"),
                 uiParagraph("This is a demostration of")->Add(
                     uiTooltip("Programmatic Object-oriented Orthogonal Framework")->Add(
