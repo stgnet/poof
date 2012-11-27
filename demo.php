@@ -1,6 +1,6 @@
 <?php
     require 'poof.php';
-    poof_theme('united');
+    poof_theme('stg');
 
     $navmenu=array('Home'=>"demo.php");
     foreach (arDir("demo")->Match("*.php")->Sort() as $file)
