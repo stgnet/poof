@@ -21,6 +21,22 @@ class uiEditable extends uiElement
 
     public function __toString()
     {
+        $edit_delete_buttons= uiButton()
+                ->AddClass("btn-small")
+                ->AddAttr('name','edit')
+                ->Add(uiIcon('pencil'))
+            ." ".
+            uiButton()
+                ->AddClass("btn-small")
+                ->AddAttr('name','delete')
+                ->Add(uiIcon('trash'));
+
+        $add_button=uiButton()
+                ->AddClass("btn-small")
+                ->Add(uiIcon('plus-sign'));
+
+        $add_id=$this->db->guid();
+
         $row='';
         foreach ($this->fields as $field => $header)
             $row.=$this->Tag("th",htmlentities($header));
@@ -30,18 +46,23 @@ class uiEditable extends uiElement
         );
 
         $body='';
-        $id=0;
         foreach ($this->db->records() as $record)
         {
-            $id++;
             $row='';
             foreach ($this->fields as $field => $header)
             {
-                $row.=$this->Tag("td id=\"$id\"",htmlentities($record[$field]));
+                $row.=$this->Tag("td",htmlentities($record[$field]));
             }
+            $row.=$this->Tag("td",$edit_delete_buttons);
 
-            $body.=$this->Tag("tr id=\"$id\"",$row);
+            $key=$record['key'];
+            $body.=$this->Tag("tr id=\"$key\"",$row);
         }
+        $row='';
+        foreach ($this->fields as $header)
+            $row.=$this->Tag("td");
+        $row.=$this->Tag("td width=\"80pt\"",$add_button);
+        $body.=$this->Tag("tr id=\"{$add_id}\"",$row);
 
         $table.=$this->Tag("tbody",$body);
 
@@ -49,22 +70,41 @@ class uiEditable extends uiElement
     }
     public function PostHandler($data)
     {
+        $save_cancel_buttons=uiButton()
+                ->AddClass("btn-small")
+                ->AddAttr('name','save')
+                ->Add(uiIcon('ok'))
+            ." ".
+            uiButton()
+                ->AddClass("btn-small")
+                ->AddAttr('name','cancel')
+                ->Add(uiIcon('remove'));
+
         $colspan=count($this->fields);
-        echo "<td colspan=\"$colspan\">";
-        echo "edit $colspan goes here ".time()." for ".print_r($data,true);
-        echo "</td>";
+        $edit="edit: ".print_r($data,true); 
+
+        echo $this->Tag("td colspan=\"$colspan\"",$edit);
+        echo $this->Tag("td width-\"80pt\"",$save_cancel_buttons);
 
         return(true);
     }
     public function PreGenerate($page)
     {
-            /*
-            alert(\$(this).text()+' id='+event.target.id);
-            console.log(\"event=%o\",\$(this).context.id);
-            */
         $url=$this->GetAction();
-        $page->ReadyScript('editable',"\$(\"tbody\").on(\"click\",\"tr\",function(event){
-            \$('#'+event.target.id).load('{$url}',{'edit':'form','id':event.target.id});
-        });");
+        $class=$this->ui_id;
+        $script="\$('#$class').on('click',function(event){
+            var btn=event.target;
+            if (btn.tagName!=\"BUTTON\")
+            {
+                btn=btn.parentNode;
+                if (btn.tagName!=\"BUTTON\")
+                    return(true);
+            }
+            var row=btn.parentNode.parentNode;
+            \$('#'+row.id).load('{$url}',{'button':btn.name,'key':row.id});
+            console.log(\"btn=%o\",btn);
+        });";
+
+        $page->ReadyScript($class,$script);
     }
 }

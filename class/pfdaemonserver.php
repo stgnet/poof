@@ -121,8 +121,8 @@ class pfDaemonServer extends pfDaemon
 
         $lastactive=time();
 
-        // shut down after being idle for 5 minutes
-        $timeout=300;
+        // shut down after being idle for 30 minutes
+        $timeout=30*60;
 
         while (time()-$lastactive<$timeout)
         {

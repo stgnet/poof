@@ -6,6 +6,8 @@ class uiicon extends uiElement
     {
         parent::__construct();
         $this->ui_tag="i";
+        if (substr($name,0,5)!="icon-")
+            $name="icon-".$name;
         $this->ui_class=$name;
     }
 }

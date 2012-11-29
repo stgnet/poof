@@ -129,8 +129,9 @@ class uipage extends uiElement
 
     public function __toString()
     {
-
-        if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST') {
+        if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST')
+        {
+            $_SERVER['REQUEST_METHOD']='post-handled';
             siDiscern()->Event('post');
             if ($this->PassToPostHandler())
                 return('');

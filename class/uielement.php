@@ -31,6 +31,8 @@ class uielement extends pfBase
         $this->ui_text=false;
         $this->ui_postfunc=false;
         $this->ui_name=false;
+        $this->ui_contents=array();
+        //siDiscern()->Event("debug-uielement-construct",$this->ui_id);
     }
     /*
     public function SetTag($tag)
@@ -109,6 +111,7 @@ class uielement extends pfBase
             if ($obj->ui_parent)
                 Fatal("uiElement::Add({$obj->ui_id}): already added to {$obj->ui_parent->ui_id}");
 
+            //siDiscern()->Event('debug-ui-add',array('parent'=>$this->ui_id,'child'=>$obj->ui_id));
             $this->ui_contents[]=$obj;
             $obj->ui_parent=&$this;
         }
@@ -181,9 +184,16 @@ class uielement extends pfBase
         $action=$this->GetAction();
         $self=$_SERVER['PHP_SELF'];
 
-        if ($action==$self) {
+        $msg='';
+        foreach (debug_backtrace() as $stack)
+            $msg.=$stack['function']."() in ".$stack['file']." #".$stack['line']."\n";
+        //siDiscern()->Event('debug-ptph-'.$this->ui_id,$msg);
+
+        if ($action==$self) 
+        {
             if ($this->ui_postfunc)
             {
+        //siDiscern()->Event('debug-postfunc',array('id'=>$this->ui_id,'action'=>$action,'self'=>$self));
                 $_SERVER['REQUEST_METHOD']="--handled--";
                 $this->ui_postfunc($_POST);
                 return(true);
@@ -191,20 +201,31 @@ class uielement extends pfBase
             if (!method_exists($this,"PostHandler"))
                 Fatal("class element does not implement PostHandler - $self");
 
+        //siDiscern()->Event('debug-posthand',array('id'=>$this->ui_id,'action'=>$action,'self'=>$self));
             if (empty($_FILES))
                 return($this->PostHandler($_POST));
             else
                 return($this->PostHandler($_POST,$_FILES));
         }
 
-        $path=substr($_SERVER['PHP_SELF'],strlen($action)+1);
-        if (!$path) Fatal("unable to determine path to post element");
+
+        //$path=substr($_SERVER['PHP_SELF'],strlen($action)+1);
+        $path=str_replace($action."/","",$self);
+        if (!$path) Fatal("error decoding path to $self");
 
         $subpath=explode('/',$path);
         $post_is_for=$subpath[0];
 
-        if ($this->ui_contents) foreach ($this->ui_contents as $element) {
-            if ($element->ui_id==$post_is_for) {
+        //siDiscern()->event('debug',array('id'=>$this->ui_id,'action'=>$action,'self'=>$self,'path'=>$path,'for'=>$post_is_for));
+
+        if (substr($self,0,strlen($action))!=$action)
+            Fatal("object '$action' does not match request '$self'");
+
+        if ($this->ui_contents) foreach ($this->ui_contents as $element) 
+        {
+            //siDiscern()->event('debug',array('id'=>$element->ui_id));
+            if ($element->ui_id==$post_is_for) 
+            {
                 return($element->PassToPostHandler());
             }
         }
@@ -279,8 +300,11 @@ class uielement extends pfBase
     {
         global $POOF_UI_DEBUG;
 
-        if (empty($this->ui_parent)) {
-            if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST') {
+        if (empty($this->ui_parent))
+        {
+            if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST')
+            {
+                $_SERVER['REQUEST_METHOD']='post-handled';
                 if ($this->PassToPostHandler())
                     return('');
             }

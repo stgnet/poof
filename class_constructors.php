@@ -66,9 +66,9 @@ function pfdaemon($name,$path=false)
     return new pfdaemon($name,$path);
 }
 
-function pfdaemonserver($sock,$server)
+function pfdaemonserver($error)
 {
-    return new pfdaemonserver($sock,$server);
+    return new pfdaemonserver($error);
 }
 
 function pfsingleton()
@@ -98,7 +98,7 @@ function uiblockquote()
     return new uiblockquote();
 }
 
-function uibutton($text,$href=false)
+function uibutton($text=false,$href=false)
 {
     return new uibutton($text,$href);
 }

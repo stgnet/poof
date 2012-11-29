@@ -2,7 +2,7 @@
 
 class uibutton extends uiElement
 {
-    public function __construct($text,$href=false)
+    public function __construct($text=false,$href=false)
     {
         parent::__construct();
         if ($href) {

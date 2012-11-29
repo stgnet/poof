@@ -222,7 +222,7 @@ if ($detailed)					$output.=print_r($stack['object'],true);
         print("\n\n<br/><hr/><p><font size=\"+2\" color=\"red\">\n");
         print("ERROR: $msg\n");
         print("</font></p>");
-//        print("<pre>".htmlentities(poof_error_trace())."</pre>");
+        print("<pre>".htmlentities(poof_error_trace(true))."</pre>");
         print("<hr/><br/>\n");
     }
     function poof_error_send_text($msg)

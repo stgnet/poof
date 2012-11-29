@@ -32,7 +32,7 @@ class siDiscern extends pfSingleton
             if (!empty($_SERVER[$var]))
                 $data[$var]=$_SERVER[$var];
         $data['SAPI']=php_sapi_name();
-        $data['ARGV']=(empty($argv)?"-not-set-":$argv);
+        $data['ARGV']=(empty($argv)?'':$argv);
         $data['SESSION']=session_id();
         $data['PHPVERSION']=phpversion();
 
