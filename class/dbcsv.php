@@ -1,5 +1,5 @@
 <?php
-class dbCsv extends pfBase
+class dbCsv extends dbBase
 {
     //private $table;
     private $path;

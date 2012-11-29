@@ -45,6 +45,22 @@ if (php_sapi_name()!="cli")
 // (yes, I know this adds overhead, trust me you'll like it)
 siDiscern($poof_init_time);
 
+// fix missing hex2bin
+if (!function_exists("hex2bin"))
+{
+    function hex2bin($h)
+    {
+        if (!is_string($h)) return null;
+        $r = '';
+        for ($a = 0; $a < strlen($h); $a += 2)
+        {
+            $r .= chr(hexdec($h{$a}.$h{($a + 1)}));
+        }
+        return $r;
+    }
+}
+
+
 // allow selection of a theme (multiple possible)
 function poof_theme($name)
 {

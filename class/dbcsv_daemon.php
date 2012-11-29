@@ -203,6 +203,13 @@ class dbcsv_daemon extends pfDaemonServer
         $file->checkfile();
         return($file);
     }
+    function keys($path)
+    {
+        $file=$this->findfile($path);
+        if (empty($file->key))
+            return(false);
+        return(array($file->key));
+    }
     function setkey($path,$key)
     {
         $file=$this->findfile($path);

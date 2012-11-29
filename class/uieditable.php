@@ -19,6 +19,35 @@ class uiEditable extends uiElement
         $this->db=$db;
     }
 
+    public function enkey($record)
+    {
+        $encoded="k";
+        foreach ($this->db->keys() as $field)
+            $encoded.="|".urlencode($record[$field]);
+        $encoded=bin2hex($encoded);
+        return($encoded);
+    }
+    public function dekey($encoded)
+    {
+        $encoded=hex2bin($encoded);
+
+        $keys=$this->db->keys();
+
+        $values=explode('|',$encoded);
+
+        $prefix=array_shift($values);
+        if ($prefix!="k")
+            return(null);
+
+        $record=array();
+        foreach ($values as $value)
+        {
+            $field=array_shift($keys);
+            $record[$field]=urldecode($value);
+        }
+        return($record);
+    }
+
     public function __toString()
     {
         $edit_delete_buttons= uiButton()
@@ -36,6 +65,10 @@ class uiEditable extends uiElement
                 ->Add(uiIcon('plus-sign'));
 
         $add_id=$this->db->guid();
+
+        $keys=$this->db->keys();
+        if (empty($keys) || count($keys)<1)
+            Fatal("no keys provided");
 
         $row='';
         foreach ($this->fields as $field => $header)
@@ -55,7 +88,7 @@ class uiEditable extends uiElement
             }
             $row.=$this->Tag("td",$edit_delete_buttons);
 
-            $key=$record['key'];
+            $key=$this->enkey($record);
             $body.=$this->Tag("tr id=\"$key\"",$row);
         }
         $row='';
@@ -81,7 +114,7 @@ class uiEditable extends uiElement
                 ->Add(uiIcon('remove'));
 
         $colspan=count($this->fields);
-        $edit="edit: ".print_r($data,true); 
+        $edit="edit: ".print_r($data,true)." | ".print_r($this->dekey($data['key']),true);
 
         echo $this->Tag("td colspan=\"$colspan\"",$edit);
         echo $this->Tag("td width-\"80pt\"",$save_cancel_buttons);
