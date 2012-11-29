@@ -106,7 +106,7 @@ function poof_url($path)
 {
     global $POOF_URL,$POOF_ROOT;
     $filepath=poof_locate($path);
-    $relpath=str_replace($POOF_ROOT,$POOF_URL,$filepath);
+    $relpath=str_replace($POOF_ROOT,"",$filepath);
     return($relpath);
 }
 
