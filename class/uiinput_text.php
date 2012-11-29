@@ -26,7 +26,7 @@ class uiInput_Text extends uiInput_Base
 {
     public function __construct($attr=false)
     {
-        $valid=array('type');
+        $valid=array('type','value');
         parent::__construct($attr,$valid);
 
         $this->ui_tag="input";

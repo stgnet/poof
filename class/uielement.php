@@ -84,6 +84,26 @@ class uielement extends pfBase
     {
         return($this->AddStyle("border: {$width}px $style $color;"));
     }
+    public function Margin($value)
+    {
+        return($this->AddStyle("margin: {$value};"));
+    }
+    public function MarginBottom($value)
+    {
+        return($this->AddStyle("margin-bottom: {$value};"));
+    }
+    public function MarginLeft($value)
+    {
+        return($this->AddStyle("margin-left: {$value};"));
+    }
+    public function MarginRight($value)
+    {
+        return($this->AddStyle("margin-right: {$value};"));
+    }
+    public function MarginTop($value)
+    {
+        return($this->AddStyle("margin-top: {$value};"));
+    }
     public function Background($color)
     {
         return($this->AddStyle("background: $color;"));
@@ -250,7 +270,7 @@ class uielement extends pfBase
     {
         $untag=explode(' ',$tag);
         $untag=$untag[0];
-        $dontclose=array('script','i','iframe');
+        $dontclose=array('script','i','iframe','div');
 
         // this prevents elements' __toString()
         // from being called more than once

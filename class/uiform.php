@@ -26,18 +26,26 @@ class uiform extends uiElement
 
         // generate field list from record list if not supplied
         if ($fields)
+        {
             $this->fields=$fields;
-        else {
+        }
+        else 
+        {
             $this->fields=array();
             if ($record) foreach ($record as $name => $value) {
                 // have to stupidly presume text field
                 $this->fields[$name]=array('type'=>"text");
             }
         }
+
         // and insure that all keys exist
-        foreach ($this->fields as $name => $pairs) {
+        foreach ($this->fields as $name => $pairs)
+        {
             if (!isset($this->record[$name]))
                 $this->record[$name]='';
+
+            if (empty($pairs['value']))
+                $this->fields[$name]['value']=$this->record[$name];
         }
 
         // insure name is in attributes
@@ -48,8 +56,8 @@ class uiform extends uiElement
         }
 
         // add each field to this form
-
-        foreach ($this->fields as $name => $attributes) {
+        foreach ($this->fields as $name => $attributes)
+        {
             $type="text";
             if (!empty($attributes['type']))
                 $type=$attributes['type'];
