@@ -2,7 +2,7 @@
 
 // new uiElement base class replaces ui and uibase classes
 
-class uielement extends pfBase
+class uiElement extends pfBase
 {
     private $ui_parent;
     private $ui_contents;
@@ -180,6 +180,26 @@ class uielement extends pfBase
         return($action);
     }
 
+    // sanitize a fully descriptive field array
+    // to be just 'name'=>"Descriptive Title"
+    public function FieldsWithNames($fields)
+    {
+        $fieldnames=array();
+        foreach ($fields as $name => $details)
+        {
+            if (is_array($details))
+            {
+                if (empty($details['desc']))
+                    $fieldnames[$name]=str_replace(array('-','_')," ",$name);
+                else
+                    $fieldnames[$name]=$details['desc'];
+            }
+            else
+                $fieldnames[$name]=$details;
+        }
+        return($fieldnames);
+    }
+    /* deprecated:
     public function DefaultFields($db)
     {
         // obtain list of fields for table/edit from database itself
@@ -191,6 +211,7 @@ class uielement extends pfBase
 
         return($fields);
     }
+    */
     public function Post($func)
     {
         $this->ui_postfunc=$func;

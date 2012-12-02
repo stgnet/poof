@@ -1,5 +1,6 @@
 <?php
-/* ==========================================================
+/**
+ * ==========================================================
  * poof
  * http://poof.stg.net
  * ==========================================================
@@ -16,7 +17,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ========================================================== */
+ * ==========================================================
+ * 
+ * @package poof
+ * @author Scott Griepentrog
+ * @copyright Apache 2.0
+ */
 
 // for siDiscern(), make note of actual start time
 $poof_init_time=microtime(true);
@@ -102,18 +108,27 @@ function poof_locate($path)
     }
     if ($path)
     {
+        $orig=$path;
         $path=strtolower($path);
         // default must be last theme checked
         foreach (array_merge($POOF_THEMES,array('default')) as $theme)
         {
             $test="$POOF_DIR/theme/$theme/$path";
             if (file_exists($test))
+            {
+                //siDiscern()->Event("locate",array('request'=>$orig,'path'=>$test));
                 return($test);
+            }
         }
         $test="$POOF_DIR/$path";
         if (file_exists($test))
+        {
+            //if (class_exists("siDiscern"))
+            //    siDiscern()->Event("locate",array('request'=>$orig,'path'=>$test));
             return($test);
+        }
         //Warning("poof_locate(): did not find '$test'");
+        siDiscern()->Event("locate-failed",array('request'=>$orig));
     }
     return(false);
 }

@@ -1,6 +1,9 @@
 <?php
+/**
+ * Error handling
+ * @package poof
+ */
 
-    // send details to email rather than output
     function poof_error_email($email)
     {
         global $poof_error_config;
@@ -222,7 +225,7 @@ if ($detailed)					$output.=print_r($stack['object'],true);
         print("\n\n<br/><hr/><p><font size=\"+2\" color=\"red\">\n");
         print("ERROR: $msg\n");
         print("</font></p>");
-        print("<pre>".htmlentities(poof_error_trace(true))."</pre>");
+        print("<pre>".htmlentities(poof_error_trace(false))."</pre>");
         print("<hr/><br/>\n");
     }
     function poof_error_send_text($msg)

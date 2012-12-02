@@ -22,11 +22,22 @@
 // POOF_CONSTRUCT: uiInput_url
 // POOF_CONSTRUCT: uiInput_week
 
+// POOF:
+// POOF_CONSTRUCT: uiInput_key
+
 class uiInput_Text extends uiInput_Base
 {
     public function __construct($attr=false)
     {
-        $valid=array('type','value');
+        if (empty($attr['type']))
+            $attr['type']="text";
+        if ($attr['type']=="key")
+        {
+            $attr['type']="text";
+            $attr['disabled']=true;
+        }
+
+        $valid=array('type','value','disabled');
         parent::__construct($attr,$valid);
 
         $this->ui_tag="input";

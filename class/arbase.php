@@ -1,7 +1,8 @@
 <?php
-
-    // array manipulation functions in base class for all arXyz classes to use
-
+    /**
+     * array manipulation functions
+     * @package poof
+     */
     class arBase extends ArrayObject
     {
         public function __construct()

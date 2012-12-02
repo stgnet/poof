@@ -13,9 +13,12 @@ class uiform extends uiElement
         $this->target=false;
         $this->style=$style;
         $this->ui_tag="form";
-        if ($style) {
+
+        if ($style && $style!="td") {
             if (substr($style,0,5)!="form-")
                 $style="form-".$style;
+
+            // pass form-style as class
             $this->ui_class=$style;
         }
 
@@ -103,6 +106,13 @@ class uiform extends uiElement
         foreach ($this->ContentArray() as $element) {
             $desc=$element->GetDescription();
 
+            if ($this->style=='td') {
+                if ($desc)
+                    $element->SetInlineDescription($desc);
+                $output.=$this->Tag('td',$element);
+                $output.=$element;
+                continue;
+            }
             if ($this->style=='inline') {
                 // place no divs
                 if ($desc)
