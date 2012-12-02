@@ -151,7 +151,7 @@
 
             $fields=array('key','alpha','beta');
 
-            $test8=dbcsv($file)->SetFields($fields)->SetKey('key');
+            $test8=dbcsv($file)->SetFields($fields,'key');
 
             $test8->insert(array('alpha'=>"abc",'beta'=>"def"));
             $test8->insert(array('alpha'=>"ghi",'beta'=>"jkl"));
@@ -177,7 +177,7 @@
 
             $fields=array('key','alpha','beta');
 
-            $test9=dbcsv($file)->SetFields($fields)->SetKey('key');
+            $test9=dbcsv($file)->SetFields($fields,'key');
 
             $test9->insert(array('alpha'=>"abc",'beta'=>"def"));
             $test9->insert(array('alpha'=>"ghi",'beta'=>"jkl"));
@@ -212,6 +212,24 @@
 3,octothorpe,pqrs
 4,tuv,wxyz
 ",file_get_contents($file));
+        }
+        function test_create_unspecified_key()
+        {
+            $file="tests/testa.csv";
+            unlink($file);
+
+            $fields=array('alpha','beta');
+
+            $testa=dbcsv($file)->SetFields($fields,'key');
+
+            $testa->Insert(array('alpha'=>'one','beta'=>'two'));
+
+            sleep(4);
+
+            $this->assertEquals("key,alpha,beta
+1,one,two
+",file_get_contents($file));
+
         }
     }
 ?>

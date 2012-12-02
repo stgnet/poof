@@ -37,16 +37,10 @@ class dbCsv extends dbBase
         $dbcsv_daemon=pfDaemon("dbcsv");
     }
 
-    public function SetFields($fields)
+    public function SetFields($fields,$key=false)
     {
         global $dbcsv_daemon;
-        $dbcsv_daemon->SetFields($this->path,$fields);
-        return($this);
-    }
-    public function SetKey($key)
-    {
-        global $dbcsv_daemon;
-        $dbcsv_daemon->SetKey($this->path,$key);
+        $dbcsv_daemon->SetFields($this->path,$fields,$key);
         return($this);
     }
     public function keys()

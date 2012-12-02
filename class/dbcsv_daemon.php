@@ -210,21 +210,16 @@ class dbcsv_daemon extends pfDaemonServer
             return(false);
         return(array($file->key));
     }
-    function setkey($path,$key)
-    {
-        $file=$this->findfile($path);
-
-        if (!in_array($key,$file->fields))
-            return(new pfDaemonError("key '$key' is not in fields"));
-
-        $file->key=$key;
-        $file->readfile(); // force re-read to set keyhigh
-    }
-    function setfields($path,$fields)
+    function setfields($path,$fields,$key)
     {
         // convert detailed field list to just names
         if (is_array(reset($fields)))
             $fields=array_keys($fields);
+
+        if ($key && !in_array($key,$fields))
+            array_unshift($fields,$key);
+            //$fields[]=$key;
+            //return(new pfDaemonError("key '$key' is not in fields"));
 
         // set/add fields
         $file=$this->findfile($path);
@@ -237,6 +232,7 @@ class dbcsv_daemon extends pfDaemonServer
 
             $file=$this->findfile($path);
         }
+        $file->key=$key;
 
         foreach ($fields as $name)
         {

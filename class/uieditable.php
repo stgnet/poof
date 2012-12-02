@@ -90,6 +90,7 @@ class uiEditable extends uiElement
         {
             $row.=$this->Tag("th",htmlentities($header));
         }
+        $row.=$this->Tag("th","");
 
         $table=$this->Tag("thead",
             $this->Tag("tr",$row)
