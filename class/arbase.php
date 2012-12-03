@@ -10,16 +10,24 @@
         }
 
         // eliminate entries that don't match pattern (* and ? wildcards)
-        public function Match($pattern,$negate=false)
+        public function Match($pattern)
         {
             $pattern=str_replace("*",".*",$pattern);
             $pattern=str_replace("?",".",$pattern);
             $pattern="^$pattern$";
 
-            return($this->PregMatch($pattern,$negate));
+            return($this->PregMatch($pattern));
+        }
+        public function NotMatch($pattern)
+        {
+            $pattern=str_replace("*",".*",$pattern);
+            $pattern=str_replace("?",".",$pattern);
+            $pattern="^$pattern$";
+
+            return($this->PregMatch($pattern,true));
         }
         // eliminate entries that don't match regular expression
-        public function PregMatch($regexp,$negate=false)
+        public function PregMatch($regexp,$reverse=false)
         {
             $separator="|";
             if (substr_count($regexp,$separator))
@@ -33,7 +41,7 @@
             $remove=array();
             foreach ($this as $index => $item)
             {
-                if ($negate)
+                if ($reverse)
                 {
                     if (preg_match($pattern,$item))
                         $remove[]=$index;
