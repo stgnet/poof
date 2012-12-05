@@ -16,13 +16,9 @@ class pfDaemonConnection extends pfDaemon
     private $server;
     public $name;
     public $peer;
-    private $timeout;
 
     function __construct($sock,$server)
     {
-        // shut down (by default) after being idle for 30 minutes
-        $this->timeout=30*60;
-
         $this->sock=$sock;
         $this->server=$server;
         $this->_Write($server->name);
@@ -68,9 +64,14 @@ class pfDaemonConnection extends pfDaemon
 
 class pfDaemonServer extends pfDaemon
 {
+    private $timeout;
+
     function __construct($name)
     {
         global $argv;
+
+        // shut down (by default) after being idle for 30 minutes
+        $this->timeout=30*60;
 
         if (empty($argv[2]) || $argv[2]!="debug")
         {
