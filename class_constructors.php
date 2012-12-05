@@ -203,6 +203,11 @@ function uiheading($level,$text=false)
     return new uiheading($level,$text);
 }
 
+function uihelpicon($text)
+{
+    return new uihelpicon($text);
+}
+
 function uihero()
 {
     return new uihero();
