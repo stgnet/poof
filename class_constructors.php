@@ -398,6 +398,11 @@ function uilist($list=false)
     return new uilist($list);
 }
 
+function uilongpoll()
+{
+    return new uilongpoll();
+}
+
 function uinav($class=false)
 {
     return new uinav($class);
