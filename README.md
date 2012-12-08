@@ -4,9 +4,13 @@ POOF
 POOF is a Programmatic, Object Oriented, and Orthogonal Framework for PHP, using a
 non-conventional approach to Web development.
 
-The purpose of this framework is to hide all aspects of HTML, AJAX, and CSS inside high
+The purpose of this framework is to hide nearly all aspects of HTML, AJAX, and CSS inside high
 level generic objects, providing for rapid development and easy modifications without
 the conventional multi-file MVC or template approach.
+
+If you want to create just a few quickly developed web pages with modern whizz-bang features, and
+would prefer easy modifications in a single php rather than templates and MVC, then POOF is just
+right.
 
 Design Concepts
 ---------------
@@ -14,6 +18,8 @@ Design Concepts
 * Object chains similar to [EDEN](http://eden.openovate.com/) allow flexibility and extensibility
 * Many complex operations are reduced to a line or few of code
 * Each class *foobar* has convenience function `foobar()` that returns `new foobar()`
+* Use best practices, *except* where they a) detract from readability, b) slow development
+* Instrumentation and diagnostics built in, so finding that bug or slow bit of code is a snap
 
 Getting Started
 ---------------
@@ -21,27 +27,29 @@ Getting Started
 * View the demo at [poof.stg.net](http://poof.stg.net) for coding examples
 * Clone POOF to your project directory
 
-    mkdir myproject ; cd myproject
-    git clone https://github.com/stgnet/poof
-    cp poof/demo.php index.php
-    etc...
-
+```bash
+mkdir myproject ; cd myproject
+git clone https://github.com/stgnet/poof
+cp poof/demo.php index.php
+etc...
+```
 
 Hello World
 -----------
 A minimalistic code example:
 
-	require('poof/poof.php');
+```php
+require('poof/poof.php');
 
-	echo uiPage("Page Title")->Add(
-		uiContainer()->Add(
-			uiHero()->Add(
-				uiHeader("Hello, World!"),
-				uiParagraph("It works!")
-			)
-		)
-	);
-
+echo uiPage("Page Title")->Add(
+    uiContainer()->Add(
+        uiHero()->Add(
+            uiHeader("Hello, World!"),
+            uiParagraph("It works!")
+        )
+    )
+);
+```
 
 Bug Reports, Feature Requests, Code Contributions
 -------------------------------------------------

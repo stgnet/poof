@@ -34,7 +34,8 @@ spl_autoload_register('poof_autoload');
 require_once(dirname(__FILE__)."/class_constructors.php");
 
 // load error handling
-require_once(dirname(__FILE__)."/error_handler.php");
+//require_once(dirname(__FILE__)."/error_handler.php");
+siError();
 
 //require(dirname(__FILE__)."/class/sidiscern.php");
 
@@ -51,7 +52,7 @@ if (php_sapi_name()!="cli")
 
 // load instrumentation class and initialize it
 // (yes, I know this adds overhead, trust me you'll like it)
-siDiscern($poof_init_time);
+siDiscern(false,false,$poof_init_time);
 
 // fix missing hex2bin
 if (!function_exists("hex2bin"))

@@ -32,7 +32,7 @@ class pfDaemonConnection extends pfDaemon
         $test=socket_recv($this->sock,$data,1,MSG_PEEK);
         if ($test===0)
         {
-            //siDiscern()->Event("disconnected",array('name'=>$this->name,'peer'=>$this->peer))->Flush();
+            //siDiscern("disconnected",array('name'=>$this->name,'peer'=>$this->peer))->Flush();
             return(false); // disconnected
         }
 
@@ -75,7 +75,7 @@ class pfDaemonServer extends pfDaemon
 
         if (empty($argv[2]) || $argv[2]!="debug")
         {
-            //siDiscern()->Event("daemonizing");
+            //siDiscern("daemonizing");
             if (!function_exists("posix_setsid"))
                 Fatal("posix_setsid not found - install php-process please");
 
@@ -84,7 +84,7 @@ class pfDaemonServer extends pfDaemon
             if ($pid)
             {
                 // i am the parent
-                //siDiscern()->Event("parent-exit");
+                //siDiscern("parent-exit");
                 exit(0);
             }
 
@@ -102,7 +102,7 @@ class pfDaemonServer extends pfDaemon
             $STDOUT=fopen("/dev/null","wb");
             $STDERR=fopen("/dev/null","wb");
         }
-        siDiscern()->Event("daemon")->Flush();
+        siDiscern("daemon")->Flush();
         
         // listen for connections
         pfDaemon::__construct($name);
@@ -113,8 +113,11 @@ class pfDaemonServer extends pfDaemon
         if (!$this->sock)
             Fatal("pfDaemonServer: socket_create: ".$this->_SockErr());
 
-        socket_bind($this->sock,"localhost",$this->port)
-            or Fatal("pfDaemonServer: socket_bind: ".$this->_SockErr());
+        if (socket_bind($this->sock,"127.0.0.1",$this->port)===false &&
+            socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
+        {
+            Fatal("pfDaemonServer: socket_bind: ".$this->_SockErr());
+        }
 
         socket_listen($this->sock)
             or Fatal("pfDaemonServer: socket_list: ".$this->_SockErr());
@@ -130,7 +133,7 @@ class pfDaemonServer extends pfDaemon
         {
             $cc=count($connections);
             $age=time()-$lastactive;
-            //siDiscern()->Event("active",array('connections'=>$cc,'age'=>$age))->Flush();
+            //siDiscern("active",array('connections'=>$cc,'age'=>$age))->Flush();
             if (count($connections))
                 $lastactive=time();
 
@@ -191,7 +194,7 @@ class pfDaemonServer extends pfDaemon
             socket_getpeername($new_sock,$addr,$port);
             $peer="$addr:$port";
 
-            //siDiscern()->Event("accept",array('name'=>$name,'peer'=>$peer))->Flush();
+            //siDiscern("accept",array('name'=>$name,'peer'=>$peer))->Flush();
 
             $accept=new pfDaemonConnection($new_sock,$this);
             $accept->name=$name;

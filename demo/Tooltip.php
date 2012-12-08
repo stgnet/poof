@@ -1,10 +1,9 @@
 <?php
-    require '../poof.php';
     require 'navbar.inc';
 
-    echo uiPage("POOF Demo")->background("#def")->Add(
+    echo uiPage("POOF Demo")->Add(
         $navbar,
-        uiContainer()->background("#efd")->Add(
+        uiContainer()->Add(
             uiHeading("Demonstration of Tooltip"),
             uiParagraph()->Add(
                 "Hover ",

@@ -91,11 +91,28 @@ function pfsingleton()
     return new pfsingleton();
 }
 
-function sidiscern($init_time=false)
+function sidiscern($name=false,$data=false,$time=false)
 {
     if (empty($GLOBALS['sidiscern']))
-        $GLOBALS['sidiscern']=new sidiscern($init_time);
-    return $GLOBALS['sidiscern'];
+        return $GLOBALS['sidiscern']=new sidiscern($name,$data,$time);
+    else
+        return $GLOBALS['sidiscern']($name,$data,$time);
+}
+
+function sierror($error=false)
+{
+    if (empty($GLOBALS['sierror']))
+        return $GLOBALS['sierror']=new sierror($error);
+    else
+        return $GLOBALS['sierror']($error);
+}
+
+function sitest($value)
+{
+    if (empty($GLOBALS['sitest']))
+        return $GLOBALS['sitest']=new sitest($value);
+    else
+        return $GLOBALS['sitest']($value);
 }
 
 function uialert($class=false)

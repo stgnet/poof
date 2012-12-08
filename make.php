@@ -67,8 +67,9 @@
 function $class($args)
 {
     if (empty(\$GLOBALS['$class']))
-        \$GLOBALS['$class']=new $class($justargs);
-    return \$GLOBALS['$class'];
+        return \$GLOBALS['$class']=new $class($justargs);
+    else
+        return \$GLOBALS['$class']($justargs);
 }
 ";
 

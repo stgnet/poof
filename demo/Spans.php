@@ -1,14 +1,13 @@
 <?php
-    require '../poof.php';
     require 'navbar.inc';
 
     $red="#f44";
     $green="#4f4";
     $blue="#88f";
 
-    echo uiPage("POOF Demo")->Background("#def")->Add(
+    echo uiPage("POOF Demo")->Add(
         $navbar,
-        uiContainer()->Background("#efd")->Center()->Add(
+        uiContainer()->Center()->Add(
             uiHeading("Spans Demonstration")
         ),
 

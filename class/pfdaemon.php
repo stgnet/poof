@@ -7,6 +7,7 @@ class pfDaemon extends pfBase
 {
     protected $name;
     protected $port;
+    protected $altp;
     protected $path;
     protected $sock;
 
@@ -17,7 +18,10 @@ class pfDaemon extends pfBase
     public function __construct($name,$path=false)
     {
         $this->name=$name;
-        $this->port=50000+hexdec(substr(md5($name),-3));
+
+        $unique=hexdec(substr(md5($name),-3));
+        $this->port=50000+$unique;
+        $this->altp=49999-$unique;
 
         $file="class/{$name}_daemon.php";
         $path=poof_locate($file);
@@ -129,11 +133,12 @@ class pfDaemon extends pfBase
                     continue;
                 }
                     //siDiscern()->Event("connect",array('to'=>"127.0.0.1:{$this->port}"))->Flush();
-                if (socket_connect($this->sock,'127.0.0.1',$this->port)===false)
+                if (socket_connect($this->sock,'127.0.0.1',$this->port)===false &&
+                    socket_connect($this->sock,'127.0.0.1',$this->altp)===false)
                 {
                     if (socket_last_error($this->sock)!=111)
                     {
-                        Warning("pfDaemon::_Request() socket_connect localhost:$this->port ".$this->_SockErr());
+                        Warning("pfDaemon::_Request() socket_connect: ".$this->_SockErr());
                         socket_close($this->sock);
                         $this->sock=false;
                         sleep(1);

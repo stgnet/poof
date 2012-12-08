@@ -1,5 +1,4 @@
 <?php
-    require "../poof.php";
     require "navbar.inc";
 
     $target=uiDiv();
@@ -8,7 +7,7 @@
         $url=$data['URL'];
         if (!$url || substr($url,0,7)!="http://")
         {
-            echo uiHeading(3,"Please enter a valid url")->Background("#f00");
+            echo uiHeading(3,"Please enter a valid url");
             return;
         }
         $page=mlScrape($url);
@@ -21,9 +20,9 @@
         echo uiPre($output);
     };
 
-    echo uiPage("POOF Demo")->Background("#def")->Add(
+    echo uiPage("POOF Demo")->Add(
         $navbar,
-        uiContainer()->Background("#efd")->Add(
+        uiContainer()->Add(
             uiForm(
                 array(
                     'URL'=>array('type'=>"text",'desc'=>"Enter URL to scrape"),

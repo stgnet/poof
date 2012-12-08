@@ -1,5 +1,4 @@
 <?php
-    require '../poof.php';
     require 'navbar.inc';
 
     $login=array(
@@ -37,7 +36,7 @@
     $target=uiDiv()->Add("Post data will appear here");
     $postfunc=function($data) {
         $_SESSION['demo_form']=$data;
-        echo uiPre(print_r($data,true))->Background("#ff8");
+        echo uiPre(print_r($data,true));
     };
 
     if (empty($_SESSION['demo_form']))
@@ -53,9 +52,9 @@
         'Misc'=>uiForm($misc,false,"horizontal")->OnSubmit($target)->Post($postfunc)
     );
 
-    echo uiPage("POOF Demo")->Background("#def")->Add(
+    echo uiPage("POOF Demo")->Add(
         $navbar,
-        uiContainer()->Background("#efd")->Add(
+        uiContainer()->Add(
             uiRow()->Add(
                 uiSpan(8)->Add(
                     uiHeading("Form Demonstration"),
