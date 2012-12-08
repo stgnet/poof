@@ -120,6 +120,13 @@ class uipage extends uiElement
             "});\n"
         );
 
+        $tail='';
+        foreach ($this->ui_tailscripts as $code)
+            $tail.=" ".$code."\n";
+
+        if (!empty($tail))
+            $output.=$this->Tag("script type=\"text/javascript\"",$tail);
+
         return($output);
     }
     public function GenerateMeta()

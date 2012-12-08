@@ -13,7 +13,7 @@ class uiRelead extends uiElement
     public function PreGenerate($page)
     {
         $trackingid=$this->trackingid;
-        $page->HeadScript($this->ui_id,"var releadTrackingId = '$trackingid';
+        $page->TailScript($this->ui_id,"var releadTrackingId = '$trackingid';
 	(function() {
 		var rl = document.createElement('script');
 		rl.type = 'text/javascript';
