@@ -47,7 +47,7 @@
             $this->assertEquals(1,count($test4->records()));
 
             sleep(20);
-            unlink($file);
+            if (file_exists($file)) unlink($file);
 
             // change contents on disk, ask for records again
             file_put_contents($file,"alpha,beta\n1,2\n3,4\n");
@@ -59,7 +59,7 @@
         public function test_creation()
         {
             $file="tests/test5.csv";
-            unlink($file);
+            if (file_exists($file)) unlink($file);
 
             $fields=array(
                 'username'=>array('type'=>"text",'desc'=>"Email"),
@@ -124,7 +124,7 @@
         function test_create()
         {
             $file="tests/test7.csv";
-            unlink($file);
+            if (file_exists($file)) unlink($file);
 
             $fields=array('key','alpha','beta');
 
@@ -147,7 +147,7 @@
         function test_key()
         {
             $file="tests/test8.csv";
-            unlink($file);
+            if (file_exists($file)) unlink($file);
 
             $fields=array('key','alpha','beta');
 
@@ -173,7 +173,7 @@
         function test_update()
         {
             $file="tests/test9.csv";
-            unlink($file);
+            if (file_exists($file)) unlink($file);
 
             $fields=array('key','alpha','beta');
 
@@ -216,7 +216,7 @@
         function test_create_unspecified_key()
         {
             $file="tests/testa.csv";
-            unlink($file);
+            if (file_exists($file)) unlink($file);
 
             $fields=array('alpha','beta');
 
