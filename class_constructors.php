@@ -453,6 +453,11 @@ function uipre($text)
     return new uipre($text);
 }
 
+function uirelead($trackingid)
+{
+    return new uirelead($trackingid);
+}
+
 function uirow($class=false)
 {
     return new uirow($class);

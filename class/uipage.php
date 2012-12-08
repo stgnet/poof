@@ -7,6 +7,7 @@ class uipage extends uiElement
     private $ui_prescripts;
     private $ui_postscripts;
     private $ui_headscripts;
+    private $ui_tailscripts;
     private $ui_readyscripts;
 
     public function __construct($meta)
@@ -20,6 +21,7 @@ class uipage extends uiElement
         // jquery always goes first!
         $this->ui_postscripts=array();
         $this->ui_headscripts=array();
+        $this->ui_tailscripts=array();
         $this->ui_readyscripts=array();
 
         if (!is_array($meta))
@@ -44,6 +46,10 @@ class uipage extends uiElement
     public function HeadScript($name,$code)
     {
         $this->ui_headscripts[$name]=$code;
+    }
+    public function TailScript($name,$code)
+    {
+        $this->ui_tailscripts[$name]=$code;
     }
     public function ReadyScript($name,$code)
     {
