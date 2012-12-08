@@ -36,6 +36,8 @@ require_once(dirname(__FILE__)."/class_constructors.php");
 // load error handling
 require_once(dirname(__FILE__)."/error_handler.php");
 
+//require(dirname(__FILE__)."/class/sidiscern.php");
+
 // security considerations
 if (function_exists("libxml_disable_entity_loader"))
     libxml_disable_entity_loader(true);
@@ -86,6 +88,7 @@ function poof_locate($path)
     global $POOF_ROOT;  // directory path to poof library
     global $POOF_URL;   // URL path to poof library
     global $POOF_CWD;   // the current directory
+    global $POOF_PRJ;   // the 'project' directory poof was invoked from
     global $POOF_THEMES;    // array of directories to check first
 
     if (empty($POOF_DIR))
@@ -104,6 +107,13 @@ function poof_locate($path)
             $POOF_ROOT=$POOF_CWD;
 
         $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
+
+        // figure out the path to the directory of script that 
+        // included poof.php - as we want to locate() files there also
+        if (empty($_SERVER['PWD']) || $_SERVER['SCRIPT_FILENAME'][0]=="/")
+            $POOF_PRJ=realpath(dirname($_SERVER['SCRIPT_FILENAME']));
+        else
+            $POOF_PRJ=realpath(dirname($_SERVER['PWD']."/".$_SERVER['SCRIPT_FILENAME']));
         $POOF_THEMES=array();
     }
     if ($path)
@@ -120,14 +130,29 @@ function poof_locate($path)
                 return($test);
             }
         }
+
+        // first option: find the file in the POOF framework
         $test="$POOF_DIR/$path";
         if (file_exists($test))
         {
             //if (class_exists("siDiscern"))
             //    siDiscern()->Event("locate",array('request'=>$orig,'path'=>$test));
-            return($test);
+            return(realpath($test));
         }
+
+        // second option: find the file in the customer's project
+        $test="$POOF_PRJ/$path";
+        if (file_exists($test))
+            return(realpath($test));
+
+        // third option: find the file in the customer project
+        // but without the usual class/ or css/ etc prefix dir
+        $test="$POOF_PRJ/".basename($path);
+        if (file_exists($test))
+            return(realpath($test));
+
         //Warning("poof_locate(): did not find '$test'");
+        if (class_exists("siDiscern"))
         siDiscern()->Event("locate-failed",array('request'=>$orig));
     }
     return(false);
