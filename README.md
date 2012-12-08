@@ -53,6 +53,7 @@ echo uiPage("Page Title")->Add(
 
 Bug Reports, Feature Requests, Code Contributions
 -------------------------------------------------
+* Working Demonstration at [poof.stg.net](http://poof.stg.net)
 * Report issues on [GitHub](https://github.com/stgnet/poof/issues)
 * [Pivotal Tracker](https://www.pivotaltracker.com/projects/641527)
 * [Source on github](https://github.com/stgnet/poof)
