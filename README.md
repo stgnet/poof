@@ -74,6 +74,10 @@ LICENSE
 ------- 
 POOF is licensed under [Apache License V2](http://www.apache.org/license/LICENSE-2.0)
 
+Requirements
+------------
+* POOF requires PHP 5.3 or later
+
 Included Projects
 -----------------
 POOF includes and uses code from these fine open source projects:
