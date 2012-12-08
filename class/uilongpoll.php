@@ -6,10 +6,21 @@
 
 class uiLongPoll extends uiElement
 {
+    private $every;
+    private $timeout;
+
     public function __construct()
     {
         parent::__construct();
         $this->ui_tag="div";
+
+        $this->every=1*1000;
+        $this->timeout=15*1000;
+    }
+    public function Every($secs)
+    {
+        $this->every=$secs*1000;
+        return($this);
     }
     public function PreGenerate($page)
     {
@@ -17,8 +28,8 @@ class uiLongPoll extends uiElement
         $target='#'.$this->ui_id;
         $id=$this->ui_id;
 
-        $every=1*1000;
-        $timeout=15*1000;
+        $every=$this->every;
+        $timeout=$this->timeout;
 
         $page->HeadScript("post_$id","
             function post_$id()

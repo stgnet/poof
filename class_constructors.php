@@ -31,6 +31,11 @@ function audigest($realm,$users,$fail=false)
     return new audigest($realm,$users,$fail);
 }
 
+function dbarray($table)
+{
+    return new dbarray($table);
+}
+
 function dbbase()
 {
     return new dbbase();
@@ -93,6 +98,11 @@ function sidiscern($init_time=false)
     return $GLOBALS['sidiscern'];
 }
 
+function uialert($class=false)
+{
+    return new uialert($class);
+}
+
 function uiarticle($class=false)
 {
     return new uiarticle($class);
@@ -101,6 +111,11 @@ function uiarticle($class=false)
 function uiaside($class=false)
 {
     return new uiaside($class);
+}
+
+function uibadge($class=false)
+{
+    return new uibadge($class);
 }
 
 function uiblockquote()

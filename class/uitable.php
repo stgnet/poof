@@ -1,6 +1,6 @@
 <?php
 
-class uitable extends uiElement
+class uiTable extends uiElement
 {
     public $fields;
     public $db;
@@ -14,7 +14,8 @@ class uitable extends uiElement
         if ($fields)
             $this->fields=$fields;
         else
-            $this->fields=$this->DefaultFields($db);
+            $this->fields=$db->fields(); //$this->DefaultFields($db);
+        $this->fields=$this->FieldsWithNames($this->fields);
 
         $this->db=$db;
     }
@@ -33,7 +34,13 @@ class uitable extends uiElement
         foreach ($this->db->records() as $record) {
             $row='';
             foreach ($this->fields as $field => $header)
-                $row.=$this->Tag("td",htmlentities($record[$field]));
+            {
+                if (!array_key_exists($field,$record))
+                    $text="Error: $field not found";
+                else
+                    $text=$record[$field];
+                $row.=$this->Tag("td",htmlentities($text));
+            }
 
             $body.=$this->Tag("tr",$row);
         }

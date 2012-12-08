@@ -20,9 +20,10 @@ class pfDaemon extends pfBase
         $this->port=50000+hexdec(substr(md5($name),-3));
 
         $file="class/{$name}_daemon.php";
-        if (!file_exists($file))
-            $file=poof_locate($file);
-        $this->path=$file;
+        $path=poof_locate($file);
+        if (!$path)
+            Fatal("Unable to locate $file");
+        $this->path=$path;
         $this->sock=false;
 
         $this->head='';

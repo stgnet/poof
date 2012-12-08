@@ -195,7 +195,11 @@ class uiElement extends pfBase
                     $fieldnames[$name]=$details['desc'];
             }
             else
+            {
+                if (is_numeric($name))
+                    $name=$details;
                 $fieldnames[$name]=$details;
+            }
         }
         return($fieldnames);
     }
@@ -260,7 +264,7 @@ class uiElement extends pfBase
         //siDiscern()->event('debug',array('id'=>$this->ui_id,'action'=>$action,'self'=>$self,'path'=>$path,'for'=>$post_is_for));
 
         if (substr($self,0,strlen($action))!=$action)
-            Fatal("object '$action' does not match request '$self'");
+            Fatal("POST object '$action' does not match request '$self'");
 
         if ($this->ui_contents) foreach ($this->ui_contents as $element) 
         {
