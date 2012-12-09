@@ -33,11 +33,13 @@ class pfDaemonConnection extends pfDaemon
         $test=socket_recv($this->sock,$data,1,MSG_PEEK);
         if ($test===0)
         {
+            /*
             siDiscern('daemon-connection-close',array(
                 'name'=>$this->name,
                 'peer'=>$this->peer,
                 'requests'=>$this->count,
             ))->Flush();
+            */
             return(false); // disconnected
         }
 
@@ -64,10 +66,12 @@ class pfDaemonConnection extends pfDaemon
 
         $this->_Write(json_encode($response));
 
+        /*
         siDiscern('request',array(
             'request'=>$request,
             'response'=>$response
         ))->Flush();
+        */
 
         $this->count++;
 
@@ -126,6 +130,8 @@ class pfDaemonServer extends pfDaemon
         if (!$this->sock)
             Fatal("pfDaemonServer: socket_create: ".$this->_SockErr());
 
+        siError()->IgnoreFunction('socket_bind');
+
         if (socket_bind($this->sock,"127.0.0.1",$this->port)===false &&
             socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
         {
@@ -149,11 +155,13 @@ class pfDaemonServer extends pfDaemon
 
             if ($cc)
             {
+                /*
                 siDiscern("active",array(
                     'name'=>$this->name,
                     'connections'=>$cc,
                     'age'=>$age
                 ))->Flush();
+                */
 
                 $lastactive=time();
             }

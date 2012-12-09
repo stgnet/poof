@@ -52,17 +52,17 @@ class siError extends pfSingleton
     {
         if (!in_array($name,$this->ignore_functions))
             $this->ignore_functions[]=$name;
+            sidiscern('ignore-now',$this->ignore_functions);
     }
     public function php_error_handler($type,$message,$file,$line)
     {
         //self::__invoke(new ErrorException($message,$type,0,$file,$line));
 
-        $exp=explode('(',$message,1);
+        $exp=explode('(',$message);
         $function_name=$exp[0];
-        siDiscern('php_error_function',$function_name);
         if (in_array($function_name,$this->ignore_functions))
         {
-            siDiscern('php_error_ignore',$function_name);
+            //siDiscern('php_error_ignore',$function_name);
             return true;
         }
 
