@@ -16,6 +16,7 @@ class pfDaemonConnection extends pfDaemon
     private $server;
     public $name;
     public $peer;
+    public $count;
 
     function __construct($sock,$server)
     {
@@ -32,7 +33,11 @@ class pfDaemonConnection extends pfDaemon
         $test=socket_recv($this->sock,$data,1,MSG_PEEK);
         if ($test===0)
         {
-            //siDiscern("disconnected",array('name'=>$this->name,'peer'=>$this->peer))->Flush();
+            siDiscern('daemon-connection-close',array(
+                'name'=>$this->name,
+                'peer'=>$this->peer,
+                'requests'=>$this->count,
+            ))->Flush();
             return(false); // disconnected
         }
 
@@ -58,6 +63,14 @@ class pfDaemonConnection extends pfDaemon
             $response=array('error'=>"method '{$request['name']}' not found");
 
         $this->_Write(json_encode($response));
+
+        siDiscern('request',array(
+            'request'=>$request,
+            'response'=>$response
+        ))->Flush();
+
+        $this->count++;
+
         return(true);
     }
 }
@@ -71,7 +84,7 @@ class pfDaemonServer extends pfDaemon
         global $argv;
 
         // shut down (by default) after being idle for 30 minutes
-        $this->timeout=30*60;
+        $this->timeout=1*60;
 
         if (empty($argv[2]) || $argv[2]!="debug")
         {
@@ -133,9 +146,17 @@ class pfDaemonServer extends pfDaemon
         {
             $cc=count($connections);
             $age=time()-$lastactive;
-            //siDiscern("active",array('connections'=>$cc,'age'=>$age))->Flush();
-            if (count($connections))
+
+            if ($cc)
+            {
+                siDiscern("active",array(
+                    'name'=>$this->name,
+                    'connections'=>$cc,
+                    'age'=>$age
+                ))->Flush();
+
                 $lastactive=time();
+            }
 
             $r=array($this->sock);
             foreach ($connections as $connection)

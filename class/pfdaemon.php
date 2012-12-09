@@ -19,7 +19,8 @@ class pfDaemon extends pfBase
     {
         $this->name=$name;
 
-        $unique=hexdec(substr(md5($name),-3));
+        $user=get_current_user();
+        $unique=hexdec(substr(md5("$name-$user"),-3));
         $this->port=50000+$unique;
         $this->altp=49999-$unique;
 
@@ -133,6 +134,10 @@ class pfDaemon extends pfBase
                     continue;
                 }
                     //siDiscern()->Event("connect",array('to'=>"127.0.0.1:{$this->port}"))->Flush();
+
+                // do not throw errors for this function
+                siError()->IgnoreFunction('socket_connect');
+
                 if (socket_connect($this->sock,'127.0.0.1',$this->port)===false &&
                     socket_connect($this->sock,'127.0.0.1',$this->altp)===false)
                 {
@@ -148,9 +153,11 @@ class pfDaemon extends pfBase
                     // connection refused indicates daemon is not running
                     $cmd="php {$this->path} -daemon";
                     //siDiscern()->Event("exec",array('cmd'=>$cmd))->Flush();
+                    siDiscern('exec',$cmd)->Flush();
                     $error=shell_exec($cmd);
                     if ($error)
                         Warning("pfDaemon::_Request() fork of {$this->path} had result: $error");
+                    siDiscern('exec-completed',$cmd)->Flush();
                     //siDiscern()->Event("exec-complete",array('cmd'=>$cmd))->Flush();
 
                     socket_close($this->sock);

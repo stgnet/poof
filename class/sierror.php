@@ -2,8 +2,12 @@
 
 class siError extends pfSingleton
 {
+    private $ignore_functions;
+
     public function __construct($error=false)
     {
+        $this->ignore_functions=array();
+
         // send all php errors to this class
         set_error_handler(array($this,'php_error_handler'));
         set_exception_handler(array($this,'__invoke'));
@@ -44,17 +48,23 @@ class siError extends pfSingleton
 
         return($this);
     }
+    public function IgnoreFunction($name)
+    {
+        if (!in_array($name,$this->ignore_functions))
+            $this->ignore_functions[]=$name;
+    }
     public function php_error_handler($type,$message,$file,$line)
     {
         //self::__invoke(new ErrorException($message,$type,0,$file,$line));
-        $ignore=array(
-            'socket_connect',
-            'socket_shutdown',
-        );
 
-        $funcname=explode('(',$message);
-        if (in_array($funcname[0],$ignore))
+        $exp=explode('(',$message,1);
+        $function_name=$exp[0];
+        siDiscern('php_error_function',$function_name);
+        if (in_array($function_name,$this->ignore_functions))
+        {
+            siDiscern('php_error_ignore',$function_name);
             return true;
+        }
 
         throw new ErrorException($message,$type,0,$file,$line);
     }
