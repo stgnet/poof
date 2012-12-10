@@ -49,6 +49,7 @@ class uibutton extends uiElement
             $page->ReadyScript($id,"
                 \$('$button').click(function(){
                             \$('$button').addClass('disabled').removeClass('btn-danger');
+                    \$('$target').empty().append('Loading...');
                     \$.ajax({
                         type: 'POST',
                         url: '$url',
