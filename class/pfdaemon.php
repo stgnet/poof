@@ -116,76 +116,73 @@ class pfDaemon extends pfBase
         $this->head='';
         return($this->data);
     }
+    private function WarnSocketError($where)
+    {
+        Warning("pfDaemon: $where: ".$this->_SockErr());
+    }
+    private function ThrowSocketError($where)
+    {
+        Fatal("pfDaemon: $where: ".$this->_SockErr());
+    }
+
+    private function StartDaemon()
+    {
+        $cmd="php {$this->path} -daemon";
+        //siDiscern('exec',$cmd)->Flush();
+        $error=shell_exec($cmd);
+        if ($error)
+            Warning("pfDaemon::_Request() fork of {$this->path} had result: $error");
+        //siDiscern('exec-completed',$cmd)->Flush();
+    }
+
+    private function Connect()
+    {
+        if ($this->sock)
+            return;
+
+        $this->sock=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+        if (!$this->sock)
+            return $this->WarnSocketError("socket_create");
+
+        try
+        {
+            if (socket_connect($this->sock,'127.0.0.1',$this->port)===false)
+                ThrowSocketError("socket_connect");
+        }
+        catch (Exception $e)
+        {
+            try
+            {
+                if (socket_connect($this->sock,'127.0.0.1',$this->altp)===false)
+                    ThrowSocketError("socket_connect");
+            }
+            catch (Exception $e)
+            {
+                // connection refused indicates daemon may not be runing
+                if (socket_last_error($this->sock)==111)
+                    $this->StartDaemon();
+                else
+                    WarnSocketError("socket_connect");
+
+                socket_close($this->sock);
+                $this->sock=false;
+                return;
+            }
+        }
+    }
     public function _Request($data)
     {
-                // do not throw errors for this function
-                siError()->IgnoreFunction('socket_connect');
-
         $timeout=15;
         $started=time();
         while (time()-$started<$timeout)
         {
             if (!$this->sock)
             {
-                    //siDiscern()->Event("create")->Flush();
-                $this->sock=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+                $this->Connect();
                 if (!$this->sock)
                 {
-                    Warning("pfDaemon::_Request() socket_create: ".
-                        $this->_SockErr());
-                    sleep(1);
+                    usleep(10000); // 100th of a second
                     continue;
-                }
-                    //siDiscern()->Event("connect",array('to'=>"127.0.0.1:{$this->port}"))->Flush();
-
-                if (socket_connect($this->sock,'127.0.0.1',$this->port)===false &&
-                    socket_connect($this->sock,'127.0.0.1',$this->altp)===false)
-                {
-                    if (socket_last_error($this->sock)!=111)
-                    {
-                        Warning("pfDaemon::_Request() socket_connect: ".$this->_SockErr());
-                        socket_close($this->sock);
-                        $this->sock=false;
-                        sleep(1);
-                        continue;
-                    }
-
-                    // connection refused indicates daemon is not running
-                    $cmd="php {$this->path} -daemon";
-                    //siDiscern()->Event("exec",array('cmd'=>$cmd))->Flush();
-                    //siDiscern('exec',$cmd)->Flush();
-                    $error=shell_exec($cmd);
-                    if ($error)
-                        Warning("pfDaemon::_Request() fork of {$this->path} had result: $error");
-                    //siDiscern('exec-completed',$cmd)->Flush();
-                    //siDiscern()->Event("exec-complete",array('cmd'=>$cmd))->Flush();
-
-                    socket_close($this->sock);
-                    $this->sock=false;
-                    sleep(1);
-                    continue;
-
-
-                    // retry several times quickly to avoid delay
-                    $retry=100;
-                    while (1)
-                    {
-                        if (!$retry)
-                        {
-                            socket_close($this->sock);
-                            $this->sock=false;
-                            break;
-                        }
-                        $retry--;
-                        usleep(10000); // 100th of a second
-                        if (socket_connect($this->sock,'localhost',$this->port)===false)
-                            continue;
-                        // got a connection, drop through
-                        break;
-                    }
-
-                    if (!$this->sock)
-                        continue;
                 }
 
                 // after connect, always confirm identity
