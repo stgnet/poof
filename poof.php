@@ -95,13 +95,13 @@ function poof_locate($path)
     if (empty($POOF_DIR))
     {
         // locate the poof library itself, set globals
-        $POOF_FILE=__FILE__;
+        $POOF_FILE=realpath(__FILE__);
         $POOF_CWD=getcwd();
         $POOF_DIR=dirname($POOF_FILE);
         if (!file_exists("$POOF_DIR/poof.php"))
             Fatal("unable to locate file path to poof library");
 
-        $POOF_ROOT=str_replace($_SERVER['SCRIPT_NAME'],"",$_SERVER['SCRIPT_FILENAME']);
+        $POOF_ROOT=str_replace($_SERVER['SCRIPT_NAME'],"",realpath($_SERVER['SCRIPT_FILENAME']));
         if (!$POOF_ROOT && !empty($_SERVER['HOME']))
             $POOF_ROOT=$_SERVER['HOME'];
         if (!$POOF_ROOT)
