@@ -134,8 +134,10 @@ class siDiscern extends pfSingleton
 
         // flush the output to make sure user sees page immediately
         // (rather than after a small delay for discern flush to complete)
+        /*
         if (php_sapi_name()!="cli")
             ob_end_flush();
+        */
         flush();
 
         $this->Flush();
