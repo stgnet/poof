@@ -102,17 +102,20 @@ class uipage extends uiElement
         $ready='';
         foreach ($this->ui_readyscripts as $code)
             $ready.=" ".$code."\n";
-/*
-    \$('.nav-tabs').button();
-    \$('#{$this->ui_id}').bind('contextmenu',function(e){
-        if (e.ctrlKey) {
-            alert('right click '+e.toElement.id);
-            console.log(\"rightclick=%o\",e);
 
-            return false;
-        }
-    })
-*/
+        $urlscript=urlencode($_SERVER['SCRIPT_NAME']);
+
+        $ready.="
+\$('#{$this->ui_id}').bind('contextmenu',function(e)
+{
+    if (e.ctrlKey) {
+        //alert('right click '+e.toElement.id);
+        console.log(\"rightclick=%o\",e);
+        window.open('$POOF_URL/index.php?edit=$urlscript&id='+e.toElement.id);
+        return false;
+    }
+});";
+
         if (!empty($ready))
         $output.=$this->Tag("script type=\"text/javascript\"",
             "\$(document).ready(function(){\n".
@@ -145,6 +148,8 @@ class uipage extends uiElement
         try
         {
             global $POOF_DIR;
+            global $POOF_URL;
+
             if (!empty($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD']=='POST')
             {
                 $_SERVER['REQUEST_METHOD']='post-handled';
@@ -163,6 +168,9 @@ class uipage extends uiElement
             foreach ($this->ui_meta as $name => $content)
                 if (strtolower($name)=='title')
                     $title=$content;
+
+            $urlscript=urlencode($_SERVER['SCRIPT_NAME']);
+            $toolhref="$POOF_URL/index.php?config=$urlscript";
 
             return("<!DOCTYPE html>".
                 $this->Tag("html lang=\"en\"",
@@ -184,6 +192,7 @@ class uipage extends uiElement
                     ).
                     $this->GeneratePostScripts()
                 )
+                .'<p class="pull-right"><a href="'.$toolhref.'">&nbsp;<i class="icon-wrench"></i>&nbsp;</a>&nbsp;</p>'
                 .(siDiscern('output')?'':'')
             );
         }

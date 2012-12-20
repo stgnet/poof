@@ -1,6 +1,8 @@
 <?php
-    require 'poof.php';
+    require 'poof/poof.php';
     poof_theme('cerulean');
+
+    $config=dbPoofSite();
 
     $navmenu=array('Home'=>"demo.php");
     foreach (arDir("demo")->Match("*.php")->Sort() as $file)
@@ -41,5 +43,6 @@
         uiParagraph(),
         uiContainer()->Add(
             uiDebug("_SESSION")
-        )
+        ),
+        uiPre(print_r($config->lookup(),true))
     );

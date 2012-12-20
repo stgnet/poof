@@ -33,13 +33,11 @@ class pfDaemonConnection extends pfDaemon
         $test=socket_recv($this->sock,$data,1,MSG_PEEK);
         if ($test===0)
         {
-            /*
             siDiscern('daemon-connection-close',array(
                 'name'=>$this->name,
                 'peer'=>$this->peer,
                 'requests'=>$this->count,
             ))->Flush();
-            */
             return(false); // disconnected
         }
 
@@ -55,23 +53,28 @@ class pfDaemonConnection extends pfDaemon
 
         if (method_exists($this->server,$request['name']))
         {
-            $return=call_user_func_array(array($this->server,$request['name']),$request['args']);
-            if (is_a($return,"pfDaemonError"))
-                $response=array('error'=>$return->error);
-            else
-                $response=array('return'=>$return);
+            try
+            {
+                $return=call_user_func_array(array($this->server,$request['name']),$request['args']);
+                if (is_a($return,"pfDaemonError"))
+                    $response=array('error'=>$return->error);
+                else
+                    $response=array('return'=>$return);
+            }
+            catch (Exception $e)
+            {
+                $response=array('error'=>(string)$e);
+            }
         }
         else
             $response=array('error'=>"method '{$request['name']}' not found");
 
         $this->_Write(json_encode($response));
 
-        /*
         siDiscern('request',array(
             'request'=>$request,
             'response'=>$response
         ))->Flush();
-        */
 
         $this->count++;
 
@@ -82,6 +85,7 @@ class pfDaemonConnection extends pfDaemon
 class pfDaemonServer extends pfDaemon
 {
     private $timeout;
+    private $lastactive;
 
     function __construct($name)
     {
@@ -89,13 +93,23 @@ class pfDaemonServer extends pfDaemon
 
         // shut down (by default) after being idle for 30 minutes
         $this->timeout=1*60;
+        $this->lastactive=time();
 
-        if (empty($argv[2]) || $argv[2]!="debug")
+        if (!empty($argv[2]) && $argv[2]=="debug")
         {
-            //siDiscern("daemonizing");
+            // debug mode: don't fork, don't timeout
+            $this->timeout=0;
+        }
+        else
+        {
+            if (get_current_user()=="root" ||
+                getmyuid()===0)
+                Fatal("daemon $name should not be run as ".get_current_user());
+
             if (!function_exists("posix_setsid"))
                 Fatal("posix_setsid not found - install php-process please");
 
+            siDiscern("daemonizing");
             $pid=pcntl_fork();
             if ($pid<0) Fatal("pcntl_fork failed $pid");
             if ($pid)
@@ -130,13 +144,26 @@ class pfDaemonServer extends pfDaemon
         if (!$this->sock)
             Fatal("pfDaemonServer: socket_create: ".$this->_SockErr());
 
-        siError()->IgnoreFunction('socket_bind');
-
-        if (socket_bind($this->sock,"127.0.0.1",$this->port)===false &&
-            socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
+        try
         {
-            Fatal("pfDaemonServer: socket_bind: ".$this->_SockErr());
+            if (socket_bind($this->sock,"127.0.0.1",$this->port)===false)
+                $this->ThrowSocketError("socket_connect");
+            siDiscern('debug',"bound on port {$this->port}");
         }
+        catch (Exception $e)
+        {
+            //try
+            //{
+                if (socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
+                    $this->ThrowSocketError("socket_connect");
+                siDiscern('debug',"bound on port {$this->altp}");
+            //}
+            //catch (Exception $e)
+            //{
+            //    Fatal("Unable to bind primary {$this->port} and alt {$this->altp} ports");
+            //}
+        }
+
 
         socket_listen($this->sock)
             or Fatal("pfDaemonServer: socket_list: ".$this->_SockErr());
@@ -146,24 +173,22 @@ class pfDaemonServer extends pfDaemon
 
         $connections=array();
 
-        $lastactive=time();
+        $this->lastactive=time();
 
-        while (!$this->timeout || time()-$lastactive<$this->timeout)
+        while (!$this->timeout || time()-$this->lastactive<$this->timeout)
         {
             $cc=count($connections);
-            $age=time()-$lastactive;
+            $age=time()-$this->lastactive;
 
             if ($cc)
             {
-                /*
                 siDiscern("active",array(
                     'name'=>$this->name,
                     'connections'=>$cc,
                     'age'=>$age
                 ))->Flush();
-                */
 
-                $lastactive=time();
+                $this->lastactive=time();
             }
 
             $r=array($this->sock);
@@ -182,7 +207,16 @@ class pfDaemonServer extends pfDaemon
 
             // allow daemon to perform background processes via poll every 1sec
             if (method_exists($this,"_Process"))
-                $this->_Process();
+            {
+                try
+                {
+                    $this->_Process();
+                }
+                catch (Exception $e)
+                {
+                    Warning($e);
+                }
+            }
 
             if (!$select) continue; // don't bother checking, stay idle
 
@@ -223,7 +257,7 @@ class pfDaemonServer extends pfDaemon
             socket_getpeername($new_sock,$addr,$port);
             $peer="$addr:$port";
 
-            //siDiscern("accept",array('name'=>$name,'peer'=>$peer))->Flush();
+            siDiscern("accept",array('name'=>$name,'peer'=>$peer))->Flush();
 
             $accept=new pfDaemonConnection($new_sock,$this);
             $accept->name=$name;
@@ -231,6 +265,10 @@ class pfDaemonServer extends pfDaemon
 
             $connections[]=$accept;
         }
+    }
+    public function ResetActivity()
+    {
+        $this->lastactive=time();
     }
     public function SetTimeout($seconds)
     {

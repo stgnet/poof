@@ -15,6 +15,7 @@ class dbcsv_file extends dbBase
     private $last; // last time file read
     public $fields; // array of fields (can be expanded beyond last read)
     public $header; // array of fields on last read
+    public $detailed; // array of fields with full details
     public $writewhen; // when non-zero, when to write changed file
     public $key; // key field (unique id)
     public $keyhigh; // highest value of key field
@@ -26,6 +27,7 @@ class dbcsv_file extends dbBase
         $this->keyhigh=false;
         $this->fields=array();
         $this->header=array();
+        $this->detailed=array();
         $this->path=$path;
         $this->readfile();
         return($this);
@@ -70,8 +72,13 @@ class dbcsv_file extends dbBase
         }
 
         foreach ($header as $name)
+        {
             if (!in_array($name,$this->fields))
+            {
                 $this->fields[]=$name;
+                $this->detailed[$name]=array('type'=>'text');
+            }
+        }
 
         $this->header=$header;
         fclose($fp);
@@ -207,14 +214,23 @@ class dbcsv_daemon extends pfDaemonServer
     {
         $file=$this->findfile($path);
         if (empty($file->key))
-            return(false);
+        {
+            // if no key has been supplied, presume first field is key
+            $file->key=reset($file->fields);
+            if (empty($file->key))
+                return(false);
+        }
         return(array($file->key));
     }
-    function setfields($path,$fields,$key)
+    function SetFields($path,$fields,$key)
     {
+        $detailed=$fields;
         // convert detailed field list to just names
         if (is_array(reset($fields)))
             $fields=array_keys($fields);
+        else
+            foreach ($fields as $name)
+                $detailed[$name]=array('type'=>"text",'desc'=>ucwords($name));
 
         if ($key && !in_array($key,$fields))
             array_unshift($fields,$key);
@@ -232,6 +248,7 @@ class dbcsv_daemon extends pfDaemonServer
 
             $file=$this->findfile($path);
         }
+        $file->detailed=$detailed;
         $file->key=$key;
 
         foreach ($fields as $name)
@@ -256,10 +273,13 @@ class dbcsv_daemon extends pfDaemonServer
         }
         return($file->table);
     }
-    function fields($path)
+    function fields($path,$detailed=false)
     {
         $file=$this->findfile($path);
-//        return(array_keys($file->table[0]));
+
+        if ($detailed)
+            return($file->detailed);
+
         return($file->fields);
     }
     function insert($path,$record)
@@ -315,9 +335,10 @@ class dbcsv_daemon extends pfDaemonServer
         return(null);
     }
 
-    function bogus()
+    function test_fatal()
     {
-        return(new pfDaemonError("bogus error"));
+        //return(new pfDaemonError("bogus error"));
+        Fatal("this is a simulation of a fatal error");
     }
 }
 

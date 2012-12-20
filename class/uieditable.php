@@ -26,7 +26,7 @@ class uiEditable extends uiElement
         if ($fields)
             $this->fields=$fields;
         else
-            $this->fields=$db->fields();
+            $this->fields=$db->fields(true);
 
         $this->fieldnames=$this->FieldsWithNames($this->fields);
 

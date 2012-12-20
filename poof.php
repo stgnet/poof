@@ -24,14 +24,16 @@
  * @copyright Apache 2.0
  */
 
-// for siDiscern(), make note of actual start time
-$poof_init_time=microtime(true);
+$init_time=microtime(true);
 
 // register our autoloader
 spl_autoload_register('poof_autoload');
 
 // load functions mapped to class constructors
 require_once(dirname(__FILE__)."/class_constructors.php");
+
+// load the instrumentation library
+siDiscern()->init($init_time);
 
 // load error handling
 //require_once(dirname(__FILE__)."/error_handler.php");
@@ -43,6 +45,10 @@ siError();
 if (function_exists("libxml_disable_entity_loader"))
     libxml_disable_entity_loader(true);
 
+// new compatible password hashing
+if (!function_exists("password_hash"))
+    require_once(dirname(__FILE__)."/misc/password.php");
+
 // always start session handling 
 if (php_sapi_name()!="cli")
 {
@@ -50,9 +56,11 @@ if (php_sapi_name()!="cli")
     session_start();
 }
 
-// load instrumentation class and initialize it
-// (yes, I know this adds overhead, trust me you'll like it)
-siDiscern(false,false,$poof_init_time);
+// fix missing hostname
+if (empty($_SERVER['HOSTNAME']))
+{
+    $_SERVER['HOSTNAME']=trim(`hostname`);
+}
 
 // fix missing hex2bin
 if (!function_exists("hex2bin"))
@@ -88,6 +96,7 @@ function poof_locate($path)
     global $POOF_DIR;   // base directory for poof library
     global $POOF_ROOT;  // directory path to poof library
     global $POOF_URL;   // URL path to poof library
+    global $POOF_HOST;  // hostname used (possibly virtual)
     global $POOF_CWD;   // the current directory
     global $POOF_PRJ;   // the 'project' directory poof was invoked from
     global $POOF_THEMES;    // array of directories to check first
@@ -102,12 +111,36 @@ function poof_locate($path)
             Fatal("unable to locate file path to poof library");
 
         $POOF_ROOT=str_replace($_SERVER['SCRIPT_NAME'],"",$_SERVER['SCRIPT_FILENAME']);
-        if (!$POOF_ROOT && !empty($_SERVER['HOME']))
-            $POOF_ROOT=$_SERVER['HOME'];
-        if (!$POOF_ROOT)
-            $POOF_ROOT=$POOF_CWD;
+        $rootfile="$POOF_DIR/root";
+        if ($POOF_ROOT)
+        {
+            if (!file_exists($rootfile))
+                file_put_contents($rootfile,$POOF_ROOT);
+        }
+        else
+        {
+            if (file_exists($rootfile))
+                $POOF_ROOT=trim(file_get_contents($rootfile));
+            else
+                $POOF_ROOT="/invalid";
+        }
 
         $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
+
+        $hostfile="$POOF_DIR/host";
+        if (!empty($_SERVER['HTTP_HOST']))
+        {
+            $POOF_HOST=$_SERVER['HTTP_HOST'];
+            if (!file_exists($hostfile))
+                file_put_contents($hostfile,$POOF_HOST);
+        }
+        else
+        {
+            if (file_exists($hostfile))
+                $POOF_HOST=trim(file_get_contents($hostfile));
+            else
+                $POOF_HOST=`invalid`;
+        }
 
         // figure out the path to the directory of script that 
         // included poof.php - as we want to locate() files there also
@@ -183,3 +216,6 @@ function poof_autoload($class)
     //Fatal("unable to locate file '$path'\n");
     return(false);
 }
+
+siDiscern('main');
+

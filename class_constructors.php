@@ -56,9 +56,24 @@ function dbflat($file,$fields)
     return new dbflat($file,$fields);
 }
 
+function dbpoofsite()
+{
+    return new dbpoofsite();
+}
+
+function dbwhere($db,$where)
+{
+    return new dbwhere($db,$where);
+}
+
 function event()
 {
     return new event();
+}
+
+function gtalk_daemon()
+{
+    return new gtalk_daemon();
 }
 
 function mlbase($text=false)
@@ -84,6 +99,11 @@ function pfdaemon($name,$path=false)
 function pfdaemonserver($error)
 {
     return new pfdaemonserver($error);
+}
+
+function pfgtalk()
+{
+    return new pfgtalk();
 }
 
 function pfsingleton()
@@ -198,6 +218,11 @@ function uidropdown($text,$list=false)
 function uieditable($db,$fields=NULL)
 {
     return new uieditable($db,$fields);
+}
+
+function uieditrecord($db,$fields=NULL)
+{
+    return new uieditrecord($db,$fields);
 }
 
 function uielement()

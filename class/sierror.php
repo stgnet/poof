@@ -8,18 +8,71 @@ class siError extends pfSingleton
     {
         $this->ignore_functions=array();
 
-        // send all php errors to this class
+        // send all php errors and exceptions to this class
         set_error_handler(array($this,'php_error_handler'));
         set_exception_handler(array($this,'__invoke'));
+
+        // enable all errors to be reported
         error_reporting(-1);
+
+        // turn off display errors due to https://bugs.php.net/bug.php?id=47494
+        ini_set('display_errors','0');
 
         if ($error!==false)
             self::__invoke($error);
+    }
+    public function log($error)
+    {
+        global $POOF_DIR;
+        global $POOF_URL;
+        global $POOF_HOST;
+
+        // cannot use /error as apache may have redirected that
+        $dir="errlog";
+        $path="$POOF_DIR/$dir";
+        if (!is_dir($path))
+            mkdir($path,0777,true);
+
+        $msg=$error->getMessage().
+            " in ".$error->getFile().
+            " line ".$error->getLine();
+
+        $file=md5($msg).".txt";
+
+        $pathfile="$path/$file";
+        if (file_exists($pathfile))
+        {
+            echo "Skipping $pathfile\n";
+            return;
+        }
+
+        file_put_contents($pathfile,print_r($error,true));
+
+        $url="http://$POOF_HOST$POOF_URL/$dir/$file";
+
+        $msg.="\n".$url;
+
+        $ch=curl_init("http://poof.stg.net/error_notify.php?msg=".urlencode($msg));
+        curl_setopt($ch,CURLOPT_HEADER,0);
+        curl_setopt($ch,CURLOPT_POSTFIELDS,"");
+        curl_setopt($ch,CURLOPT_POST,1);
+        curl_exec($ch);
+        curl_close($ch);
     }
     public function __invoke($error=false)
     {
         if (!$error)
             return($this);
+
+        $additional=false;
+        try
+        {
+            $this->log($error);
+        }
+        catch (Exception $e)
+        {
+            $additional="\nAdditional error: ".(string)$e;
+        }
 
         $header="H2";
         $color="red";
@@ -31,7 +84,7 @@ class siError extends pfSingleton
         else
             echo "\n\n<br/><hr/><$header><font color=\"$color\">";
 
-        $message=(string)$error;
+        $message=(string)$error.$additional;
         if (php_sapi_name()!='cli')
             $message=str_replace("\n","<br />",htmlentities($message));
 
@@ -57,7 +110,7 @@ class siError extends pfSingleton
     public function php_error_handler($type,$message,$file,$line)
     {
         //self::__invoke(new ErrorException($message,$type,0,$file,$line));
-
+        global $POOF_DIR;
         $exp=explode('(',$message);
         $function_name=$exp[0];
         if (in_array($function_name,$this->ignore_functions))
@@ -65,7 +118,32 @@ class siError extends pfSingleton
             //siDiscern('php_error_ignore',$function_name);
             return true;
         }
-
+/*        elseif ($function_name=="fopen")
+        {
+           siDiscern('error',"$message in $file line $line");
+           return true;
+        }
+        */
+        elseif ($function_name=="date")
+        {
+            // fix issue with lack of timezone
+            if (strstr($message,"date_default_timezone_set"))
+            {
+                $tzfile="$POOF_DIR/timezone"; // edit this file to change it
+                if (file_exists($tzfile))
+                {
+                    $tz=file_get_contents($tzfile);
+                }
+                else
+                {
+                    $tz=date_default_timezone_get();
+                    file_put_contents($tzfile,$tz);
+                }
+                date_default_timezone_set($tz);
+                return true;
+            }
+        }
+//print("ERROR: $message in $file $line\n");
         throw new ErrorException($message,$type,0,$file,$line);
     }
 
@@ -82,12 +160,25 @@ class WarningException extends Exception
 // for convenience, global function Fatal() and Warning() are defined
 function Fatal($message)
 {
-    siDiscern('fatal',$message);
+    if ($message instanceof Exception)
+    {
+        siDiscern('error',$message->getMessage());
+        throw $message;
+    }
+    siDiscern('error',$message);
     throw new Exception($message);
 }
 function Warning($message)
 {
-    siDiscern('warning',$message);
+    if ($message instanceof Exception)
+    {
+        siDiscern('error-warning',$message->getMessage());
+        siError($message);
+        return false;
+    }
+
+    siDiscern('error-warning',$message);
     siError(new WarningException($message));
+    return false;
 }
 

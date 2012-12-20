@@ -13,12 +13,21 @@
 class siDiscern extends pfSingleton
 {
     private $events;
+    public $error;
 
     public function __construct($name=false,$data=false,$time=false)
     {
-        if ($name!==false || $data!==false || empty($time))
-            Fatal("Invalid construction of siDiscern");
+        $this->error=false;
+        $this->events=array();
 
+        // make sure we note completion along with any exceptions
+        register_shutdown_function(array($this,"Shutdown"));
+
+        if ($name)
+            return self::__invoke($name,$data,$time);
+    }
+    public function Init($time)
+    {
         global $argv;
 
         $server=array(
@@ -44,18 +53,9 @@ class siDiscern extends pfSingleton
         $data['SESSION']=session_id();
         $data['PHPVERSION']=phpversion();
 
-        $this->events=array();
-
-        // make sure we note completion along with any exceptions
-        register_shutdown_function(array($this,"Shutdown"));
-
         // log the start time noted in poof.h
         self::__invoke("init",$data,$time);
-
-        // separately log the current time dropping back to main code
-        $this->Event("main");
     }
-
     public function Event($name=false,$data=false,$time=false)
     {
         return self::__invoke($name,$data,$time);
@@ -64,6 +64,7 @@ class siDiscern extends pfSingleton
     {
         if (is_array($data))
             $data=json_encode($data);
+
         $event=array(
             'pid'=>getmypid(),
             'time'=>($time?$time:microtime(true)),
@@ -72,21 +73,32 @@ class siDiscern extends pfSingleton
             'name'=>"$name",
             'data'=>"$data"
         );
+
         $this->events[]=$event;
         return($this);
     }
 
     public function Flush()
     {
-        $discfile="/tmp/discern.csv";
+        global $POOF_DIR;
+
+        $path="$POOF_DIR/discern";
+        if (!is_dir($path))
+            mkdir($path,0777,true);
+
+        $pid=getmypid();
+        $script=basename($_SERVER['SCRIPT_FILENAME']);
+        //$date=date('Hi');
+        $date="xxxx";
+
+        $discfile="$path/$date.csv";
         // log the events for later processing
         $fp=fopen($discfile,"a");
-        if ($fp)
-        {
-            foreach ($this->events as $event)
-                fputcsv($fp,$event);
-            fclose($fp);
-        }
+        if (!$fp)
+            $fp=STDOUT; //Fatal("Unable to write $discfile");
+        foreach ($this->events as $event)
+            fputcsv($fp,$event);
+        fclose($fp);
         $this->events=array();
     }
 

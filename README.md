@@ -23,7 +23,6 @@ Design Concepts
 
 Getting Started
 ---------------
-
 * View the demo at [poof.stg.net](http://poof.stg.net) for coding examples
 * Clone POOF to your project directory
 

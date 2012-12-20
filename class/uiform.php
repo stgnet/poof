@@ -66,7 +66,19 @@ class uiform extends uiElement
                 $type=$attributes['type'];
 
             $class="uiInput_$type";
-            $this->Add($class($attributes)->SetName($name));
+            if (!function_exists($class))
+                Fatal("Class '$class' doesn't exists for field '$name' with type '$type'\n".
+                    print_r($this->fields,true));
+
+            try 
+            {
+                $this->Add($class($attributes)->SetName($name));
+            }
+            catch (Exception $e)
+            {
+                Fatal("Encountered error while adding field '$name' with type '$type':\n".
+                    $e->getMessage());
+            }
         }
 
     }

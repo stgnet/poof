@@ -48,10 +48,10 @@ class dbCsv extends dbBase
         global $dbcsv_daemon;
         return($dbcsv_daemon->keys($this->path));
     }
-    public function fields()
+    public function fields($detailed=false)
     {
         global $dbcsv_daemon;
-        return($dbcsv_daemon->fields($this->path));
+        return($dbcsv_daemon->fields($this->path,$detailed));
     }
     public function escape($data)
     {

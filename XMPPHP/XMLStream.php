@@ -381,7 +381,7 @@ class XMPPHP_XMLStream {
 		
 		do {
 			$starttime = (microtime(true) * 1000000);
-			$read = array($this->socket);
+    		$read = array($this->socket);
 			$write = array();
 			$except = array();
 			if (is_null($maximum)) {

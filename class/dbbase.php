@@ -85,7 +85,7 @@ class dbbase extends event
             }
             return(Warning("MatchWhere invalid types in array: ".json_encode($where)));
         }
-        return(Warning("MatchWhere unimplemented comparison: ".json_encode($where)));
+        return(Warning("MatchWhere unimplemented comparison: ".json_encode($where)." record ".json_encode($record)));
     }
 
     protected function WhereToString($input,$db)

@@ -231,5 +231,27 @@
 ",file_get_contents($file));
 
         }
+        function test_create_retrieve_key()
+        {
+            $file="tests/testb.csv";
+            if (file_exists($file)) unlink($file);
+
+            $fields=array(
+                'alpha'=>array('type'=>"text",'desc'=>"Alpha"),
+                'beta'=>array('type'=>"text",'desc'=>"Beta")
+            );
+
+            $testb=dbcsv($file)->SetFields($fields,'alpha');
+
+            $fields_names=$testb->fields();
+
+            $fields_detail=$testb->fields(true);
+
+            $this->assertEquals(2,count($fields_names));
+            $this->assertEquals($fields_names,array('alpha','beta'));
+
+            $this->assertEquals(2,count($fields_detail));
+            $this->assertEquals($fields,$fields_detail);
+        }
     }
 ?>

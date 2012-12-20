@@ -20,9 +20,13 @@ class pfDaemon extends pfBase
         $this->name=$name;
 
         $user=get_current_user();
-        $unique=hexdec(substr(md5("$name-$user"),-3));
+        //$id="$name-$user";
+        $id="$name";
+        $unique=hexdec(substr(md5($id),-3));
         $this->port=50000+$unique;
         $this->altp=49999-$unique;
+
+        siDiscern('debug',"daemon $id $unique {$this->port}");
 
         $file="class/{$name}_daemon.php";
         $path=poof_locate($file);
@@ -147,22 +151,26 @@ class pfDaemon extends pfBase
         try
         {
             if (socket_connect($this->sock,'127.0.0.1',$this->port)===false)
-                ThrowSocketError("socket_connect");
+                $this->ThrowSocketError("socket_connect");
+            siDiscern('debug',"connected to port {$this->port}");
         }
         catch (Exception $e)
         {
+            siDiscern('debug',"failed to connect to port {$this->port}");
             try
             {
                 if (socket_connect($this->sock,'127.0.0.1',$this->altp)===false)
-                    ThrowSocketError("socket_connect");
+                    $this->ThrowSocketError("socket_connect");
+                siDiscern('debug',"connected to port {$this->altp}");
             }
             catch (Exception $e)
             {
+                siDiscern('debug',"failed to connect to port {$this->altp}");
                 // connection refused indicates daemon may not be runing
                 if (socket_last_error($this->sock)==111)
                     $this->StartDaemon();
                 else
-                    WarnSocketError("socket_connect");
+                    $this->WarnSocketError("socket_connect");
 
                 socket_close($this->sock);
                 $this->sock=false;
