@@ -104,7 +104,7 @@ function poof_locate($path)
     if (empty($POOF_DIR))
     {
         // locate the poof library itself, set globals
-        $POOF_FILE=__FILE__;
+        $POOF_FILE=realpath(__FILE__);
         $POOF_CWD=getcwd();
         $POOF_DIR=dirname($POOF_FILE);
         if (!file_exists("$POOF_DIR/poof.php"))
