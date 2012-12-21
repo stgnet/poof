@@ -23,10 +23,15 @@ class uibutton extends uiElement
         }
     }
 
-    public function Post($func)
+    public function NewTab()
+    {
+        $this->AddAttr('target',"_blank");
+        return($this);
+    }
+    public function Post($func,$data=false)
     {
         $this->click=true;
-        return(parent::Post($func));
+        return(parent::Post($func,$data));
     }
     public function Target($that)
     {
@@ -46,14 +51,17 @@ class uibutton extends uiElement
         {
             $target='#'.$this->target->ui_id;
 
+                        //{'button':'$id','value':'$name','data':target.currentTarget.getAttribute('post-data')},
+
             $page->ReadyScript($id,"
-                \$('$button').click(function(){
+                \$('$button').click(function(target){
                             \$('$button').addClass('disabled').removeClass('btn-danger');
                     \$('$target').empty().append('Loading...');
+                    data=eval('('+target.currentTarget.getAttribute('post-data')+')');
                     \$.ajax({
                         type: 'POST',
                         url: '$url',
-                        data: {'button':'$id','value':'$name'},
+                        data: data,
                         success: function(data) {
                             \$('$target').empty().append(data);
                             \$('$button').removeClass('disabled');

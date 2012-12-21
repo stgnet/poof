@@ -46,7 +46,7 @@ class siError extends pfSingleton
             return;
         }
 
-        file_put_contents($pathfile,print_r($error,true));
+        file_put_contents($pathfile,(string)$error."\n\n".print_r($error,true));
 
         $url="http://$POOF_HOST$POOF_URL/$dir/$file";
 

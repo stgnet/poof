@@ -135,9 +135,9 @@ function sitest($value)
         return $GLOBALS['sitest']($value);
 }
 
-function uialert($class=false)
+function uialert($class=false,$text=false)
 {
-    return new uialert($class);
+    return new uialert($class,$text);
 }
 
 function uiarticle($class=false)

@@ -199,6 +199,7 @@ class uipage extends uiElement
         catch(Exception $e)
         {
             siError($e);
+            return('');
         }
     }
 }

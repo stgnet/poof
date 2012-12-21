@@ -19,4 +19,18 @@
             while ($file=$d->read())
                 $this[]=$path.$file;
         }
+        public function SortNewest()
+        {
+            $this->uasort(function($a,$b){
+                return (filemtime($a)<filemtime($b));
+            });
+            return($this);
+        }
+        public function SortOldest()
+        {
+            $this->uasort(function($a,$b){
+                return (filemtime($a)>filemtime($b));
+            });
+            return($this);
+        }
     }

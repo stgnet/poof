@@ -216,9 +216,24 @@ class uiElement extends pfBase
         return($fields);
     }
     */
-    public function Post($func)
+    public function Post($func,$data=false)
     {
         $this->ui_postfunc=$func;
+
+        if ($data)
+            $this->AddAttr('post-data',json_encode($data));
+        return($this);
+    }
+    public function RemoveAfter($secs)
+    {
+        $ms=$secs*1000;
+        $this->ui_html.=$this->Tag("script",
+            "setTimeout(function(){
+                \$('#{$this->ui_id}').fadeOut(500,function(){
+                    \$(this).remove();
+                });
+            },$ms);"
+        );
         return($this);
     }
     public function PassToPostHandler()

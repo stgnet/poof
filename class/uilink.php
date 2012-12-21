@@ -10,4 +10,9 @@ class uilink extends uiElement
         //$this->ui_attr="href=\"$href\"";
         $this->AddAttr('href',$href);
     }
+    public function NewTab()
+    {
+        $this->AddAttr('target',"_blank");
+        return($this);
+    }
 }
