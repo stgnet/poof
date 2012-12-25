@@ -74,50 +74,58 @@ class uiEditable extends uiElement
 
     public function __toString()
     {
-        $edit_delete_buttons=uiIconButton('pencil','edit')." ".
-            uiIconButton('trash','delete');
-
-        $add_button=uiIconButton('plus-sign','add');
-
-        $add_id="_".$this->db->guid();
-
-        $keys=$this->db->keys();
-        if (empty($keys) || count($keys)<1)
-            Fatal("no keys provided");
-
-        $row='';
-        foreach ($this->fieldnames as $field => $header)
+        try
         {
-            $row.=$this->Tag("th",htmlentities($header));
-        }
-        $row.=$this->Tag("th","");
+            $edit_delete_buttons=uiIconButton('pencil','edit')." ".
+                uiIconButton('trash','delete');
 
-        $table=$this->Tag("thead",
-            $this->Tag("tr",$row)
-        );
+            $add_button=uiIconButton('plus-sign','add');
 
-        $body='';
-        foreach ($this->db->records() as $record)
-        {
+            $add_id="_".$this->db->guid();
+
+            $keys=$this->db->keys();
+            if (empty($keys) || count($keys)<1)
+                Fatal("no keys provided");
+
             $row='';
             foreach ($this->fieldnames as $field => $header)
             {
-                $row.=$this->Tag("td",htmlentities($record[$field]));
+                $row.=$this->Tag("th",htmlentities($header));
             }
-            $row.=$this->Tag("td",$edit_delete_buttons);
+            $row.=$this->Tag("th","");
 
-            $key=$this->enkey($record);
-            $body.=$this->Tag("tr id=\"$key\"",$row);
+            $table=$this->Tag("thead",
+                $this->Tag("tr",$row)
+            );
+
+            $body='';
+            foreach ($this->db->records() as $record)
+            {
+                $row='';
+                foreach ($this->fieldnames as $field => $header)
+                {
+                    $row.=$this->Tag("td",htmlentities($record[$field]));
+                }
+                $row.=$this->Tag("td",$edit_delete_buttons);
+    
+                $key=$this->enkey($record);
+                $body.=$this->Tag("tr id=\"$key\"",$row);
+            }
+            $row='';
+            foreach ($this->fieldnames as $header)
+                $row.=$this->Tag("td");
+            $row.=$this->Tag("td width=\"".BTNCOL_WIDTH."\"",$add_button);
+            $body.=$this->Tag("tr id=\"{$add_id}\"",$row);
+    
+            $table.=$this->Tag("tbody",$body);
+    
+            return($this->Tag($this->GenerateTag(),$table));
         }
-        $row='';
-        foreach ($this->fieldnames as $header)
-            $row.=$this->Tag("td");
-        $row.=$this->Tag("td width=\"".BTNCOL_WIDTH."\"",$add_button);
-        $body.=$this->Tag("tr id=\"{$add_id}\"",$row);
-
-        $table.=$this->Tag("tbody",$body);
-
-        return($this->Tag($this->GenerateTag(),$table));
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
     public function PostHandler($data)
     {

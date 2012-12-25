@@ -71,7 +71,7 @@ class gtalk_daemon extends pfDaemonServer
                     $this->conn->presence($status=($_SERVER['HOSTNAME'].":".$POOF_DIR));
                     break;
                 default:
-                    Fatal("unknown event: ".print_r($event,true));
+                    Fatal("unknown event: '{$event[0]}' ".print_r($pl,true));
             }
         }
     }

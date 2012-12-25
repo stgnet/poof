@@ -26,8 +26,10 @@ class uidropdown extends uiElement
     {
         global $poof_ui_collapse;
 
-        $triggerid=$this->trigger->ui_id;
-        $list='';
+        try
+        {
+            $triggerid=$this->trigger->ui_id;
+            $list='';
 
 /*
         if (empty($poof_ui_collapse)) {
@@ -40,20 +42,26 @@ class uidropdown extends uiElement
         }
 */
 
-        if ($this->list) foreach ($this->list as $name => $href)
-            $list.=$this->Tag("li",
-                $this->Tag("a href=\"$href\"",htmlentities($name))
-            );
+            if ($this->list) foreach ($this->list as $name => $href)
+                $list.=$this->Tag("li",
+                    $this->Tag("a href=\"$href\"",htmlentities($name))
+                );
 
-        foreach ($this->GenerateContentArray() as $element)
-            $list.=$this->Tag("li",$element);
+            foreach ($this->GenerateContentArray() as $element)
+                $list.=$this->Tag("li",$element);
 
-        return($this->Tag($this->GenerateTag(),
-            $this->trigger.
-            $this->Tag("ul class=\"dropdown-menu role=\"menu\"
-                    aria-labelledby=\"$triggerid\"",
-                $list
-            )
-        ));
+            return($this->Tag($this->GenerateTag(),
+                $this->trigger.
+                $this->Tag("ul class=\"dropdown-menu role=\"menu\"
+                        aria-labelledby=\"$triggerid\"",
+                    $list
+                )
+            ));
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

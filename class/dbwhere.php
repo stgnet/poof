@@ -14,13 +14,17 @@ class dbWhere extends dbBase
         $this->where=$where;
     }
 
+    public function SetFields($fields,$key=false)
+    {
+        return($this->db->SetFields($fields,$key));
+    }
     public function keys()
     {
         return($this->db->keys());
     }
-    public function fields()
+    public function fields($detailed=false)
     {
-        return($this->db->fields());
+        return($this->db->fields($detailed));
     }
     public function escape($data)
     {

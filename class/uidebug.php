@@ -60,17 +60,24 @@ class uidebug extends uiElement
 
     public function __toString()
     {
-        $text=$this->what." = ";
+        try
+        {
+            $text=$this->what." = ";
 
-        if ($this->what=="CONSTANTS")
-            $text=print_r($this->DumpConstants(),true);
-        else
-        if (isset($GLOBALS[$this->what]))
-            $text.=print_r($GLOBALS[$this->what],true);
-        else
-            $text.="** ERROR: {$this->what} NOT SET **";
+            if ($this->what=="CONSTANTS")
+                $text=print_r($this->DumpConstants(),true);
+            else
+            if (isset($GLOBALS[$this->what]))
+                $text.=print_r($GLOBALS[$this->what],true);
+            else
+                $text.="** ERROR: {$this->what} NOT SET **";
 
-        return($this->Tag("pre",htmlentities($text)));
-
+            return($this->Tag("pre",htmlentities($text)));
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

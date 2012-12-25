@@ -22,44 +22,52 @@ class uitabbable extends uiElement
 
     public function __toString()
     {
-        $tabs='';
-        $content='';
-        $active=true;
-        /*
-        if ($this->list) foreach ($this->list as $name => $element) {
-            $content.="\n<!-- TAB: $name -->";
-
-            $div=uiDiv("tab-pane$active");
-
-            $tabs.=$this->Tag($active?"li class=\"active\"":"li",
-                $this->Tag("a href=\"#{$div->ui_name}\" data-toggle=\"tab\"",$name)
-            );
-
-            $content.=$this->Tag($div->GenerateTag(),$element);
-
-            $active='';
-        }
-            $content.="\n<!-- END TABS -->";
-        */
-        foreach ($this->ContentArray() as $element)
+        try
         {
-            $content.="\n<!-- TAB: {$element->ui_name} -->";
-            $div=uiDiv("tab-pane".($active?" active":""));
-
-            $tabs.=$this->Tag("li".($active?" class=\"active\"":""),
-                $this->Tag("a href=\"#{$div->ui_id}\" data-toggle=\"tab\"",$element->ui_name)
-            );
-
-            $content.=$this->Tag($div->GenerateTag(),$element);
-
-            $active=false;
+            $tabs='';
+            $content='';
+            $active=true;
+            /*
+            if ($this->list) foreach ($this->list as $name => $element) {
+                $content.="\n<!-- TAB: $name -->";
+    
+                $div=uiDiv("tab-pane$active");
+    
+                $tabs.=$this->Tag($active?"li class=\"active\"":"li",
+                    $this->Tag("a href=\"#{$div->ui_name}\" data-toggle=\"tab\"",$name)
+                );
+    
+                $content.=$this->Tag($div->GenerateTag(),$element);
+    
+                $active='';
+            }
+                $content.="\n<!-- END TABS -->";
+            */
+            foreach ($this->ContentArray() as $element)
+            {
+                $content.="\n<!-- TAB: {$element->ui_name} -->";
+                $div=uiDiv("tab-pane".($active?" active":""));
+    
+                $tabs.=$this->Tag("li".($active?" class=\"active\"":""),
+                    $this->Tag("a href=\"#{$div->ui_id}\" data-toggle=\"tab\"",$element->ui_name)
+                );
+    
+                $content.=$this->Tag($div->GenerateTag(),$element);
+    
+                $active=false;
+            }
+            $content.="\n<!-- END TABS -->";
+    
+            return($this->Tag($this->GenerateTag(),
+                $this->Tag("ul class=\"nav nav-tabs\"",$tabs).
+                $this->Tag("div class=\"tab-content\"",$content)
+            ));
         }
-        $content.="\n<!-- END TABS -->";
-
-        return($this->Tag($this->GenerateTag(),
-            $this->Tag("ul class=\"nav nav-tabs\"",$tabs).
-            $this->Tag("div class=\"tab-content\"",$content)
-        ));
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
 
         //return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
     }

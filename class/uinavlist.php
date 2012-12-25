@@ -19,27 +19,35 @@ class uinavlist extends uiElement
 */
     public function __toString()
     {
-        // if given a 'name'=>url list, display it
-        $list='';
-        if ($this->list) foreach ($this->list as $name => $href) {
-            $extra="";
-            if (basename($href)==basename($_SERVER['SCRIPT_NAME']))
-                $extra=" class=\"active\"";
-            $list.=$this->Tag("li$extra",
-                $this->Tag("a href=\"$href\"",htmlentities($name))
-            );
-        }
-        foreach ($this->GenerateContentArray() as $element) {
-            // make exception where element tag is 'li'
-            if ($element->ui_tag=="li")
-                $list.=$element;
-            else
-                $list.=$this->Tag("li",$element);
-        }
+        try
+        {
+            // if given a 'name'=>url list, display it
+            $list='';
+            if ($this->list) foreach ($this->list as $name => $href) {
+                $extra="";
+                if (basename($href)==basename($_SERVER['SCRIPT_NAME']))
+                    $extra=" class=\"active\"";
+                $list.=$this->Tag("li$extra",
+                    $this->Tag("a href=\"$href\"",htmlentities($name))
+                );
+            }
+            foreach ($this->GenerateContentArray() as $element) {
+                // make exception where element tag is 'li'
+                if ($element->ui_tag=="li")
+                    $list.=$element;
+                else
+                    $list.=$this->Tag("li",$element);
+            }
 
-        return($this->Tag($this->GenerateTag(),
-            $this->Tag("ul class=\"nav\"",$list)
-        ));
+            return($this->Tag($this->GenerateTag(),
+                $this->Tag("ul class=\"nav\"",$list)
+            ));
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
 
         //return($this->Tag("ul class=\"nav\"",$list).$this->GenerateContent());
     }

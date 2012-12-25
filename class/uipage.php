@@ -172,6 +172,17 @@ class uipage extends uiElement
             $urlscript=urlencode($_SERVER['SCRIPT_NAME']);
             $toolhref="$POOF_URL/index.php?config=$urlscript";
 
+            $footer_right="";
+            $admin_login=empty($_SESSION['POOFSITE']['login'])?false:true;
+            $tool_icon='wrench';
+            if ($admin_login)
+                $tool_icon='cog';
+            $footer_right.="<a href=\"$toolhref\">&nbsp;<i class=\"icon-$tool_icon\"></i>&nbsp;</a>";
+
+            $footer="";
+            if ($footer_right)
+                $footer.="<p class=\"pull-right\">$footer_right&nbsp;</p>";
+
             return("<!DOCTYPE html>".
                 $this->Tag("html lang=\"en\"",
                     $this->Tag("head",
@@ -183,16 +194,16 @@ class uipage extends uiElement
                         $this->GenerateMeta().
                         $this->GenerateStyles().
                         $this->GeneratePreScripts()
-                    ).
-                    $this->Tag($this->GenerateTag(),
+                    )
+                    .$this->Tag($this->GenerateTag(),
     //                    print_r($_SERVER,true).
     //                    print_r($_GET,true).
     //                    print_r($_POST,true).
                         $this->GenerateContent()
-                    ).
-                    $this->GeneratePostScripts()
+                    )
+                    .$this->GeneratePostScripts()
                 )
-                .'<p class="pull-right"><a href="'.$toolhref.'">&nbsp;<i class="icon-wrench"></i>&nbsp;</a>&nbsp;</p>'
+                .$footer
                 .(siDiscern('output')?'':'')
             );
         }

@@ -51,11 +51,22 @@ class uiElement extends pfBase
     {
         return($this->ui_name);
     }
-    public function AddAttr($name,$value)
+    public function GetAttr($name)
+    {
+        if (empty($this->ui_attr[$name]))
+            return(false);
+        else
+            return($this->ui_attr[$name]);
+    }
+    public function SetAttr($name,$value)
     {
         $this->ui_attr[$name]=htmlentities($value);
 
         return($this);
+    }
+    public function AddAttr($name,$value)
+    {
+        $this->SetAttr($name,$value);
     }
     public function AddClass($class)
     {
@@ -141,6 +152,9 @@ class uiElement extends pfBase
     }
     public function PreGenerateWalk($page)
     {
+        if ($this->ui_postfunc)
+            $this->AddAttr('action',$this->GetAction());
+
         if (method_exists($this,"PreGenerate"))
             $this->PreGenerate($page);
 
@@ -162,11 +176,15 @@ class uiElement extends pfBase
 
     // this returns a full URL to the php script, plus an extended path
     // that matches the UI element tree names
-    public function GetAction()
+    public function GetAction($stack=false)
     {
         $action=$this->GetPath();
         if (substr($action,0,2)=='//')
             $action=substr($action,1);
+
+        // new feature: direct path to global post function by name
+        if (!$stack && $this->ui_postfunc && gettype($this->ui_postfunc)=="string")
+            return("$action/global/{$this->ui_postfunc}");
 
         // construct element stack
         $path='';
@@ -238,16 +256,19 @@ class uiElement extends pfBase
     }
     public function PassToPostHandler()
     {
+        global $_POST;
         global $_FILES;
 
         // iterate the tree and locate the element that matches the action
         $action=$this->GetAction();
         $self=$_SERVER['PHP_SELF'];
 
+        /*
         $msg='';
         foreach (debug_backtrace() as $stack)
             $msg.=$stack['function']."() in ".$stack['file']." #".$stack['line']."\n";
-        //siDiscern()->Event('debug-ptph-'.$this->ui_id,$msg);
+        siDiscern()->Event('debug-ptph-'.$this->ui_id,$msg);
+        */
 
         if ($action==$self) 
         {
@@ -268,6 +289,21 @@ class uiElement extends pfBase
                 return($this->PostHandler($_POST,$_FILES));
         }
 
+        $basepath=$this->GetPath();
+        $subpath=explode('/',str_replace($basepath."/","",$self));
+        if ($subpath[0]=='global' && $subpath[1])
+        {
+            $func=$subpath[1];
+            if (!function_exists($func))
+                Fatal("POST to global function $func not found");
+            $_SERVER['REQUEST_METHOD']="--handled--";
+            //call_user_func($subpath[1],$_POST);
+
+            if (empty($_FILES))
+                return($func($_POST));
+            else
+                return($func($_POST,$_FILES));
+        }
 
         //$path=substr($_SERVER['PHP_SELF'],strlen($action)+1);
         $path=str_replace($action."/","",$self);
@@ -276,10 +312,11 @@ class uiElement extends pfBase
         $subpath=explode('/',$path);
         $post_is_for=$subpath[0];
 
+
         //siDiscern()->event('debug',array('id'=>$this->ui_id,'action'=>$action,'self'=>$self,'path'=>$path,'for'=>$post_is_for));
 
         if (substr($self,0,strlen($action))!=$action)
-            Fatal("POST object '$action' does not match request '$self'");
+            Fatal("POST object '$action' does not match request '$self' basepath=$basepath path=$path");
 
         if ($this->ui_contents) foreach ($this->ui_contents as $element) 
         {
@@ -384,19 +421,27 @@ class uiElement extends pfBase
             if (!empty($POOF_UI_DEBUG) || !empty($_GET['debug']))
                 $output.="</div>\n";
         }
-
         return($output);
     }
 
     // generate output, but also content from child elements
     // child classes can either preset ui_vars in constructor, or
     // override this to generate specific output
+    // NOTE: all __toString() must catch exceptions!!!
     public function __toString()
     {
-        if (!$this->ui_tag)
-            return($this->ui_html.htmlentities($this->ui_text).$this->GenerateContent());
-        return($this->Tag($this->GenerateTag(),
-            $this->ui_html.htmlentities($this->ui_text).$this->GenerateContent()
-        ));
+        try
+        {
+            if (!$this->ui_tag)
+                return($this->ui_html.htmlentities($this->ui_text).$this->GenerateContent());
+            return($this->Tag($this->GenerateTag(),
+                $this->ui_html.htmlentities($this->ui_text).$this->GenerateContent()
+            ));
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('--ERROR--');
+        }
     }
 }

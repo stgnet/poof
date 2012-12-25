@@ -10,8 +10,16 @@ class uidaterange extends uiElement
 
     public function __toString()
     {
-        $output="<html goes here>";
+        try
+        {
+            $output="<html goes here>";
 
-        return($output.$this->GenerateContent());
+            return($output.$this->GenerateContent());
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

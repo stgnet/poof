@@ -252,6 +252,21 @@
 
             $this->assertEquals(2,count($fields_detail));
             $this->assertEquals($fields,$fields_detail);
+
+            $where=array('alpha'=>1);
+
+            $whereb=dbWhere($testb,$where);
+
+            $fields_names=$whereb->fields();
+
+            $fields_detail=$whereb->fields(true);
+
+            $this->assertEquals(2,count($fields_names));
+            $this->assertEquals($fields_names,array('alpha','beta'));
+
+            $this->assertEquals(2,count($fields_detail));
+            $this->assertEquals($fields,$fields_detail);
+
         }
     }
 ?>

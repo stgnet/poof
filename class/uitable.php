@@ -22,31 +22,39 @@ class uiTable extends uiElement
 
     public function __toString()
     {
-        $row='';
-        foreach ($this->fields as $field => $header)
-            $row.=$this->Tag("th",htmlentities($header));
-
-        $table=$this->Tag("thead",
-            $this->Tag("tr",$row)
-        );
-
-        $body='';
-        foreach ($this->db->records() as $record) {
+        try
+        {
             $row='';
             foreach ($this->fields as $field => $header)
-            {
-                if (!array_key_exists($field,$record))
-                    $text="Error: $field not found";
-                else
-                    $text=$record[$field];
-                $row.=$this->Tag("td",htmlentities($text));
+                $row.=$this->Tag("th",htmlentities($header));
+    
+            $table=$this->Tag("thead",
+                $this->Tag("tr",$row)
+            );
+    
+            $body='';
+            foreach ($this->db->records() as $record) {
+                $row='';
+                foreach ($this->fields as $field => $header)
+                {
+                    if (!array_key_exists($field,$record))
+                        $text="Error: $field not found";
+                    else
+                        $text=$record[$field];
+                    $row.=$this->Tag("td",htmlentities($text));
+                }
+    
+                $body.=$this->Tag("tr",$row);
             }
-
-            $body.=$this->Tag("tr",$row);
+    
+            $table.=$this->Tag("tbody",$body);
+    
+            return($this->Tag($this->GenerateTag(),$table));
         }
-
-        $table.=$this->Tag("tbody",$body);
-
-        return($this->Tag($this->GenerateTag(),$table));
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

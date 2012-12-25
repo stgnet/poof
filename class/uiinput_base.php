@@ -21,6 +21,10 @@ class uiInput_Base extends uiElement
 
         }
     }
+    public function GetType()
+    {
+        return($this->ui_attr['type']);
+    }
     public function GetDescription()
     {
         return($this->desc);

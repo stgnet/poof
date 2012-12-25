@@ -8,19 +8,21 @@
             $daemon=pfDaemon("dbcsv"); //dbCsv("tests/test1.csv");
 
             $exception=false;
+            $returned=false;
 
             try
             {
                 $return=$daemon->test_fatal();
-                print_r($return);
+                $returned=true;
             }
             catch (Exception $e)
             {
-                print_r((string)$e);
+                //print_r((string)$e);
                 $exception=true;
             }
 
             $this->assertTrue($exception);
+            $this->assertFalse($returned);
         }
 
     }

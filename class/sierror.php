@@ -41,10 +41,7 @@ class siError extends pfSingleton
 
         $pathfile="$path/$file";
         if (file_exists($pathfile))
-        {
-            echo "Skipping $pathfile\n";
             return;
-        }
 
         file_put_contents($pathfile,(string)$error."\n\n".print_r($error,true));
 

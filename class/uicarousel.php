@@ -18,23 +18,31 @@ class uicarousel extends uiElement
 
     public function __toString()
     {
-        $list='';
-        $active=' active';
-        if ($this->list) foreach ($this->list as $name => $src) {
-            $list.=$this->Tag("div class=\"item$active\"",
-                ($src instanceof uiElement?$src:
-                    $this->Tag("img src=\"$src\"")
-                )
-            );
-            $active=false;
-        }
-        foreach ($this->GenerateContentArray() as $element) {
-            $list.=$this->Tag("div class=\"item$active\"",$element);
-            $active=false;
-        }
+        try
+        {
+            $list='';
+            $active=' active';
+            if ($this->list) foreach ($this->list as $name => $src) {
+                $list.=$this->Tag("div class=\"item$active\"",
+                    ($src instanceof uiElement?$src:
+                        $this->Tag("img src=\"$src\"")
+                    )
+                );
+                $active=false;
+            }
+            foreach ($this->GenerateContentArray() as $element) {
+                $list.=$this->Tag("div class=\"item$active\"",$element);
+                $active=false;
+            }
 
-        return($this->Tag($this->GenerateTag(),
-            $this->Tag("div class=\"carousel-inner\"",$list)
-        ));
+            return($this->Tag($this->GenerateTag(),
+                $this->Tag("div class=\"carousel-inner\"",$list)
+            ));
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

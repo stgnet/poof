@@ -36,10 +36,7 @@ require_once(dirname(__FILE__)."/class_constructors.php");
 siDiscern()->init($init_time);
 
 // load error handling
-//require_once(dirname(__FILE__)."/error_handler.php");
 siError();
-
-//require(dirname(__FILE__)."/class/sidiscern.php");
 
 // security considerations
 if (function_exists("libxml_disable_entity_loader"))
@@ -49,17 +46,24 @@ if (function_exists("libxml_disable_entity_loader"))
 if (!function_exists("password_hash"))
     require_once(dirname(__FILE__)."/misc/password.php");
 
+// fix missing hostname
+if (empty($_SERVER['HOSTNAME']))
+    $_SERVER['HOSTNAME']=trim(`hostname`);
+
 // always start session handling 
-if (php_sapi_name()!="cli")
+//if (php_sapi_name()!="cli")
+if (empty($argv[1]) || $argv[1]!="-daemon")
 {
     session_set_cookie_params(0); // persistant user tracking for discern
     session_start();
-}
 
-// fix missing hostname
-if (empty($_SERVER['HOSTNAME']))
-{
-    $_SERVER['HOSTNAME']=trim(`hostname`);
+    if (empty($_SESSION['POOFSITE']) ||
+        empty($_SESSION['POOFSITE']['loaded']) ||
+        (time()-$_SESSION['POOFSITE']['loaded'])>300)
+    {
+        $_SESSION['POOFSITE']=dbPoofSite()->lookup();
+        $_SESSION['POOFSITE']['loaded']=time();
+    }
 }
 
 // fix missing hex2bin

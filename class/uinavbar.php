@@ -11,14 +11,22 @@ class uinavbar extends uiElement
 
     public function __toString()
     {
-        return($this->Tag($this->GenerateTag(),
-            $this->Tag("div class=\"navbar\"",
-                $this->Tag("div class=\"navbar-inner\"",
-                    $this->Tag("div class=\"container\"",
-                        $this->GenerateContent()
+        try
+        {
+            return($this->Tag($this->GenerateTag(),
+                $this->Tag("div class=\"navbar\"",
+                    $this->Tag("div class=\"navbar-inner\"",
+                        $this->Tag("div class=\"container\"",
+                            $this->GenerateContent()
+                        )
                     )
                 )
-            )
-        ));
+            ));
+        }
+        catch (Exception ($e))
+        {
+            siError($e);
+            return('');
+        }
     }
 }

@@ -33,11 +33,12 @@ class uiInput_Text extends uiInput_Base
             $attr['type']="text";
         if ($attr['type']=="key")
         {
-            $attr['type']="text";
-            $attr['disabled']=true;
+            // disabled fields aren't serialize()'d
+            $attr['type']="hidden";
+            //$attr['disabled']=true;
         }
 
-        $valid=array('type','value','disabled');
+        $valid=array('type','value','disabled','required');
         parent::__construct($attr,$valid);
 
         $this->ui_tag="input";
@@ -51,6 +52,12 @@ class uiInput_Text extends uiInput_Base
                 $list.=$this->Tag("option value=\"$option\"");
             $this->ui_html.=$this->Tag("datalist id=\"$listname\"",$list);
         }
-
+        if (!empty($attr['clearonfocus']))
+            $this->ClearOnFocus();
+    }
+    public function ClearOnFocus()
+    {
+        $value=$this->GetAttr('value');
+        $this->AddAttr('onfocus',"if (this.value=='$value') {this.value='';}");
     }
 }

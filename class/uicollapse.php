@@ -18,33 +18,41 @@ class uicollapse extends uiElement
 
     public function __toString()
     {
-        $output='';
-        $group='';
-        $active=true;
-        if ($this->list) foreach ($this->list as $name => $element) {
+        try
+        {
+            $output='';
+            $group='';
+            $active=true;
+            if ($this->list) foreach ($this->list as $name => $element) {
 
-            $div=uiDiv("accordian-body collapse");
-            if (!$active)
-                $div->AddClass("in");
+                $div=uiDiv("accordian-body collapse");
+                if (!$active)
+                    $div->AddClass("in");
 
-            $group=$this->Tag("div class=\"accordian-heading\"",
-                $this->Tag("a class=\"accordian-toggle\"
+                $group=$this->Tag("div class=\"accordian-heading\"",
+                    $this->Tag("a class=\"accordian-toggle\"
 data-toggle=\"collapse\" data-parent=\"#{$this->ui_id}\"
 href=\"#{$div->ui_id}\" ",$name)
-            );
+                );
 
-            $group.=$this->Tag($div->GenerateTag(),
-                $this->Tag($element->GenerateTag(),$element)
-            );
+                $group.=$this->Tag($div->GenerateTag(),
+                    $this->Tag($element->GenerateTag(),$element)
+                );
 
-            $active=false;
+                $active=false;
 
-            $output.=$this->Tag("div class=\"accordian-group\"",
-                $group);
+                $output.=$this->Tag("div class=\"accordian-group\"",
+                    $group);
+            }
+    
+            return($this->Tag($this->GenerateTag(),$output.
+                $this->GenerateContent()
+            ));
         }
-
-        return($this->Tag($this->GenerateTag(),$output.
-            $this->GenerateContent()
-        ));
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

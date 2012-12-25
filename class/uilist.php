@@ -13,15 +13,23 @@ class uilist extends uiElement
 
     public function __toString()
     {
-        $list='';
-        if ($this->list) foreach ($this->list as $name => $href)
-            $list.=$this->Tag("li",
-                $this->Tag("a href=\"$href\"",htmlentities($name))
-            );
+        try
+        {
+            $list='';
+            if ($this->list) foreach ($this->list as $name => $href)
+                $list.=$this->Tag("li",
+                    $this->Tag("a href=\"$href\"",htmlentities($name))
+                );
 
-        foreach ($this->GenerateContentArray() as $element)
-            $list.=$this->Tag("li",$element);
+            foreach ($this->GenerateContentArray() as $element)
+                $list.=$this->Tag("li",$element);
 
-        return($list);
+            return($list);
+        }
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }

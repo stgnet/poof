@@ -13,6 +13,7 @@ class uiform extends uiElement
         $this->target=false;
         $this->style=$style;
         $this->ui_tag="form";
+        $this->AddAttr('method','POST');
 
         if ($style && $style!="td") {
             if (substr($style,0,5)!="form-")
@@ -114,42 +115,59 @@ class uiform extends uiElement
     }
     public function __toString()
     {
-        $output='';
-        foreach ($this->ContentArray() as $element) {
-            $desc=$element->GetDescription();
+        try
+        {
+            $output='';
+            foreach ($this->ContentArray() as $element) {
+                if (!method_exists($element,'GetDescription'))
+                {
+                    // add non-input elements normally
+                    $output.=$element;
+                    continue;
+                }
 
-            if ($this->style=='td') {
-                if ($desc)
-                    $element->SetInlineDescription($desc);
-                $output.=$this->Tag('td',$element);
-                $output.=$element;
-                continue;
+                $desc=$element->GetDescription();
+
+                if ($this->style=='td') {
+                    if ($desc)
+                        $element->SetInlineDescription($desc);
+                    $output.=$this->Tag('td',$element);
+                    $output.=$element;
+                    continue;
+                }
+                if ($this->style=='inline') {
+                    // place no divs
+                    if ($desc)
+                        $element->SetInlineDescription($desc);
+                    $output.=$element;
+                    continue;
+                }
+
+                if ($this->style=='search') {
+                    if ($desc)
+                        $element->SetInlineDescription($desc);
+                }
+
+                $for=$element->ui_id;
+
+                $group='';
+                if ($this->style!='search')
+                {
+                    if ($element->GetType()!='hidden')
+                        $group.=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
+                }
+                if ($this->style=='horizontal') {
+                    $group.=$this->Tag("div class=\"controls\"",$element);
+                    $output.=$this->Tag("div class=\"control-group\"",$group);
+                } else
+                    $output.=$group.$element;
             }
-            if ($this->style=='inline') {
-                // place no divs
-                if ($desc)
-                    $element->SetInlineDescription($desc);
-                $output.=$element;
-                continue;
-            }
-
-            if ($this->style=='search') {
-                if ($desc)
-                    $element->SetInlineDescription($desc);
-            }
-
-            $for=$element->ui_id;
-
-            $group='';
-            if ($this->style!='search')
-                $group=$this->Tag("label class=\"control-label\" for=\"$for\"",$desc);
-            if ($this->style=='horizontal') {
-                $group.=$this->Tag("div class=\"controls\"",$element);
-                $output.=$this->Tag("div class=\"control-group\"",$group);
-            } else
-                $output.=$group.$element;
+            return($this->Tag($this->GenerateTag(),$output));
         }
-
-        return($this->Tag($this->GenerateTag(),$output));
+        catch (Exception $e)
+        {
+            siError($e);
+            return('');
+        }
     }
 }
