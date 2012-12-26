@@ -30,15 +30,22 @@ class pfDaemonConnection extends pfDaemon
     }
     function _Process()
     {
-        $test=socket_recv($this->sock,$data,1,MSG_PEEK);
-        if ($test===0)
+        try
         {
-            siDiscern('daemon-connection-close',array(
-                'name'=>$this->name,
-                'peer'=>$this->peer,
-                'requests'=>$this->count,
-            ))->Flush();
-            return(false); // disconnected
+            $test=socket_recv($this->sock,$data,1,MSG_PEEK);
+            if ($test===0)
+            {
+                siDiscern('daemon-connection-close',array(
+                    'name'=>$this->name,
+                    'peer'=>$this->peer,
+                    'requests'=>$this->count,
+                ))->Flush();
+                return(false); // disconnected
+            }
+        }
+        catch (Exception $e)
+        {
+            return(false);
         }
 
         $data=$this->_Read();
@@ -91,9 +98,47 @@ class pfDaemonServer extends pfDaemon
     {
         global $argv;
 
+        siError()->SetText();
+
         // shut down (by default) after being idle for 30 minutes
         $this->timeout=1*60;
         $this->lastactive=time();
+
+        // listen for connections
+        pfDaemon::__construct($name);
+        if (empty($this->port))
+            Fatal("pfDaemonServer: port not set");
+
+        $this->sock=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
+        if (!$this->sock)
+            Fatal("pfDaemonServer: socket_create: ".$this->_SockErr());
+
+        try
+        {
+            if (socket_bind($this->sock,"127.0.0.1",$this->port)===false)
+                $this->ThrowSocketError("socket_connect");
+            siDiscern('debug',"bound on port {$this->port}");
+        }
+        catch (Exception $e)
+        {
+            //try
+            //{
+                if (socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
+                    $this->ThrowSocketError("socket_connect");
+                siDiscern('debug',"bound on port {$this->altp}");
+            //}
+            //catch (Exception $e)
+            //{
+            //    Fatal("Unable to bind primary {$this->port} and alt {$this->altp} ports");
+            //}
+        }
+
+
+        socket_listen($this->sock)
+            or Fatal("pfDaemonServer: socket_list: ".$this->_SockErr());
+
+        socket_set_nonblock($this->sock)
+            or Fatal("pfDaemonServer: socket_set_nonblock: ".$this->_SockErr());
 
         if (!empty($argv[2]) && $argv[2]=="debug")
         {
@@ -134,42 +179,7 @@ class pfDaemonServer extends pfDaemon
             $STDERR=fopen("/dev/null","wb");
         }
         siDiscern("daemon")->Flush();
-        
-        // listen for connections
-        pfDaemon::__construct($name);
-        if (empty($this->port))
-            Fatal("pfDaemonServer: port not set");
 
-        $this->sock=socket_create(AF_INET,SOCK_STREAM,SOL_TCP);
-        if (!$this->sock)
-            Fatal("pfDaemonServer: socket_create: ".$this->_SockErr());
-
-        try
-        {
-            if (socket_bind($this->sock,"127.0.0.1",$this->port)===false)
-                $this->ThrowSocketError("socket_connect");
-            siDiscern('debug',"bound on port {$this->port}");
-        }
-        catch (Exception $e)
-        {
-            //try
-            //{
-                if (socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
-                    $this->ThrowSocketError("socket_connect");
-                siDiscern('debug',"bound on port {$this->altp}");
-            //}
-            //catch (Exception $e)
-            //{
-            //    Fatal("Unable to bind primary {$this->port} and alt {$this->altp} ports");
-            //}
-        }
-
-
-        socket_listen($this->sock)
-            or Fatal("pfDaemonServer: socket_list: ".$this->_SockErr());
-
-        socket_set_nonblock($this->sock)
-            or Fatal("pfDaemonServer: socket_set_nonblock: ".$this->_SockErr());
 
         $connections=array();
 

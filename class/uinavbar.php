@@ -23,7 +23,7 @@ class uinavbar extends uiElement
                 )
             ));
         }
-        catch (Exception ($e))
+        catch (Exception $e)
         {
             siError($e);
             return('');

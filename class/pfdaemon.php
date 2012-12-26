@@ -135,7 +135,7 @@ class pfDaemon extends pfBase
         //siDiscern('exec',$cmd)->Flush();
         $error=shell_exec($cmd);
         if ($error)
-            Warning("pfDaemon::_Request() fork of {$this->path} had result: $error");
+            Fatal("pfDaemon::_Request() fork of {$this->path} had result: $error");
         //siDiscern('exec-completed',$cmd)->Flush();
     }
 
@@ -186,7 +186,15 @@ class pfDaemon extends pfBase
         {
             if (!$this->sock)
             {
-                $this->Connect();
+                try
+                {
+                    $this->Connect();
+                }
+                catch (Exception $e)
+                {
+                    // immediately drop out of loop on connection errors
+                    throw $e;
+                }
                 if (!$this->sock)
                 {
                     usleep(10000); // 100th of a second

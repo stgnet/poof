@@ -88,8 +88,8 @@ class siDiscern extends pfSingleton
 
         $pid=getmypid();
         $script=basename($_SERVER['SCRIPT_FILENAME']);
-        //$date=date('Hi');
-        $date="xxxx";
+        $date=date('mdHi');
+        //$date="xxxx";
 
         $discfile="$path/$date.csv";
         // log the events for later processing

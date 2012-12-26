@@ -43,7 +43,7 @@ require('poof/poof.php');
 echo uiPage("Page Title")->Add(
     uiContainer()->Add(
         uiHero()->Add(
-            uiHeader("Hello, World!"),
+            uiHeading("Hello, World!"),
             uiParagraph("It works!")
         )
     )

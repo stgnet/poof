@@ -3,10 +3,12 @@
 class siError extends pfSingleton
 {
     private $ignore_functions;
+    private $force_text;
 
     public function __construct($error=false)
     {
         $this->ignore_functions=array();
+        $this->force_text=false;
 
         // send all php errors and exceptions to this class
         set_error_handler(array($this,'php_error_handler'));
@@ -76,27 +78,35 @@ class siError extends pfSingleton
 
         siDiscern('error',$error);
 
+        $text=$this->force_text;
         if (php_sapi_name()=='cli')
+            $text=true;
+
+        if ($text)
             echo "\n\n------------------------------------------------------------\n";
         else
             echo "\n\n<br/><hr/><$header><font color=\"$color\">";
 
         $message=(string)$error.$additional;
-        if (php_sapi_name()!='cli')
+        if (!$text)
             $message=str_replace("\n","<br />",htmlentities($message));
 
         echo "ERROR: $message";
-        if (php_sapi_name()=='cli')
+        if ($text)
             echo "\n";
         else
             echo "\n</font></$header>\n<pre>";
         //print_r($error);
-        if (php_sapi_name()=='cli')
-            echo "\n\n------------------------------------------------------------\n";
+        if ($text)
+            echo "------------------------------------------------------------\n";
         else
             echo "</pre><hr /><br />\n";
 
         return($this);
+    }
+    public function SetText()
+    {
+        $this->force_text=true;
     }
     public function IgnoreFunction($name)
     {
