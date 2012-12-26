@@ -24,7 +24,7 @@
  * @copyright Apache 2.0
  */
 
-$init_time=microtime(true);
+$POOF_INIT=microtime(true);
 
 // register our autoloader
 spl_autoload_register('poof_autoload');
@@ -33,7 +33,7 @@ spl_autoload_register('poof_autoload');
 require_once(dirname(__FILE__)."/class_constructors.php");
 
 // load the instrumentation library
-siDiscern()->init($init_time);
+siDiscern()->init($POOF_INIT);
 
 // load error handling
 siError();
@@ -81,6 +81,13 @@ if (!function_exists("hex2bin"))
     }
 }
 
+function safe($var)
+{
+    if (isset($var))
+        return $var;
+
+    return false;
+}
 
 // allow selection of a theme (multiple possible)
 function poof_theme($name)

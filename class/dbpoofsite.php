@@ -25,7 +25,7 @@
             {
                 $record=array(
                     'host'=>$_SERVER['HOSTNAME'],
-                    'email'=>$_SERVER['SERVER_ADMIN']
+                    'email'=>safe($_SERVER['SERVER_ADMIN'])
                 );
                 $db->insert($record);
             }
