@@ -81,7 +81,7 @@ if (!function_exists("hex2bin"))
     }
 }
 
-function safe($var)
+function safe(&$var)
 {
     if (isset($var))
         return $var;
