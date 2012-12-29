@@ -14,17 +14,33 @@ class siDiscern extends pfSingleton
 {
     private $events;
     public $error;
+    private $filepath;
+    private $filename;
 
     public function __construct($name=false,$data=false,$time=false)
     {
         $this->error=false;
         $this->events=array();
+        $this->SetFilePath();
 
         // make sure we note completion along with any exceptions
         register_shutdown_function(array($this,"Shutdown"));
 
         if ($name)
             return self::__invoke($name,$data,$time);
+    }
+    public function GetFilePath()
+    {
+        return($this->filepath);
+    }
+    public function GetFileName()
+    {
+        return($this->filename);
+    }
+    public function GetUrl()
+    {
+        global $POOF_DIR;
+        return(poof_fullurl("$POOF_DIR/discern.php")."?file=".$this->filename);
     }
     public function Init($time)
     {
@@ -78,7 +94,7 @@ class siDiscern extends pfSingleton
         return($this);
     }
 
-    public function Flush()
+    public function SetFilePath()
     {
         global $POOF_DIR;
 
@@ -88,12 +104,16 @@ class siDiscern extends pfSingleton
 
         $pid=getmypid();
         $script=basename($_SERVER['SCRIPT_FILENAME']);
-        $date=date('mdHi');
-        //$date="xxxx";
+        $date=date('Ymd');
 
-        $discfile="$path/$date.csv";
+        $this->filename="$date-$pid.csv";
+
+        $this->filepath=$path."/".$this->filename;
+    }
+    public function Flush()
+    {
         // log the events for later processing
-        $fp=fopen($discfile,"a");
+        $fp=fopen($this->filepath,"a");
         if (!$fp)
             $fp=STDOUT; //Fatal("Unable to write $discfile");
         foreach ($this->events as $event)

@@ -45,7 +45,9 @@ class siError extends pfSingleton
         if (file_exists($pathfile))
             return;
 
-        file_put_contents($pathfile,(string)$error."\n\n".print_r($error,true));
+        $discern_url=siDiscern()->GetUrl();
+        file_put_contents($pathfile,(string)$error.
+            "\n\n$discern_url\n\n".print_r($error,true));
 
         $url="http://$POOF_HOST$POOF_URL/$dir/$file";
 
@@ -77,6 +79,7 @@ class siError extends pfSingleton
         $color="red";
 
         siDiscern('error',$error);
+        $discern_url=siDiscern()->GetUrl();
 
         $text=$this->force_text;
         if (php_sapi_name()=='cli')
@@ -93,9 +96,9 @@ class siError extends pfSingleton
 
         echo "ERROR: $message";
         if ($text)
-            echo "\n";
+            echo "\n$discern_url\n";
         else
-            echo "\n</font></$header>\n<pre>";
+            echo "\n<br /><a href=\"$discern_url\">$discern_url</a></font></$header>\n<pre>";
         //print_r($error);
         if ($text)
             echo "------------------------------------------------------------\n";

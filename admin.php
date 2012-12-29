@@ -5,7 +5,7 @@
     $db=dbPoofSite();
     $config=$db->lookup();
 
-    function login($data)
+    function login_post($data)
     {
         global $config;
 
@@ -14,7 +14,10 @@
             password_verify($data['pass'],$config['pass']))
         {
             $_SESSION['POOFSITE']['login']=time();
-            echo uiAlert('success',"Logged in as site administrator");
+            echo uiPage('Logged In')->Add(
+                uiAlert('success',"Logged in as site administrator")
+            )->ReloadAfter(3);
+            return(true);
         }
         else
         {
@@ -22,21 +25,30 @@
         }
     }
 
+    $login_form_fields=array(
+        'email'=>array('type'=>"email",'desc'=>"Email",'required'=>true),
+        'pass'=>array('type'=>"password",'desc'=>"Password",'required'=>true),
+        'submit'=>array('type'=>"button",'desc'=>"Login")
+    );
+
+    function login_form()
+    {
+        global $login_form_fields;
+
+        return(
+            uiWell()->Add(
+                uiLegend("Login to access Site Administration"),
+                uiForm($login_form_fields,false,'inline')->Post('login_post')
+            )
+        );
+    }
+
+
     if (empty($_SESSION['POOFSITE']['login']) && 
         !empty($config['pass']) &&
         !empty($config['email']))
     {
-        $fields=array(
-            'email'=>array('type'=>"email",'desc'=>"Email",'required'=>true),
-            'pass'=>array('type'=>"password",'desc'=>"Password",'required'=>true),
-            'submit'=>array('type'=>"button",'desc'=>"Login")
-        );
-        echo uiPage("POOF Site Administration")->Add(
-            uiWell()->Add(
-                uiLegend("Login to access Site Administration"),
-                uiForm($fields,false,'inline')->Post('login')
-            )
-        );
+        echo uiPage("POOF Site Administration")->Add(login_form());
         return;
     }
 
@@ -45,7 +57,7 @@
         echo uiPage("POOF Site Administration")->Add(
             uiWell()->Add(
                 uiLegend("Site Administration"),
-                uiAlert('info',"Please enter admin credentials"),
+                uiAlert('info',"Please set the admin credentials to secure future access to the adminstration tools."),
                 uiEditRecord($db)
             )
         );

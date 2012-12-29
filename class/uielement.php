@@ -242,6 +242,18 @@ class uiElement extends pfBase
             $this->AddAttr('post-data',json_encode($data));
         return($this);
     }
+    public function ReloadAfter($seconds)
+    {
+        $ms=$seconds*1000;
+        $this->ui_html.=$this->Tag("script",
+            "setTimeout(function(){
+                \$('#{$this->ui_id}').fadeOut(500,function(){
+                    location.reload();
+                });
+            },$ms);"
+        );
+        return($this);
+    }
     public function RemoveAfter($secs)
     {
         $ms=$secs*1000;

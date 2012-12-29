@@ -178,7 +178,7 @@ class uipage extends uiElement
             $tool_icon='wrench';
             if ($admin_login)
                 $tool_icon='cog';
-            $footer_right.="<a href=\"$toolhref\">&nbsp;<i class=\"icon-$tool_icon\"></i>&nbsp;</a>";
+            //$footer_right.="<a href=\"$toolhref\">&nbsp;<i class=\"icon-$tool_icon\"></i>&nbsp;</a>";
 
             $footer="";
             if ($footer_right)
@@ -193,7 +193,9 @@ class uipage extends uiElement
                 $this->GenerateStyles().
                 $this->GeneratePreScripts();
 
-            $body= $this->GenerateContent().$this->GeneratePostScripts();
+            $body= $this->GenerateContent().
+                $this->ui_html.
+                $this->GeneratePostScripts();
 
             return("<!DOCTYPE html>".
                 $this->Tag("html lang=\"en\"",
@@ -201,7 +203,12 @@ class uipage extends uiElement
                     $this->Tag($this->GenerateTag(),
                         $body.
                         $footer.
-                        "<p class=\"pull-left\">&nbsp;".number_format(microtime(true)-$POOF_INIT,3)."</p>".
+//                        "<p class=\"pull-left\">&nbsp;".number_format(microtime(true)-$POOF_INIT,3)."</p>".
+
+                        "<p class=\"pull-right\" title=\"".
+                            (integer)(1000*(microtime(true)-$POOF_INIT))." ms".
+                            "\"><a href=\"$toolhref\">
+                            <i class=\"icon-$tool_icon\"></i></a>&nbsp;</p>".
                         (siDiscern('output')?'':'')
                     )
                 )

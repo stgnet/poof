@@ -32,6 +32,10 @@ spl_autoload_register('poof_autoload');
 // load functions mapped to class constructors
 require_once(dirname(__FILE__)."/class_constructors.php");
 
+// fix the timezone first
+if ($timezone=poof_locate('timezone'))
+    date_default_timezone_set(file_get_contents($timezone));
+
 // load the instrumentation library
 siDiscern()->init($POOF_INIT);
 
@@ -165,6 +169,12 @@ function poof_locate($path)
     {
         $orig=$path;
         $path=strtolower($path);
+        if ($path[0]=='/')
+        {
+            if (file_exists($path))
+                return(realpath($path));
+        }
+
         // default must be last theme checked
         foreach (array_merge($POOF_THEMES,array('default')) as $theme)
         {
@@ -209,6 +219,11 @@ function poof_url($path)
     $filepath=poof_locate($path);
     $relpath=str_replace($POOF_ROOT,"",$filepath);
     return($relpath);
+}
+function poof_fullurl($path)
+{
+    global $POOF_HOST;
+    return("http://$POOF_HOST".poof_url($path));
 }
 
 // automatically load class files from the library when instantiated
