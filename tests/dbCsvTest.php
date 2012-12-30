@@ -82,6 +82,9 @@
             $test5->insert($record);
 
             $this->assertEquals(1,count($test5->records()));
+
+            sleep(4);
+            unlink($file);
         }
         function test_lookup_delete()
         {
@@ -143,6 +146,9 @@
             $this->assertEquals('abc',$records[0]['alpha']);
             $this->assertArrayHasKey('beta',$records[0]);
             $this->assertEquals('',$records[0]['beta']);
+
+            sleep(4);
+            unlink($file);
         }
         function test_key()
         {
@@ -169,6 +175,8 @@
 4,tuv,wxyz
 ",file_get_contents($file));
 
+            sleep(4);
+            unlink($file);
         }
         function test_update()
         {
@@ -212,6 +220,9 @@
 3,octothorpe,pqrs
 4,tuv,wxyz
 ",file_get_contents($file));
+
+            sleep(4);
+            unlink($file);
         }
         function test_create_unspecified_key()
         {
@@ -230,6 +241,8 @@
 1,one,two
 ",file_get_contents($file));
 
+            sleep(4);
+            unlink($file);
         }
         function test_create_retrieve_key()
         {
@@ -267,6 +280,8 @@
             $this->assertEquals(2,count($fields_detail));
             $this->assertEquals($fields,$fields_detail);
 
+            sleep(4);
+            unlink($file);
         }
     }
 ?>

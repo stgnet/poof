@@ -164,7 +164,18 @@ class dbcsv_file extends dbBase
     }
     function checkfile()
     {
-        $current=stat($this->path);
+        try
+        {
+            $current=stat($this->path);
+        }
+        catch (Exception $e)
+        {
+            // file has been deleted
+            siDiscern('warning',"stat failed on {$this->path} indicating deleted file: ".$e->getMessage());
+            $this->stat=array('mtime'=>0);
+            $this->table=array();
+            return;
+        }
 /*
         print("Current={$current['mtime']} {$current['size']} previous={$this->stat['mtime']} {$this->stat['size']}\n");
         print(filesize($this->path)." = ");

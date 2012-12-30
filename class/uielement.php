@@ -140,7 +140,7 @@ class uiElement extends pfBase
                 Fatal("uiElement::Add(".get_class($obj)."): incompatible object not based on uiElement! ");
 
             if ($obj->ui_parent)
-                Fatal("uiElement::Add({$obj->ui_id}): already added to {$obj->ui_parent->ui_id}");
+                Fatal("uiElement::Add({$obj->ui_id}): was previously added to {$obj->ui_parent->ui_id}");
 
             //siDiscern()->Event('debug-ui-add',array('parent'=>$this->ui_id,'child'=>$obj->ui_id));
             $this->ui_contents[]=$obj;

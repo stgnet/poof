@@ -77,7 +77,8 @@ function $class($args)
                 $output.="
 function $class($args)
 {
-    return new $class($justargs);
+    \$that=new $class($justargs);
+    return \$that;
 }
 ";
 
@@ -90,7 +91,8 @@ function $class($args)
                 $output.="
 function $alternate($args)
 {
-    return new $class($justargs);
+    \$that=new $class($justargs);
+    return \$that;
 }
 ";
 

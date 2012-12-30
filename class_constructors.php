@@ -8,107 +8,134 @@
 
 function arbase()
 {
-    return new arbase();
+    $that=new arbase();
+    return $that;
 }
 
 function ardir($path=false)
 {
-    return new ardir($path);
+    $that=new ardir($path);
+    return $that;
 }
 
 function arfile($file)
 {
-    return new arfile($file);
+    $that=new arfile($file);
+    return $that;
 }
 
 function arquery($query)
 {
-    return new arquery($query);
+    $that=new arquery($query);
+    return $that;
 }
 
 function audigest($realm,$users,$fail=false)
 {
-    return new audigest($realm,$users,$fail);
+    $that=new audigest($realm,$users,$fail);
+    return $that;
+}
+
+function bad_daemon()
+{
+    $that=new bad_daemon();
+    return $that;
 }
 
 function dbarray($table)
 {
-    return new dbarray($table);
+    $that=new dbarray($table);
+    return $that;
 }
 
 function dbbase()
 {
-    return new dbbase();
+    $that=new dbbase();
+    return $that;
 }
 
 function dbcsv($file)
 {
-    return new dbcsv($file);
+    $that=new dbcsv($file);
+    return $that;
 }
 
 function dbcsv_daemon($path)
 {
-    return new dbcsv_daemon($path);
+    $that=new dbcsv_daemon($path);
+    return $that;
 }
 
 function dbflat($file,$fields)
 {
-    return new dbflat($file,$fields);
+    $that=new dbflat($file,$fields);
+    return $that;
 }
 
 function dbpoofsite()
 {
-    return new dbpoofsite();
+    $that=new dbpoofsite();
+    return $that;
 }
 
 function dbwhere($db,$where)
 {
-    return new dbwhere($db,$where);
+    $that=new dbwhere($db,$where);
+    return $that;
 }
 
 function event()
 {
-    return new event();
+    $that=new event();
+    return $that;
 }
 
 function gtalk_daemon()
 {
-    return new gtalk_daemon();
+    $that=new gtalk_daemon();
+    return $that;
 }
 
 function mlbase($text=false)
 {
-    return new mlbase($text);
+    $that=new mlbase($text);
+    return $that;
 }
 
 function mlscrape($text=false)
 {
-    return new mlscrape($text);
+    $that=new mlscrape($text);
+    return $that;
 }
 
 function pfbase()
 {
-    return new pfbase();
+    $that=new pfbase();
+    return $that;
 }
 
 function pfdaemon($name,$path=false)
 {
-    return new pfdaemon($name,$path);
+    $that=new pfdaemon($name,$path);
+    return $that;
 }
 
 function pfdaemonserver($error)
 {
-    return new pfdaemonserver($error);
+    $that=new pfdaemonserver($error);
+    return $that;
 }
 
 function pfgtalk()
 {
-    return new pfgtalk();
+    $that=new pfgtalk();
+    return $that;
 }
 
 function pfsingleton()
 {
-    return new pfsingleton();
+    $that=new pfsingleton();
+    return $that;
 }
 
 function sidiscern($name=false,$data=false,$time=false)
@@ -137,420 +164,510 @@ function sitest($value)
 
 function uialert($class=false,$text=false)
 {
-    return new uialert($class,$text);
+    $that=new uialert($class,$text);
+    return $that;
 }
 
 function uiarticle($class=false)
 {
-    return new uiarticle($class);
+    $that=new uiarticle($class);
+    return $that;
 }
 
 function uiaside($class=false)
 {
-    return new uiaside($class);
+    $that=new uiaside($class);
+    return $that;
 }
 
 function uibadge($class=false)
 {
-    return new uibadge($class);
+    $that=new uibadge($class);
+    return $that;
 }
 
 function uiblockquote()
 {
-    return new uiblockquote();
+    $that=new uiblockquote();
+    return $that;
 }
 
 function uibutton($text=false,$href=false)
 {
-    return new uibutton($text,$href);
+    $that=new uibutton($text,$href);
+    return $that;
 }
 
 function uicarousel($list=false)
 {
-    return new uicarousel($list);
+    $that=new uicarousel($list);
+    return $that;
 }
 
 function uicodemirror($text)
 {
-    return new uicodemirror($text);
+    $that=new uicodemirror($text);
+    return $that;
 }
 
 function uicollapse($list)
 {
-    return new uicollapse($list);
+    $that=new uicollapse($list);
+    return $that;
 }
 
 function uicontainer($class=false)
 {
-    return new uicontainer($class);
+    $that=new uicontainer($class);
+    return $that;
 }
 
 function uicontainerfluid($class=false)
 {
-    return new uicontainerfluid($class);
+    $that=new uicontainerfluid($class);
+    return $that;
 }
 
 function uidaterange()
 {
-    return new uidaterange();
+    $that=new uidaterange();
+    return $that;
 }
 
 function uidebug($what=false)
 {
-    return new uidebug($what);
+    $that=new uidebug($what);
+    return $that;
 }
 
 function uidiv($class=false)
 {
-    return new uidiv($class);
+    $that=new uidiv($class);
+    return $that;
 }
 
 function uidivider()
 {
-    return new uidivider();
+    $that=new uidivider();
+    return $that;
 }
 
 function uidropdown($text,$list=false)
 {
-    return new uidropdown($text,$list);
+    $that=new uidropdown($text,$list);
+    return $that;
 }
 
 function uieditable($db,$fields=NULL)
 {
-    return new uieditable($db,$fields);
+    $that=new uieditable($db,$fields);
+    return $that;
 }
 
 function uieditrecord($db,$fields=NULL)
 {
-    return new uieditrecord($db,$fields);
+    $that=new uieditrecord($db,$fields);
+    return $that;
 }
 
 function uielement()
 {
-    return new uielement();
+    $that=new uielement();
+    return $that;
 }
 
 function uifooter($class=false)
 {
-    return new uifooter($class);
+    $that=new uifooter($class);
+    return $that;
 }
 
 function uiform($fields=false,$record=false,$style=false)
 {
-    return new uiform($fields,$record,$style);
+    $that=new uiform($fields,$record,$style);
+    return $that;
 }
 
 function uigittip($username)
 {
-    return new uigittip($username);
+    $that=new uigittip($username);
+    return $that;
 }
 
 function uigoogleanalytics($account,$domain=false)
 {
-    return new uigoogleanalytics($account,$domain);
+    $that=new uigoogleanalytics($account,$domain);
+    return $that;
 }
 
 function uiheader($class=false)
 {
-    return new uiheader($class);
+    $that=new uiheader($class);
+    return $that;
 }
 
 function uiheading($level,$text=false)
 {
-    return new uiheading($level,$text);
+    $that=new uiheading($level,$text);
+    return $that;
 }
 
 function uihelpicon($text)
 {
-    return new uihelpicon($text);
+    $that=new uihelpicon($text);
+    return $that;
 }
 
 function uihero()
 {
-    return new uihero();
+    $that=new uihero();
+    return $that;
 }
 
 function uihgroup($class=false)
 {
-    return new uihgroup($class);
+    $that=new uihgroup($class);
+    return $that;
 }
 
 function uihtml($html)
 {
-    return new uihtml($html);
+    $that=new uihtml($html);
+    return $that;
 }
 
 function uiicon($name)
 {
-    return new uiicon($name);
+    $that=new uiicon($name);
+    return $that;
 }
 
 function uiiconbutton($icon,$name=false)
 {
-    return new uiiconbutton($icon,$name);
+    $that=new uiiconbutton($icon,$name);
+    return $that;
 }
 
 function uiimage($src)
 {
-    return new uiimage($src);
+    $that=new uiimage($src);
+    return $that;
 }
 
 function uiinput_base($attr=false,$valid)
 {
-    return new uiinput_base($attr,$valid);
+    $that=new uiinput_base($attr,$valid);
+    return $that;
 }
 
 function uiinput_button($attr=false)
 {
-    return new uiinput_button($attr);
+    $that=new uiinput_button($attr);
+    return $that;
 }
 
 function uiinput_cancel($attr=false)
 {
-    return new uiinput_button($attr);
+    $that=new uiinput_button($attr);
+    return $that;
 }
 
 function uiinput_checkbox($attr=false)
 {
-    return new uiinput_checkbox($attr);
+    $that=new uiinput_checkbox($attr);
+    return $that;
 }
 
 function uiinput_radio($attr=false)
 {
-    return new uiinput_radio($attr);
+    $that=new uiinput_radio($attr);
+    return $that;
 }
 
 function uiinput_select($attr=false)
 {
-    return new uiinput_select($attr);
+    $that=new uiinput_select($attr);
+    return $that;
 }
 
 function uiinput_text($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_password($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_hidden($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_image($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_reset($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_submit($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_color($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_date($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_datetime($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_datetime_local($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_email($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_month($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_number($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_range($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_search($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_tel($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_time($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_url($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_week($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_key($attr=false)
 {
-    return new uiinput_text($attr);
+    $that=new uiinput_text($attr);
+    return $that;
 }
 
 function uiinput_textarea($attr=false)
 {
-    return new uiinput_textarea($attr);
+    $that=new uiinput_textarea($attr);
+    return $that;
 }
 
 function uilabel($text=false)
 {
-    return new uilabel($text);
+    $that=new uilabel($text);
+    return $that;
 }
 
 function uilead($text)
 {
-    return new uilead($text);
+    $that=new uilead($text);
+    return $that;
 }
 
 function uilegend($text=false)
 {
-    return new uilegend($text);
+    $that=new uilegend($text);
+    return $that;
 }
 
 function uilink($href,$text=false)
 {
-    return new uilink($href,$text);
+    $that=new uilink($href,$text);
+    return $that;
 }
 
 function uilist($list=false)
 {
-    return new uilist($list);
+    $that=new uilist($list);
+    return $that;
 }
 
 function uilongpoll()
 {
-    return new uilongpoll();
+    $that=new uilongpoll();
+    return $that;
 }
 
 function uinav($class=false)
 {
-    return new uinav($class);
+    $that=new uinav($class);
+    return $that;
 }
 
-function uinavbar()
+function uinavbar($brand=false,$menu=false)
 {
-    return new uinavbar();
+    $that=new uinavbar($brand,$menu);
+    return $that;
 }
 
 function uinavlist($list=false)
 {
-    return new uinavlist($list);
+    $that=new uinavlist($list);
+    return $that;
 }
 
 function uipage($meta)
 {
-    return new uipage($meta);
+    $that=new uipage($meta);
+    return $that;
+}
+
+function uipanel($name)
+{
+    $that=new uipanel($name);
+    return $that;
 }
 
 function uiparagraph($text=false)
 {
-    return new uiparagraph($text);
+    $that=new uiparagraph($text);
+    return $that;
 }
 
 function uipopover($text)
 {
-    return new uipopover($text);
+    $that=new uipopover($text);
+    return $that;
 }
 
 function uipre($text)
 {
-    return new uipre($text);
+    $that=new uipre($text);
+    return $that;
 }
 
 function uirelead($trackingid)
 {
-    return new uirelead($trackingid);
+    $that=new uirelead($trackingid);
+    return $that;
 }
 
 function uirow($class=false)
 {
-    return new uirow($class);
+    $that=new uirow($class);
+    return $that;
 }
 
 function uirowfluid($class=false)
 {
-    return new uirowfluid($class);
+    $that=new uirowfluid($class);
+    return $that;
 }
 
 function uiscript($code)
 {
-    return new uiscript($code);
+    $that=new uiscript($code);
+    return $that;
 }
 
 function uisection($class=false)
 {
-    return new uisection($class);
+    $that=new uisection($class);
+    return $that;
 }
 
 function uispan($number,$offset=false)
 {
-    return new uispan($number,$offset);
+    $that=new uispan($number,$offset);
+    return $that;
 }
 
 function uitabbable($list)
 {
-    return new uitabbable($list);
+    $that=new uitabbable($list);
+    return $that;
 }
 
 function uitable($db,$fields=NULL)
 {
-    return new uitable($db,$fields);
+    $that=new uitable($db,$fields);
+    return $that;
 }
 
 function uitheme($page)
 {
-    return new uitheme($page);
+    $that=new uitheme($page);
+    return $that;
 }
 
 function uitooltip($text)
 {
-    return new uitooltip($text);
+    $that=new uitooltip($text);
+    return $that;
 }
 
 function uiwell($class=false)
 {
-    return new uiwell($class);
+    $that=new uiwell($class);
+    return $that;
 }
 
 function uiyoutube($url,$width=640,$height=false)
 {
-    return new uiyoutube($url,$width,$height);
+    $that=new uiyoutube($url,$width,$height);
+    return $that;
 }
