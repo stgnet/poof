@@ -86,6 +86,7 @@ POOF includes and uses code from these fine open source projects:
 * [Twitter Bootstrap](http://twitter.github.com/bootstrap) for CSS/HTML5
 * [Code Mirror](http://codemirror.net) for code viewing and editing
 * [XMPPHP](http://code.google.com/p/xmpphp/) for Jabber (Gtalk)
+* [Suin's PHP FTP Client](http://github.com/suin/php-ftp-client)
 
 Future Improvements
 -------------------

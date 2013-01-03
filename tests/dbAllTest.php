@@ -7,7 +7,11 @@
 
         public function test_fields()
         {
-            foreach(array('dbcsv'=>"tests/dbtest1.csv") as $type => $arg)
+            $list=array(
+                'dbcsv'=>"tests/dbtest1.csv",
+                'dbini'=>"tests/dbtest1.ini"
+            );
+            foreach($list as $type => $arg)
             {
                 $db=$type($arg);
 
@@ -32,6 +36,10 @@
                 $this->assertEquals('fname',$fieldlist[1]);
                 $this->assertArrayHasKey(2,$fieldlist);
                 $this->assertEquals('lname',$fieldlist[2]);
+
+                sleep(4);
+                if (file_exists($arg))
+                    unlink($arg);
             }
         }
     }

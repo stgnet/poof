@@ -34,6 +34,8 @@ class dbbase extends event
     }
     public function MatchWhere($record,$where)
     {
+        if (empty($where)) return(true);
+
         if (!is_array($where))
             return(Warning("MatchWhere not array: ".json_encode($where)));
 

@@ -81,7 +81,9 @@
 
             $test5->insert($record);
 
-            $this->assertEquals(1,count($test5->records()));
+            $records=$test5->records();
+
+            $this->assertEquals(1,count($records));
 
             sleep(4);
             unlink($file);
@@ -131,19 +133,17 @@
 
             $fields=array('key','alpha','beta');
 
-            $test7=dbcsv($file);
-
-            $test7->SetFields($fields);
+            $test7=dbcsv($file)->SetFields($fields);
 
             $record=array('key'=>1,'alpha'=>"abc");
             $test7->insert($record);
 
             $records=$test7->records();
 
-            //print_r($records);
             $this->assertEquals(1,count($records));
             $this->assertEquals('1',$records[0]['key']);
             $this->assertEquals('abc',$records[0]['alpha']);
+
             $this->assertArrayHasKey('beta',$records[0]);
             $this->assertEquals('',$records[0]['beta']);
 
@@ -168,6 +168,7 @@
 
             $this->assertEquals(4,count($records));
 
+            sleep(4);
             $this->assertEquals("key,alpha,beta
 1,abc,def
 2,ghi,jkl
@@ -175,7 +176,6 @@
 4,tuv,wxyz
 ",file_get_contents($file));
 
-            sleep(4);
             unlink($file);
         }
         function test_update()

@@ -30,6 +30,12 @@ function arquery($query)
     return $that;
 }
 
+function arrecursivedir($path=false)
+{
+    $that=new arrecursivedir($path);
+    return $that;
+}
+
 function audigest($realm,$users,$fail=false)
 {
     $that=new audigest($realm,$users,$fail);
@@ -69,6 +75,12 @@ function dbcsv_daemon($path)
 function dbflat($file,$fields)
 {
     $that=new dbflat($file,$fields);
+    return $that;
+}
+
+function dbini($file)
+{
+    $that=new dbini($file);
     return $that;
 }
 
@@ -348,6 +360,12 @@ function uiiconbutton($icon,$name=false)
     return $that;
 }
 
+function uiiframe($src)
+{
+    $that=new uiiframe($src);
+    return $that;
+}
+
 function uiimage($src)
 {
     $that=new uiimage($src);
@@ -570,7 +588,7 @@ function uinavlist($list=false)
     return $that;
 }
 
-function uipage($meta)
+function uipage($meta='')
 {
     $that=new uipage($meta);
     return $that;

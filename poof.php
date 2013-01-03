@@ -24,23 +24,37 @@
  * @copyright Apache 2.0
  */
 
+// necessary for PHPUNIT
+global $POOF_INIT;
+global $POOF_SITE;
+
 $POOF_INIT=microtime(true);
 
 // register our autoloader
+poof_init_locate();
 spl_autoload_register('poof_autoload');
 
 // load functions mapped to class constructors
 require_once(dirname(__FILE__)."/class_constructors.php");
 
-// fix the timezone first
-if ($timezone=poof_locate('timezone'))
-    date_default_timezone_set(file_get_contents($timezone));
+// load error handling
+siError();
 
 // load the instrumentation library
 siDiscern()->init($POOF_INIT);
 
-// load error handling
-siError();
+// fix missing hostname
+if (empty($_SERVER['HOSTNAME']))
+    $_SERVER['HOSTNAME']=trim(`hostname`);
+
+global $POOF_SITE;
+$POOF_SITE=dbPoofSite();
+
+$tz=$POOF_SITE->Get('timezone');
+if ($tz)
+    date_default_timezone_set($tz);
+
+poof_init_url();
 
 // security considerations
 if (function_exists("libxml_disable_entity_loader"))
@@ -49,10 +63,6 @@ if (function_exists("libxml_disable_entity_loader"))
 // new compatible password hashing
 if (!function_exists("password_hash"))
     require_once(dirname(__FILE__)."/misc/password.php");
-
-// fix missing hostname
-if (empty($_SERVER['HOSTNAME']))
-    $_SERVER['HOSTNAME']=trim(`hostname`);
 
 // always start session handling 
 //if (php_sapi_name()!="cli")
@@ -92,6 +102,12 @@ function safe(&$var)
 
     return false;
 }
+function safearray(&$var)
+{
+    if (empty($var))
+        return(array());
+    return($var);
+}
 
 // allow selection of a theme (multiple possible)
 function poof_theme($name)
@@ -104,20 +120,15 @@ function poof_theme($name)
     $POOF_THEMES[]=$name;
 }
 
-// locate a file from the library
-function poof_locate($path)
+function poof_init_locate()
 {
     global $POOF_FILE;  // path to this file
     global $POOF_DIR;   // base directory for poof library
     global $POOF_ROOT;  // directory path to poof library
-    global $POOF_URL;   // URL path to poof library
-    global $POOF_HOST;  // hostname used (possibly virtual)
     global $POOF_CWD;   // the current directory
     global $POOF_PRJ;   // the 'project' directory poof was invoked from
     global $POOF_THEMES;    // array of directories to check first
 
-    if (empty($POOF_DIR))
-    {
         // locate the poof library itself, set globals
         $POOF_FILE=realpath(__FILE__);
         $POOF_CWD=getcwd();
@@ -140,23 +151,6 @@ function poof_locate($path)
                 $POOF_ROOT="/invalid";
         }
 
-        $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
-
-        $hostfile="$POOF_DIR/host";
-        if (!empty($_SERVER['HTTP_HOST']))
-        {
-            $POOF_HOST=$_SERVER['HTTP_HOST'];
-            if (!file_exists($hostfile))
-                file_put_contents($hostfile,$POOF_HOST);
-        }
-        else
-        {
-            if (file_exists($hostfile))
-                $POOF_HOST=trim(file_get_contents($hostfile));
-            else
-                $POOF_HOST=`invalid`;
-        }
-
         // figure out the path to the directory of script that 
         // included poof.php - as we want to locate() files there also
         if (empty($_SERVER['PWD']) || $_SERVER['SCRIPT_FILENAME'][0]=="/")
@@ -164,7 +158,44 @@ function poof_locate($path)
         else
             $POOF_PRJ=realpath(dirname($_SERVER['PWD']."/".$_SERVER['SCRIPT_FILENAME']));
         $POOF_THEMES=array();
-    }
+}
+function poof_init_url()
+{
+    global $POOF_URL;   // URL path to poof library
+    global $POOF_HOST;  // hostname used (possibly virtual)
+    global $POOF_SITE;  // site configuration database
+    global $POOF_ROOT;
+    global $POOF_DIR;
+
+        $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
+
+        $POOF_HOST=safe($_SERVER['HTTP_HOST']);
+        $site_host=$POOF_SITE->Get('host');
+
+        if (!$POOF_HOST)
+        {
+            if ($site_host)
+                $POOF_HOST=$site_host;
+            else
+                $POOF_HOST='unknown-host';
+        }
+        else
+        {
+            if ($POOF_HOST!=$site_host)
+                $POOF_SITE->Put('host',$POOF_HOST);
+        }
+
+}
+// locate a file from the library
+function poof_locate($path)
+{
+    global $POOF_FILE;  // path to this file
+    global $POOF_DIR;   // base directory for poof library
+    global $POOF_ROOT;  // directory path to poof library
+    global $POOF_CWD;   // the current directory
+    global $POOF_PRJ;   // the 'project' directory poof was invoked from
+    global $POOF_THEMES;    // array of directories to check first
+
     if ($path)
     {
         $orig=$path;
@@ -236,6 +267,14 @@ function poof_autoload($class)
     if (is_file($path))
     {
         require_once($path);
+        return(true);
+    }
+
+    // 
+    $test="$POOF_DIR/vendors/".str_replace(array('\\', '_'), '/',$class).'.php';
+    if (is_file($test))
+    {
+        require_once($test);
         return(true);
     }
 

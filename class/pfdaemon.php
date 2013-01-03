@@ -17,21 +17,25 @@ class pfDaemon extends pfBase
 
     public function __construct($name,$path=false)
     {
-        $this->name=$name;
 
-        $user=get_current_user();
+        $file="class/{$name}_daemon.php";
+        $path=poof_locate($file);
+        if (!$path)
+            Fatal("Unable to locate $file");
+
+        $ver=filemtime($path);
+
+        $this->name=$name;
+        //$user=get_current_user();
         //$id="$name-$user";
-        $id="$name";
+        $id="$name-$ver";
+
         $unique=hexdec(substr(md5($id),-3));
         $this->port=50000+$unique;
         $this->altp=49999-$unique;
 
         siDiscern('debug',"daemon $id $unique {$this->port}");
 
-        $file="class/{$name}_daemon.php";
-        $path=poof_locate($file);
-        if (!$path)
-            Fatal("Unable to locate $file");
         $this->path=$path;
         $this->sock=false;
 

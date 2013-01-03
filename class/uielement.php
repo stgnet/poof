@@ -359,7 +359,7 @@ class uiElement extends pfBase
     {
         $untag=explode(' ',$tag);
         $untag=$untag[0];
-        $dontclose=array('script','i','iframe','div');
+        $dontclose=array('script','i','iframe','div','title');
 
         // this prevents elements' __toString()
         // from being called more than once

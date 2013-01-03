@@ -10,7 +10,7 @@ class uipage extends uiElement
     private $ui_tailscripts;
     private $ui_readyscripts;
 
-    public function __construct($meta)
+    public function __construct($meta='')
     {
         parent::__construct();
         $this->ui_tag="body";

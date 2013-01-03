@@ -121,8 +121,13 @@ class siError extends pfSingleton
     {
         //self::__invoke(new ErrorException($message,$type,0,$file,$line));
         global $POOF_DIR;
+        global $POOF_SITE;
+        global $POOF_TIMEZONE;
+
         $exp=explode('(',$message);
         $function_name=$exp[0];
+
+
         if (in_array($function_name,$this->ignore_functions))
         {
             //siDiscern('php_error_ignore',$function_name);
@@ -134,11 +139,12 @@ class siError extends pfSingleton
            return true;
         }
         */
-        elseif ($function_name=="date")
+        elseif ($function_name=="date" || $function_name=="date_default_timezone_get")
         {
             // fix issue with lack of timezone
             if (strstr($message,"date_default_timezone_set"))
             {
+                /*
                 $tzfile="$POOF_DIR/timezone"; // edit this file to change it
                 if (file_exists($tzfile))
                 {
@@ -150,6 +156,14 @@ class siError extends pfSingleton
                     file_put_contents($tzfile,$tz);
                 }
                 date_default_timezone_set($tz);
+                */
+                if (!$POOF_TIMEZONE)
+                {
+                    $POOF_TIMEZONE=date_default_timezone_get();
+                    $POOF_SITE->Set('timezone',$POOF_TIMEZONE);
+                }
+                else
+                    date_default_timezone_set($POOF_TIMEZONE);
                 return true;
             }
         }

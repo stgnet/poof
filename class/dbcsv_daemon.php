@@ -64,6 +64,7 @@ class dbcsv_file extends dbBase
                 $record[$header[$index]]=$data;
                 $index++;
             }
+//$record['path']=$this->path;
             $this->table[]=$record;
 
             if ($this->key && !empty($record[$this->key]))
@@ -103,13 +104,14 @@ class dbcsv_file extends dbBase
             fputcsv($fp,$ordered);
         }
         fclose($fp);
+        $this->stat=stat($this->path);
         $this->writewhen=false;
     }
     function write()
     {
         // set write flag if not already
         if (!$this->writewhen)
-            $this->writewhen=time()+2; // update file every 3 secs when changing
+            $this->writewhen=time()+1; // update file every 3 secs when changing
     }
     function _Process()
     {
@@ -134,6 +136,18 @@ class dbcsv_file extends dbBase
         if (!empty($record[$this->key]) && $this->keyhigh<$record[$this->key])
             $this->keyhigh=$record[$this->key];
 
+        // insure record added has all current fields
+        foreach ($this->header as $field)
+            if (!array_key_exists($field,$record))
+                $record[$field]='';
+
+//$record['path-add']=$this->path;
+
+// temp hack: use delayed full write only
+$this->table[]=$record;
+$this->write();
+return($this->table);
+
         // is there a column in record that is not in last read header?
         foreach ($record as $field => $value)
         {
@@ -142,7 +156,7 @@ class dbcsv_file extends dbBase
                 // can't add single record, must rewrite entire file
                 $this->table[]=$record;
                 $this->write();
-                return($record);
+                return($this->table);
             }
         }
 
@@ -154,10 +168,6 @@ class dbcsv_file extends dbBase
         fputcsv($fp,$ordered);
         fclose($fp);
 
-        // insure record added has all current fields
-        foreach ($this->header as $field)
-            if (!array_key_exists($field,$record))
-                $record[$field]='';
 
         $this->table[]=$record;
         return($record);
@@ -214,7 +224,7 @@ class dbcsv_daemon extends pfDaemonServer
     {
         if (!file_exists($path)) return(null);
         $stat=stat($path);
-        $index=$stat['dev']."-".$stat['ino'];
+        $index=realpath($path); //$stat['dev']."-".$stat['ino'];
         if (empty($this->files[$index]))
             $this->files[$index]=new dbcsv_file($path);
         $file=$this->files[$index];
@@ -344,6 +354,10 @@ class dbcsv_daemon extends pfDaemonServer
         }
         $file->write();
         return(null);
+    }
+
+    function DeleteFile($path)
+    {
     }
 
     function test_fatal()

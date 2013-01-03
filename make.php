@@ -30,6 +30,7 @@
         sort($files);
 
         foreach ($files as $file) {
+            //echo "Searching '$file'\n";
             // skip anything that isn't an autoload-able class
             if (!preg_match('/^(.*)\.php$/',$file,$match)) {
                 if ($file[0]!='.') print("WARNING: skipping $file\n");
@@ -104,5 +105,5 @@ function $alternate($args)
 
     // make all the components needed
     make_constructors();
-    system("phpdoc -d . -i 'demo/*' -i 'tests/*' -t docs");
+//    system("phpdoc -d . -i 'demo/*' -i 'tests/*' -t docs");
 
