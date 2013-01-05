@@ -160,6 +160,8 @@ class siError extends pfSingleton
                 if (!$POOF_TIMEZONE)
                 {
                     $POOF_TIMEZONE=date_default_timezone_get();
+                    if (!safe($POOF_SITE))
+                        $POOF_SITE=dbPoofSite();
                     $POOF_SITE->Set('timezone',$POOF_TIMEZONE);
                 }
                 else

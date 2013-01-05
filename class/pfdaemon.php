@@ -29,6 +29,7 @@ class pfDaemon extends pfBase
         //$user=get_current_user();
         //$id="$name-$user";
         $id="$name-$ver";
+        $id="$name";
 
         $unique=hexdec(substr(md5($id),-3));
         $this->port=50000+$unique;

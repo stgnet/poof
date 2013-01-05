@@ -233,12 +233,54 @@
 
             $testa=dbcsv($file)->SetFields($fields,'key');
 
-            $testa->Insert(array('alpha'=>'one','beta'=>'two'));
+            $result=$testa->Insert(array('alpha'=>'one','beta'=>'two'));
+
+            $this->assertArrayHasKey('alpha',$result);
+            $this->assertEquals('one',$result['alpha']);
+            $this->assertArrayHasKey('beta',$result);
+            $this->assertEquals('two',$result['beta']);
+            $this->assertArrayHasKey('key',$result);
+            $this->assertEquals('1',$result['key']);
 
             sleep(4);
 
             $this->assertEquals("key,alpha,beta
 1,one,two
+",file_get_contents($file));
+
+            sleep(4);
+            unlink($file);
+        }
+        function test_create_key_additional()
+        {
+            $file="tests/testa1.csv";
+            file_put_contents($file,"key,alpha,beta
+1,abc,def
+2,hij,klm
+3,nop,qrw
+4,xyz,42
+");
+            $fields=array('alpha','beta');
+
+            $testa=dbcsv($file)->SetFields($fields,'key');
+
+            $result=$testa->Insert(array('alpha'=>'one','beta'=>'two'));
+
+            $this->assertArrayHasKey('alpha',$result);
+            $this->assertEquals('one',$result['alpha']);
+            $this->assertArrayHasKey('beta',$result);
+            $this->assertEquals('two',$result['beta']);
+            $this->assertArrayHasKey('key',$result);
+            $this->assertEquals('5',$result['key']);
+
+            sleep(4);
+
+            $this->assertEquals("key,alpha,beta
+1,abc,def
+2,hij,klm
+3,nop,qrw
+4,xyz,42
+5,one,two
 ",file_get_contents($file));
 
             sleep(4);

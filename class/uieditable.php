@@ -47,7 +47,11 @@ class uiEditable extends uiElement
     {
         $encoded="k";
         foreach ($this->db->keys() as $field)
+        {
+            if (!array_key_exists($field,$record))
+                Fatal("record does not have key field '$field'");
             $encoded.="|".urlencode($record[$field]);
+        }
         $encoded=bin2hex($encoded);
         return($encoded);
     }

@@ -55,10 +55,12 @@ class dbcsv_file extends dbBase
         $this->stat=stat($this->path);
 
         $header=fgetcsv($fp);
-        while ($row=fgetcsv($fp)) {
+        while ($row=fgetcsv($fp))
+        {
             $record=array();
             $index=0;
-            foreach ($row as $data) {
+            foreach ($row as $data)
+            {
                 if (empty($header[$index]))
                     $header[$index]="COL$index";
                 $record[$header[$index]]=$data;
@@ -66,10 +68,6 @@ class dbcsv_file extends dbBase
             }
 //$record['path']=$this->path;
             $this->table[]=$record;
-
-            if ($this->key && !empty($record[$this->key]))
-                if ($this->keyhigh<$record[$this->key])
-                    $this->keyhigh=$record[$this->key];
         }
 
         foreach ($header as $name)
@@ -83,6 +81,17 @@ class dbcsv_file extends dbBase
 
         $this->header=$header;
         fclose($fp);
+    }
+    private function setkeyhigh()
+    {
+        foreach ($this->table as $record)
+        {
+            if ($this->key && !empty($record[$this->key]))
+            {
+                if ($this->keyhigh<$record[$this->key])
+                    $this->keyhigh=$record[$this->key];
+            }
+        }
     }
     function writefile()
     {
@@ -123,6 +132,9 @@ class dbcsv_file extends dbBase
         // if key field defined, insure it is unique
         if ($this->key && empty($record[$this->key]))
         {
+            if ($this->keyhigh===false)
+                $this->setkeyhigh();
+
             if (empty($this->keyhigh) || is_numeric($this->keyhigh))
             {
                 $this->keyhigh=1+$this->keyhigh;
@@ -130,11 +142,13 @@ class dbcsv_file extends dbBase
             }
             else
             {
-                $record[$this->key]=$this->guid();
+                $record[$this->key]=$this->keyhigh=$this->guid();
             }
         }
+        /*
         if (!empty($record[$this->key]) && $this->keyhigh<$record[$this->key])
             $this->keyhigh=$record[$this->key];
+            */
 
         // insure record added has all current fields
         foreach ($this->header as $field)
@@ -146,7 +160,7 @@ class dbcsv_file extends dbBase
 // temp hack: use delayed full write only
 $this->table[]=$record;
 $this->write();
-return($this->table);
+return($record);
 
         // is there a column in record that is not in last read header?
         foreach ($record as $field => $value)
@@ -156,7 +170,7 @@ return($this->table);
                 // can't add single record, must rewrite entire file
                 $this->table[]=$record;
                 $this->write();
-                return($this->table);
+                return($record);
             }
         }
 

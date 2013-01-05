@@ -47,7 +47,6 @@ siDiscern()->init($POOF_INIT);
 if (empty($_SERVER['HOSTNAME']))
     $_SERVER['HOSTNAME']=trim(`hostname`);
 
-global $POOF_SITE;
 $POOF_SITE=dbPoofSite();
 
 $tz=$POOF_SITE->Get('timezone');
@@ -167,6 +166,11 @@ function poof_init_url()
     global $POOF_ROOT;
     global $POOF_DIR;
 
+    if (!safe($POOF_SITE))
+        $POOF_SITE=dbPoofSite();
+    if (!safe($POOF_SITE))
+        Fatal("Unable to initialize dbPoofSite");
+
         $POOF_URL=str_replace($POOF_ROOT,"",$POOF_DIR);
 
         $POOF_HOST=safe($_SERVER['HTTP_HOST']);
@@ -182,7 +186,7 @@ function poof_init_url()
         else
         {
             if ($POOF_HOST!=$site_host)
-                $POOF_SITE->Put('host',$POOF_HOST);
+                $POOF_SITE->Set('host',$POOF_HOST);
         }
 
 }
