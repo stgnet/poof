@@ -37,21 +37,22 @@ spl_autoload_register('poof_autoload');
 // load functions mapped to class constructors
 require_once(dirname(__FILE__)."/class_constructors.php");
 
-// load error handling
-siError();
-
-// load the instrumentation library
-siDiscern()->init($POOF_INIT);
-
 // fix missing hostname
 if (empty($_SERVER['HOSTNAME']))
     $_SERVER['HOSTNAME']=trim(`hostname`);
+
+// load error handling
+siError();
 
 $POOF_SITE=dbPoofSite();
 
 $tz=$POOF_SITE->Get('timezone');
 if ($tz)
     date_default_timezone_set($tz);
+
+// load the instrumentation library
+siDiscern()->init($POOF_INIT);
+
 
 poof_init_url();
 

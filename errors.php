@@ -16,6 +16,7 @@
 
     foreach (arDir("errlog")->Match('*.txt')->SortNewest() as $errfile)
     {
+        $mtime=filemtime($errfile);
         $text=file_get_contents($errfile);
         /*
         [message:protected] => MatchWhere field 'noexist' does not exist in record
@@ -41,7 +42,8 @@
         if (preg_match('_\[line.*\] => (.*)\n_',$text,$match) && !empty($match[1]))
             $line=$match[1];
 
-        $error="$type: $message in $file at $line";
+        $date=date('Y/m/d H:i:s',$mtime);
+        $error="[$date] $type: $message in $file at $line";
 
         $p=uiParagraph($error);
         $p->Add(

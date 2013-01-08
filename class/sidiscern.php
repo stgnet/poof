@@ -104,8 +104,8 @@ class siDiscern extends pfSingleton
 
         $pid=getmypid();
         $script=basename($_SERVER['SCRIPT_FILENAME']);
-        //$date=date('Ymd');
-        $date='x';
+        $date=date('Ymd');
+        //$date='x';
 
         $this->filename="$date-$pid.csv";
 
