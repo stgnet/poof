@@ -105,7 +105,7 @@ class uiform extends uiElement
                         \$('{$target}').empty().append(data);
                     },
                     error: function(xhr) {
-                        alert(xhr.status+\" \"+xhr.statusText+\": \"+xhr.responseText);
+                        \$('{$target}').empty().append(xhr.status+\" \"+xhr.statusText+\": \"+xhr.responseText);
                     }
                 });
                 return false;

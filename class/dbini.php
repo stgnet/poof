@@ -23,8 +23,10 @@ class dbIni extends dbBase
                 $this->fp=fopen($this->path,"x+");
         }
 
+        /*
         if (!flock($this->fp,LOCK_SH))
             Fatal("unable to lock {$this->path}");
+            */
 
         if (!$this->fields)
             $this->fields=array($this->key=>array('type'=>"text"));
@@ -73,8 +75,10 @@ class dbIni extends dbBase
         if (!$this->fp)
             Fatal("file is not open");
 
+        /*
         if (!flock($this->fp,LOCK_EX))
             Fatal("unable to exclusively lock {$this->path}");
+            */
 
         rewind($this->fp);
         ftruncate($this->fp,0);
@@ -92,7 +96,7 @@ class dbIni extends dbBase
             }
         }
         fflush($this->fp);
-        flock($this->fp,LOCK_UN);
+        //flock($this->fp,LOCK_UN);
 
     }
 

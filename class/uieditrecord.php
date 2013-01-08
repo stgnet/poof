@@ -8,6 +8,7 @@ class uiEditRecord extends uiForm
 {
     protected $fields;
     private $db;
+    private $posturl;
 
     /**
      * create field that edits database
@@ -16,6 +17,8 @@ class uiEditRecord extends uiForm
      */
     public function __construct($db,$fields=NULL)
     {
+        $this->posturl=false;
+
         if (!($db instanceof dbWhere))
             Fatal("uiEditRecord requires dbWhere");
 
@@ -47,11 +50,22 @@ class uiEditRecord extends uiForm
         $this->Add($target);
         $this->OnSubmit($target);
     }
+    public function PostUrl($url)
+    {
+        $this->posturl=$url;
+        return($this);
+    }
 
     public function PostHandler($data)
     {
-        echo uiPre(print_r($data,true));
+        //echo uiPre(print_r($data,true));
         $this->db->update($data);
+        echo uiBadge("success")->Add("Saved");
+        if ($this->posturl)
+        echo "<script>setTimeout(function(){
+            window.location.href=\"{$this->posturl}\";
+        },3000);</script>";
+
         return(true);
     }
 

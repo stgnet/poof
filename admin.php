@@ -75,7 +75,7 @@
     echo uiPage("POOF Site Administration")->Add(
         uiNavBar("POOF Admin",$navmenu),
         uiPanel("Site Administration")->Add(
-            uiEditRecord($db)
+            uiEditRecord($db)->PostUrl($_SERVER['SCRIPT_NAME'])
         )
     );
 
