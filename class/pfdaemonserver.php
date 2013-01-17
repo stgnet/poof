@@ -33,9 +33,9 @@ class pfDaemonConnection extends pfDaemon
             $r=array($this->sock);
             $w=NULL;
             $e=NULL;
-            //siDiscern("debug","connection  select")->Flush();
+            if (pfDaemonDebug) siDiscern("debug","connection  select")->Flush();
             $select=socket_select($r,$w,$e,0);
-            //siDiscern("debug","connection select returned $select")->Flush();
+            if (pfDaemonDebug) siDiscern("debug","connection select returned $select")->Flush();
             if ($select===false || !$select)
                 return(false);
 
@@ -128,7 +128,7 @@ class pfDaemonServer extends pfDaemon
         {
             if (socket_bind($this->sock,"127.0.0.1",$this->port)===false)
                 $this->ThrowSocketError("socket_connect");
-            //siDiscern('debug',"bound on port {$this->port}")->Flush();
+            if (pfDaemonDebug) siDiscern('debug',"bound on port {$this->port}")->Flush();
         }
         catch (Exception $e)
         {
@@ -136,7 +136,7 @@ class pfDaemonServer extends pfDaemon
             //{
                 if (socket_bind($this->sock,"127.0.0.1",$this->altp)===false)
                     $this->ThrowSocketError("socket_connect");
-                //siDiscern('debug',"bound on port {$this->altp}")->Flush();
+                if (pfDaemonDebug) siDiscern('debug',"bound on port {$this->altp}")->Flush();
             //}
             //catch (Exception $e)
             //{
@@ -171,7 +171,7 @@ class pfDaemonServer extends pfDaemon
             if ($pid)
             {
                 // i am the parent
-                //siDiscern("parent-exit")->Flush();
+                if (pfDaemonDebug) siDiscern("parent-exit")->Flush();
                 exit(0);
             }
 
@@ -218,7 +218,7 @@ class pfDaemonServer extends pfDaemon
             $w=NULL;
             $e=NULL;
 
-            //siDiscern("debug","enter select of ".count($r))->Flush();
+            if (pfDaemonDebug) siDiscern("debug","enter select of ".count($r))->Flush();
             $select=socket_select($r,$w,$e,1);
             if ($select===false)
             {
@@ -226,16 +226,16 @@ class pfDaemonServer extends pfDaemon
                 sleep(1);
                 continue;
             }
-            //siDiscern("debug","select returned $select")->Flush();
+            if (pfDaemonDebug) siDiscern("debug","select returned $select")->Flush();
 
             // allow daemon to perform background processes via poll every 1sec
             if (method_exists($this,"_Process"))
             {
                 try
                 {
-                    //siDiscern("debug","enter process")->Flush();
+                    if (pfDaemonDebug) siDiscern("debug","enter process")->Flush();
                     $this->_Process();
-                    //siDiscern("debug","exit process")->Flush();
+                    if (pfDaemonDebug) siDiscern("debug","exit process")->Flush();
                 }
                 catch (Exception $e)
                 {
@@ -250,10 +250,10 @@ class pfDaemonServer extends pfDaemon
             foreach ($connections as $index => $connection)
             {
                 $name=$connection->name;
-                //siDiscern("debug","Enter connection process $name")->Flush();
+                if (pfDaemonDebug) siDiscern("debug","Enter connection process $name")->Flush();
                 $connection->_Process()
                     or $remove[]=$index;
-                //siDiscern("debug","Exit connection process")->Flush();
+                if (pfDaemonDebug) siDiscern("debug","Exit connection process")->Flush();
             }
             foreach ($remove as $index)
                 unset($connections[$index]);
@@ -262,13 +262,13 @@ class pfDaemonServer extends pfDaemon
             $r=array($this->sock);
             $w=NULL;
             $e=NULL;
-            //siDiscern("debug","accept select")->Flush();
+            if (pfDaemonDebug) siDiscern("debug","accept select")->Flush();
             $select=socket_select($r,$w,$e,0);
-            //siDiscern("debug","select returned $select")->Flush();
+            if (pfDaemonDebug) siDiscern("debug","select returned $select")->Flush();
             if ($select===false || !$select)
                 continue;
 
-            //siDiscern("debug","entering accept")->Flush();
+            if (pfDaemonDebug) siDiscern("debug","entering accept")->Flush();
             $new_sock=socket_accept($this->sock);
             if ($new_sock===false)
             {
