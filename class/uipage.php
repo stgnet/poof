@@ -62,9 +62,14 @@ class uipage extends uiElement
         $output='';
 
         foreach ($this->ui_styles as $style)
-            $output.=$this->Tag("link href=\"".
-                poof_url("css/$style").
-                "\" rel=\"stylesheet\"");
+        {
+            $cssurl=poof_url("css/$style");
+            if (!$cssurl)
+                $cssurl=poof_url($style);
+            if (!$cssurl)
+                Fatal("Unable to locate $style");
+            $output.=$this->Tag("link href=\"$cssurl\" rel=\"stylesheet\"");
+        }
 
         return($output);
     }
