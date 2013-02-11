@@ -1,6 +1,6 @@
 <?php
 
-class uiInput_Text extends uiInput_Base
+class uiInput_Textarea extends uiInput_Base
 {
     public function __construct($attr=false)
     {

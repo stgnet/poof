@@ -203,7 +203,7 @@ class uiElement extends pfBase
     public function FieldsWithNames($fields)
     {
         $fieldnames=array();
-        foreach ($fields as $name => $details)
+        foreach (safearray($fields) as $name => $details)
         {
             if (is_array($details))
             {

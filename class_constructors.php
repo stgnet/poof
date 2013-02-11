@@ -72,6 +72,12 @@ function dbcsv_daemon($path)
     return $that;
 }
 
+function dbcsvro($file)
+{
+    $that=new dbcsvro($file);
+    return $that;
+}
+
 function dbflat($file,$fields)
 {
     $that=new dbflat($file,$fields);
