@@ -12,6 +12,8 @@ class uipage extends uiElement
 
     public function __construct($meta='')
     {
+        global $POOF_MIN;
+
         parent::__construct();
         $this->ui_tag="body";
         $this->ui_meta=$meta;
@@ -29,7 +31,15 @@ class uipage extends uiElement
 
 
         // activate the theme (it calls back to add elements)
-        uiTheme($this);
+        if (safe($POOF_MIN))
+        {
+            // POOF MIN uses CDN url rather than local file
+            $page->StyleSheet('bootstrap','http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css');
+            $page->PostScript('jquery','http://code.jquery.com/jquery-1.9.1.min.js');
+            $page->PostScript('bootstrap','http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
+        }
+        else
+            uiTheme($this);
     }
     public function Stylesheet($name,$file)
     {
@@ -224,5 +234,18 @@ class uipage extends uiElement
             siError($e);
             return('');
         }
+    }
+}
+<?php
+
+class uiTheme extends uiElement
+{
+    public function __construct($page)
+    {
+        // add bootstrap's components to the page
+    }
+    public function __toString()
+    {
+        return(false);
     }
 }
