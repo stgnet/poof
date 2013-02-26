@@ -34,9 +34,9 @@ class uipage extends uiElement
         if (safe($POOF_MIN))
         {
             // POOF MIN uses CDN url rather than local file
-            $page->StyleSheet('bootstrap','http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css');
-            $page->PostScript('jquery','http://code.jquery.com/jquery-1.9.1.min.js');
-            $page->PostScript('bootstrap','http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
+            $this->StyleSheet('bootstrap','http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css');
+            $this->PostScript('jquery','http://code.jquery.com/jquery-1.9.1.min.js');
+            $this->PostScript('bootstrap','http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/js/bootstrap.min.js');
         }
         else
             uiTheme($this);
