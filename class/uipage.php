@@ -236,16 +236,3 @@ class uipage extends uiElement
         }
     }
 }
-<?php
-
-class uiTheme extends uiElement
-{
-    public function __construct($page)
-    {
-        // add bootstrap's components to the page
-    }
-    public function __toString()
-    {
-        return(false);
-    }
-}
