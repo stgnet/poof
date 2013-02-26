@@ -73,11 +73,18 @@ class uipage extends uiElement
 
         foreach ($this->ui_styles as $style)
         {
-            $cssurl=poof_url("css/$style");
-            if (!$cssurl)
-                $cssurl=poof_url($style);
-            if (!$cssurl)
-                Fatal("Unable to locate $style");
+            if ($style[0]=='/' || substr($style,0,7)=="http://")
+            {
+                $cssurl=$style;
+            }
+            else
+            {
+                $cssurl=poof_url("css/$style");
+                if (!$cssurl)
+                    $cssurl=poof_url($style);
+                if (!$cssurl)
+                    Fatal("Unable to locate $style");
+            }
             $output.=$this->Tag("link href=\"$cssurl\" rel=\"stylesheet\"");
         }
 
@@ -90,9 +97,18 @@ class uipage extends uiElement
         $head='';
 
         foreach ($this->ui_prescripts as $script)
-            $output.=$this->Tag("script src=\"".
-                poof_url("js/$script").
-                "\"");
+        {
+            if ($script[0]=='/' || substr($script,0,7)=='http://')
+            {
+                $output.=$this->Tag("script src=\"$script\"");
+            }
+            else
+            {
+                $output.=$this->Tag("script src=\"".
+                    poof_url("js/$script").
+                    "\"");
+            }
+        }
 
         $head='';
         foreach ($this->ui_headscripts as $code)
@@ -109,9 +125,18 @@ class uipage extends uiElement
         $output='';
 
         foreach ($this->ui_postscripts as $script)
-            $output.=$this->Tag("script src=\"".
-                poof_url("js/$script").
-                "\"");
+        {
+            if ($script[0]=='/' || substr($script,0,7)=='http://')
+            {
+                $output.=$this->Tag("script src=\"$script\"");
+            }
+            else
+            {
+                $output.=$this->Tag("script src=\"".
+                    poof_url("js/$script").
+                    "\"");
+            }
+        }
 
         // active the js components
         $ready='';
