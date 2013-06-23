@@ -1,6 +1,5 @@
 <?php
     require 'poof/poof.php';
-    poof_theme('cerulean');
 
     $config=dbPoofSite();
 

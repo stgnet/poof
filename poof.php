@@ -141,7 +141,7 @@ function poof_init_locate()
         if ($POOF_ROOT)
         {
             if (!file_exists($rootfile))
-                file_put_contents($rootfile,$POOF_ROOT);
+                @file_put_contents($rootfile,$POOF_ROOT);
         }
         else
         {
