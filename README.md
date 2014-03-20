@@ -72,7 +72,7 @@ Class Types in POOF
 
 LICENSE 
 ------- 
-POOF is licensed under [Apache License V2](http://www.apache.org/license/LICENSE-2.0)
+POOF is licensed under [Apache License V2](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Requirements
 ------------
